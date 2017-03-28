@@ -1,0 +1,27 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.episode6.hackit.deployable.aar'
+apply plugin: 'com.episode6.hackit.gdmc'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+android {
+  compileSdkVersion 24
+  buildToolsVersion "25.0.2"
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+}
+
+dependencies {
+  compile('net.sourceforge.findbugs:jsr305')
+  testCompile('junit:junit')
+  testCompile('org.mockito:mockito-core')
+  testCompile('com.episode6.hackit.mockspresso:mockspresso-core')
+  testCompile('com.episode6.hackit.mockspresso:mockspresso-mockito')
+  testCompile('org.easytesting:fest-assert-core')
+}
