@@ -1,8 +1,6 @@
 package com.episode6.hackit.typed.core;
 
 import com.episode6.hackit.typed.core.util.Preconditions;
-import com.episode6.hackit.typed.core.util.Supplier;
-import com.episode6.hackit.typed.core.util.Suppliers;
 
 import javax.annotation.Nullable;
 
@@ -12,27 +10,27 @@ public class TypedKeyNamespace {
   @Nullable private final TypedKeyNamespace mParent;
   @Nullable private final String mName;
 
-  private final Supplier<String> mFullNameSupplier;
+  private final String mFullName;
 
   TypedKeyNamespace(String delineator) {
     mDelineator = Preconditions.checkNotNull(delineator);
     mParent = null;
     mName = null;
-    mFullNameSupplier = Suppliers.memoize(new FullNameSupplier());
+    mFullName = "";
   }
 
   TypedKeyNamespace(TypedKeyNamespace parent, String childName) {
     mParent = Preconditions.checkNotNull(parent);
     mDelineator = parent.mDelineator;
     mName = Preconditions.checkNotNull(childName);
-    mFullNameSupplier = Suppliers.memoize(new FullNameSupplier());
+    mFullName = parent.getNameForChild(childName);
   }
 
   public String getNameForChild(String childName) {
     if (isAnonymous()) {
       return childName;
     }
-    return mFullNameSupplier.get() + mDelineator + childName;
+    return mFullName + mDelineator + childName;
   }
 
   private boolean isAnonymous() {
@@ -41,7 +39,7 @@ public class TypedKeyNamespace {
 
   @Override
   public String toString() {
-    return mFullNameSupplier.get();
+    return mFullName;
   }
 
   @Override
@@ -63,19 +61,5 @@ public class TypedKeyNamespace {
     result = 31 * result + (mParent != null ? mParent.hashCode() : 0);
     result = 31 * result + (mName != null ? mName.hashCode() : 0);
     return result;
-  }
-
-  private class FullNameSupplier implements Supplier<String> {
-
-    @Override
-    public String get() {
-      if (isAnonymous()) {
-        return "";
-      }
-      if (mParent == null) {
-        return mName;
-      }
-      return mParent.getNameForChild(mName);
-    }
   }
 }
