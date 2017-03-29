@@ -23,7 +23,9 @@ android {
 }
 
 dependencies {
+  compile project(':typed-core')
   compile('net.sourceforge.findbugs:jsr305')
+
   testCompile('junit:junit')
   testCompile('org.mockito:mockito-core')
   testCompile('com.episode6.hackit.mockspresso:mockspresso-core')
