@@ -1,4 +1,4 @@
-package com.episode6.hackit.typed.core;
+package com.episode6.hackit.typed.core.util;
 
 import org.junit.Test;
 

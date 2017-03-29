@@ -1,5 +1,7 @@
 package com.episode6.hackit.typed.core;
 
+import com.episode6.hackit.typed.core.util.Preconditions;
+
 import javax.annotation.Nullable;
 
 public class TypedKeyNamespace {
