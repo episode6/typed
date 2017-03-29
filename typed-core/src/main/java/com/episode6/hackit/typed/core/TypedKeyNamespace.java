@@ -1,6 +1,8 @@
 package com.episode6.hackit.typed.core;
 
 import com.episode6.hackit.typed.core.util.Preconditions;
+import com.episode6.hackit.typed.core.util.Supplier;
+import com.episode6.hackit.typed.core.util.Suppliers;
 
 import javax.annotation.Nullable;
 
@@ -10,52 +12,36 @@ public class TypedKeyNamespace {
   @Nullable private final TypedKeyNamespace mParent;
   @Nullable private final String mName;
 
-  @Nullable private String mFullName;
+  private final Supplier<String> mFullNameSupplier;
 
   TypedKeyNamespace(String delineator) {
     mDelineator = Preconditions.checkNotNull(delineator);
     mParent = null;
     mName = null;
+    mFullNameSupplier = Suppliers.memoize(new FullNameSupplier());
   }
 
   TypedKeyNamespace(TypedKeyNamespace parent, String childName) {
     mParent = Preconditions.checkNotNull(parent);
     mDelineator = parent.mDelineator;
     mName = Preconditions.checkNotNull(childName);
-  }
-
-  public synchronized String getFullName() {
-    if (mFullName == null) {
-      mFullName = generateFullName();
-    }
-
-    return mFullName;
+    mFullNameSupplier = Suppliers.memoize(new FullNameSupplier());
   }
 
   public String getNameForChild(String childName) {
     if (isAnonymous()) {
       return childName;
     }
-    return getFullName() + mDelineator + childName;
+    return mFullNameSupplier.get() + mDelineator + childName;
   }
 
   private boolean isAnonymous() {
     return mName == null;
   }
 
-  private String generateFullName() {
-    if (isAnonymous()) {
-      return "";
-    }
-    if (mParent == null) {
-      return mName;
-    }
-    return mParent.getNameForChild(mName);
-  }
-
   @Override
   public String toString() {
-    return getFullName();
+    return mFullNameSupplier.get();
   }
 
   @Override
@@ -77,5 +63,19 @@ public class TypedKeyNamespace {
     result = 31 * result + (mParent != null ? mParent.hashCode() : 0);
     result = 31 * result + (mName != null ? mName.hashCode() : 0);
     return result;
+  }
+
+  private class FullNameSupplier implements Supplier<String> {
+
+    @Override
+    public String get() {
+      if (isAnonymous()) {
+        return "";
+      }
+      if (mParent == null) {
+        return mName;
+      }
+      return mParent.getNameForChild(mName);
+    }
   }
 }

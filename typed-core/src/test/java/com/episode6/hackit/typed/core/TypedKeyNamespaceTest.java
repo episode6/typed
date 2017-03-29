@@ -48,17 +48,11 @@ public class TypedKeyNamespaceTest {
     TypedKeyNamespace parentNamespace = spy(new TypedKeyNamespace(mAnonymousNamespace, "parent"));
     TypedKeyNamespace namespace = new TypedKeyNamespace(parentNamespace, "child");
 
-    String value1 = namespace.getFullName();
-    String value2 = namespace.toString();
-    String value3 = namespace.getFullName();
+    String value = namespace.toString();
 
-
-    verify(mAnonymousNamespace, times(1)).getNameForChild("parent");
-    verify(parentNamespace, times(1)).getNameForChild("child");
-    assertThat(value1)
-        .isEqualTo(value2)
-        .isEqualTo(value3)
-        .isEqualTo("parent/child");
+    verify(mAnonymousNamespace).getNameForChild("parent");
+    verify(parentNamespace).getNameForChild("child");
+    assertThat(value).isEqualTo("parent/child");
   }
 
   @Test
