@@ -12,21 +12,21 @@ public class TypedKeyNamespace {
 
   private final String mFullName;
 
-  TypedKeyNamespace(String delineator) {
+  protected TypedKeyNamespace(String delineator) {
     mDelineator = Preconditions.checkNotNull(delineator);
     mParent = null;
     mName = null;
     mFullName = "";
   }
 
-  TypedKeyNamespace(TypedKeyNamespace parent, String childName) {
+  protected TypedKeyNamespace(TypedKeyNamespace parent, String childName) {
     mParent = Preconditions.checkNotNull(parent);
     mDelineator = parent.mDelineator;
     mName = Preconditions.checkNotNull(childName);
     mFullName = parent.getNameForChild(childName);
   }
 
-  public String getNameForChild(String childName) {
+  String getNameForChild(String childName) {
     if (isAnonymous()) {
       return childName;
     }

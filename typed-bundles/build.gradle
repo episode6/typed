@@ -25,6 +25,7 @@ android {
 dependencies {
   compile project(':typed-core')
   compile('net.sourceforge.findbugs:jsr305')
+  compile('com.google.code.gson:gson')
 
   testCompile('junit:junit')
   testCompile('org.mockito:mockito-core')
