@@ -78,6 +78,87 @@ public class TypedPreferencesGenericsTest {
         .isEqualTo(expected);
   }
 
+  @Test
+  public void testSetSimplePref() {
+    String keyName = SIMPLE_PREF.getKeyName().toString();
+    SimpleTestClass newValue = new SimpleTestClass("newSetValue");
+    when(mGson.toJson(newValue)).thenReturn("newSetValueJson");
+
+    mTypedPreferences.edit()
+        .put(SIMPLE_PREF, newValue)
+        .commit();
+
+    verify(mSharedPreferences).edit();
+    verify(mGson).toJson(newValue);
+    verify(mEditor).putString(keyName, "newSetValueJson");
+    verify(mEditor).commit();
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testSetSimplePrefException() {
+    mTypedPreferences.edit()
+        .put(SIMPLE_PREF, null);
+  }
+
+  @Test
+  public void testNullSimplePrefDoesntExist() {
+    String keyName = SIMPLE_NULL_PREF.getKeyName().toString();
+
+    SimpleTestClass result = mTypedPreferences.get(SIMPLE_NULL_PREF);
+
+    verify(mSharedPreferences).contains(keyName);
+    assertThat(result).isNull();
+  }
+
+  @Test
+  public void testNullSimplePrefDoesExist() {
+    String keyName = SIMPLE_NULL_PREF.getKeyName().toString();
+    Type objectType = SIMPLE_NULL_PREF.getObjectType();
+    SimpleTestClass expected = new SimpleTestClass("newValue");
+    when(mSharedPreferences.contains(keyName)).thenReturn(true);
+    when(mSharedPreferences.getString(keyName, null)).thenReturn("newValueJson");
+    when(mGson.fromJson("newValueJson", objectType)).thenReturn(expected);
+
+    SimpleTestClass result = mTypedPreferences.get(SIMPLE_NULL_PREF);
+
+    verify(mSharedPreferences).contains(keyName);
+    verify(mSharedPreferences).getString(keyName, null);
+    verify(mGson).fromJson("newValueJson", objectType);
+    assertThat(result)
+        .isNotNull()
+        .isEqualTo(expected);
+  }
+
+  @Test
+  public void testSetSimpleNullPref() {
+    String keyName = SIMPLE_NULL_PREF.getKeyName().toString();
+    SimpleTestClass newValue = new SimpleTestClass("newSetValue");
+    when(mGson.toJson(newValue)).thenReturn("newSetValueJson");
+
+    mTypedPreferences.edit()
+        .put(SIMPLE_NULL_PREF, newValue)
+        .apply();
+
+    verify(mSharedPreferences).edit();
+    verify(mGson).toJson(newValue);
+    verify(mEditor).putString(keyName, "newSetValueJson");
+    verify(mEditor).apply();
+  }
+
+  @Test
+  public void testSetSimpleNullPrefNull() {
+    String keyName = SIMPLE_NULL_PREF.getKeyName().toString();
+
+    mTypedPreferences.edit()
+        .put(SIMPLE_NULL_PREF, null)
+        .commit();
+
+    verify(mSharedPreferences).edit();
+    verify(mEditor).remove(keyName);
+    verify(mEditor).commit();
+  }
+
+
   public static class SimpleTestClass {
     final String value;
 
