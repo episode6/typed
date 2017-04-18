@@ -1,5 +1,6 @@
 package com.episode6.hackit.typed.preferences;
 
+import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.util.Preconditions;
@@ -89,6 +90,7 @@ public class TypedPreferencesImpl implements TypedPreferences {
     }
 
     @Override
+    @TargetApi(9)
     public void apply() {
       mEditor.apply();
     }
