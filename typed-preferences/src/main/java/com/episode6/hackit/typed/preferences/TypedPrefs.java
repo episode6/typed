@@ -20,7 +20,7 @@ public interface TypedPrefs {
   interface Editor {
     @TargetApi(9)
     void apply();
-    
+
     void commit();
 
     <T> Editor put(PrefKey<T> prefKey, T instance);

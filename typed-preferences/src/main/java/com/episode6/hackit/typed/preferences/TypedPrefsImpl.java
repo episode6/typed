@@ -143,6 +143,7 @@ class TypedPrefsImpl implements TypedPrefs {
 
     private final SharedPreferences.Editor mEditor;
     private HashMap<TypedKey<?>, Object> mPutMap = new HashMap<>();
+    private boolean mClearCacheOnCommit = false;
 
     private EditorImpl(SharedPreferences.Editor editor) {
       mEditor = editor;
@@ -176,10 +177,9 @@ class TypedPrefsImpl implements TypedPrefs {
 
     @Override
     public Editor clear() {
-      //FIXME
       mEditor.clear();
       mPutMap.clear();
-      clearCache();
+      mClearCacheOnCommit = true;
       return this;
     }
 
@@ -196,6 +196,10 @@ class TypedPrefsImpl implements TypedPrefs {
     }
 
     private void processPutMap() {
+      if (mClearCacheOnCommit) {
+        clearCache();
+      }
+
       for (Map.Entry<TypedKey<?>, Object> entry : mPutMap.entrySet()) {
         if (entry.getValue() == null) {
           removeInternal(entry.getKey());
