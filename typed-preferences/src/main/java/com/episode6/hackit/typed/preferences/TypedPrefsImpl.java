@@ -6,6 +6,7 @@ import android.util.LruCache;
 import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.util.Preconditions;
 import com.episode6.hackit.typed.core.util.Supplier;
+import com.episode6.hackit.typed.core.util.Suppliers;
 import com.google.gson.Gson;
 
 import javax.annotation.Nullable;
@@ -17,7 +18,7 @@ import java.util.Map;
  *
  */
 @TargetApi(12)
-public class TypedPrefsImpl implements TypedPrefs {
+class TypedPrefsImpl implements TypedPrefs {
 
   private final SharedPreferences mBackingPrefs;
   private final Supplier<Gson> mGsonSupplier;
@@ -28,7 +29,7 @@ public class TypedPrefsImpl implements TypedPrefs {
       Supplier<Gson> gsonSupplier,
       @Nullable LruCache<TypedKey, Object> cache) {
     mBackingPrefs = backingPrefs;
-    mGsonSupplier = gsonSupplier;
+    mGsonSupplier = Suppliers.memoize(gsonSupplier);
     mCache = cache;
   }
 

@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
  *
  */
 public interface TypedPrefs {
+
   <T> T get(PrefKey<T> prefKey);
   @Nullable <T> T get(OptPrefKey<T> prefKey);
 
