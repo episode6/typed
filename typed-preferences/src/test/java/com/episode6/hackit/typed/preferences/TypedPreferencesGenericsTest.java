@@ -1,8 +1,10 @@
 package com.episode6.hackit.typed.preferences;
 
 import android.content.SharedPreferences;
+import android.util.LruCache;
 import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.mockspresso.annotation.RealObject;
+import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.util.Supplier;
 import com.episode6.hackit.typed.testing.Answers;
 import com.episode6.hackit.typed.testing.Rules;
@@ -11,9 +13,10 @@ import com.google.gson.reflect.TypeToken;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -26,7 +29,8 @@ public class TypedPreferencesGenericsTest {
 
   private static final PrefNamespace PREF_NAMESPACE = PrefNamespace.ROOT.extend("testNamespace").extend("generics");
 
-  private static final PrefKey<SimpleTestClass> SIMPLE_PREF = PREF_NAMESPACE.key(SimpleTestClass.class)
+  private static final PrefKey<SimpleTestClass> SIMPLE_PREF = PREF_NAMESPACE
+      .key(SimpleTestClass.class)
       .named("simpleTestPref")
       .buildWithDefault(new Supplier<SimpleTestClass>() {
         @Override
@@ -34,11 +38,13 @@ public class TypedPreferencesGenericsTest {
           return new SimpleTestClass("defaultValue");
         }
       });
-  private static final NullablePrefKey<SimpleTestClass> SIMPLE_NULL_PREF = PREF_NAMESPACE.key(SimpleTestClass.class)
+  private static final NullablePrefKey<SimpleTestClass> SIMPLE_NULL_PREF = PREF_NAMESPACE
+      .key(SimpleTestClass.class)
       .named("simpleNullTestPref")
       .buildNullable();
 
-  private static final PrefKey<HashMap<String, SimpleTestClass>> COMPLEX_MAP_PREF = PREF_NAMESPACE.key(new TypeToken<HashMap<String, SimpleTestClass>>() {})
+  private static final PrefKey<HashMap<String, SimpleTestClass>> COMPLEX_MAP_PREF = PREF_NAMESPACE
+      .key(new TypeToken<HashMap<String, SimpleTestClass>>() {})
       .named("complexMapPref")
       .buildWithDefault(new Supplier<HashMap<String, SimpleTestClass>>() {
         @Override
@@ -49,7 +55,8 @@ public class TypedPreferencesGenericsTest {
           return map;
         }
       });
-  private static final NullablePrefKey<HashMap<String, SimpleTestClass>> COMPLEX_MAP_NULL_PREF = PREF_NAMESPACE.key(new TypeToken<HashMap<String, SimpleTestClass>>() {})
+  private static final NullablePrefKey<HashMap<String, SimpleTestClass>> COMPLEX_MAP_NULL_PREF = PREF_NAMESPACE
+      .key(new TypeToken<HashMap<String, SimpleTestClass>>() {})
       .named("complexMapNullPref")
       .buildNullable();
 
@@ -58,6 +65,7 @@ public class TypedPreferencesGenericsTest {
   @Mock SharedPreferences mSharedPreferences;
   /*Mock*/ SharedPreferences.Editor mEditor;
   @Mock Gson mGson;
+  @Mock LruCache<TypedKey, Object> mCache;
 
   @RealObject(implementation = TypedPreferencesImpl.class) TypedPreferences mTypedPreferences;
 
@@ -65,33 +73,25 @@ public class TypedPreferencesGenericsTest {
   public void setup() {
     mEditor = mock(SharedPreferences.Editor.class, Answers.builderAnswer());
     when(mSharedPreferences.edit()).thenReturn(mEditor);
+    when(mGson.toJson(any())).thenReturn("someFakeJson");
   }
 
   @Test
   public void testSimplePrefDoesntExist() {
-    String keyName = SIMPLE_PREF.getKeyName().toString();
-
     SimpleTestClass result = mTypedPreferences.get(SIMPLE_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    assertThat(result).isNotNull();
+    verifyPrefDidntExist(SIMPLE_PREF);
     assertThat(result.value).isEqualTo("defaultValue");
   }
 
   @Test
   public void testSimplePrefDoesExist() {
-    String keyName = SIMPLE_PREF.getKeyName().toString();
-    Type objectType = SIMPLE_PREF.getObjectType();
     SimpleTestClass expected = new SimpleTestClass("newValue");
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getString(keyName, null)).thenReturn("newValueJson");
-    when(mGson.fromJson("newValueJson", objectType)).thenReturn(expected);
+    setupPrefExists(SIMPLE_PREF, expected);
 
     SimpleTestClass result = mTypedPreferences.get(SIMPLE_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getString(keyName, null);
-    verify(mGson).fromJson("newValueJson", objectType);
+    verifyPrefExisted(SIMPLE_PREF);
     assertThat(result)
         .isNotNull()
         .isEqualTo(expected);
@@ -99,18 +99,13 @@ public class TypedPreferencesGenericsTest {
 
   @Test
   public void testSetSimplePref() {
-    String keyName = SIMPLE_PREF.getKeyName().toString();
     SimpleTestClass newValue = new SimpleTestClass("newSetValue");
-    when(mGson.toJson(newValue)).thenReturn("newSetValueJson");
 
     mTypedPreferences.edit()
         .put(SIMPLE_PREF, newValue)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mGson).toJson(newValue);
-    verify(mEditor).putString(keyName, "newSetValueJson");
-    verify(mEditor).commit();
+    verifyPrefWasSet(SIMPLE_PREF, newValue);
   }
 
   @Test(expected = NullPointerException.class)
@@ -120,29 +115,30 @@ public class TypedPreferencesGenericsTest {
   }
 
   @Test
-  public void testNullSimplePrefDoesntExist() {
-    String keyName = SIMPLE_NULL_PREF.getKeyName().toString();
+  public void testRemoveSimplePref() {
+    mTypedPreferences.edit()
+        .remove(SIMPLE_PREF)
+        .commit();
 
+    verifyPrefWasRemoved(SIMPLE_PREF);
+  }
+
+  @Test
+  public void testNullSimplePrefDoesntExist() {
     SimpleTestClass result = mTypedPreferences.get(SIMPLE_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(SIMPLE_NULL_PREF);
     assertThat(result).isNull();
   }
 
   @Test
   public void testNullSimplePrefDoesExist() {
-    String keyName = SIMPLE_NULL_PREF.getKeyName().toString();
-    Type objectType = SIMPLE_NULL_PREF.getObjectType();
     SimpleTestClass expected = new SimpleTestClass("newValue");
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getString(keyName, null)).thenReturn("newValueJson");
-    when(mGson.fromJson("newValueJson", objectType)).thenReturn(expected);
+    setupPrefExists(SIMPLE_NULL_PREF, expected);
 
     SimpleTestClass result = mTypedPreferences.get(SIMPLE_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getString(keyName, null);
-    verify(mGson).fromJson("newValueJson", objectType);
+    verifyPrefExisted(SIMPLE_NULL_PREF);
     assertThat(result)
         .isNotNull()
         .isEqualTo(expected);
@@ -150,40 +146,38 @@ public class TypedPreferencesGenericsTest {
 
   @Test
   public void testSetSimpleNullPref() {
-    String keyName = SIMPLE_NULL_PREF.getKeyName().toString();
     SimpleTestClass newValue = new SimpleTestClass("newSetValue");
-    when(mGson.toJson(newValue)).thenReturn("newSetValueJson");
 
     mTypedPreferences.edit()
         .put(SIMPLE_NULL_PREF, newValue)
-        .apply();
+        .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mGson).toJson(newValue);
-    verify(mEditor).putString(keyName, "newSetValueJson");
-    verify(mEditor).apply();
+    verifyPrefWasSet(SIMPLE_NULL_PREF, newValue);
+  }
+
+  @Test
+  public void testRemoveSimpleNullPref() {
+    mTypedPreferences.edit()
+        .remove(SIMPLE_NULL_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(SIMPLE_NULL_PREF);
   }
 
   @Test
   public void testSetSimpleNullPrefNull() {
-    String keyName = SIMPLE_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(SIMPLE_NULL_PREF, null)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).remove(keyName);
-    verify(mEditor).commit();
+    verifyPrefWasRemoved(SIMPLE_NULL_PREF);
   }
 
   @Test
   public void testComplexPrefDoesntExist() {
-    String keyName = COMPLEX_MAP_PREF.getKeyName().toString();
-
     HashMap<String, SimpleTestClass> result = mTypedPreferences.get(COMPLEX_MAP_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(COMPLEX_MAP_PREF);
     assertThat(result)
         .isNotNull()
         .containsKey("key1")
@@ -194,18 +188,12 @@ public class TypedPreferencesGenericsTest {
 
   @Test
   public void testComplexPrefDoesExist() {
-    String keyName = COMPLEX_MAP_PREF.getKeyName().toString();
-    Type objectType = COMPLEX_MAP_PREF.getObjectType();
     HashMap<String, SimpleTestClass> expected = new HashMap<>();
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getString(keyName, null)).thenReturn("newValueJson");
-    when(mGson.fromJson("newValueJson", objectType)).thenReturn(expected);
+    setupPrefExists(COMPLEX_MAP_PREF, expected);
 
     HashMap<String, SimpleTestClass> result = mTypedPreferences.get(COMPLEX_MAP_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getString(keyName, null);
-    verify(mGson).fromJson("newValueJson", objectType);
+    verifyPrefExisted(COMPLEX_MAP_PREF);
     assertThat(result)
         .isNotNull()
         .isEqualTo(expected);
@@ -213,18 +201,22 @@ public class TypedPreferencesGenericsTest {
 
   @Test
   public void testSetComplexPref() {
-    String keyName = COMPLEX_MAP_PREF.getKeyName().toString();
     HashMap<String, SimpleTestClass> newValue = new HashMap<>();
-    when(mGson.toJson(newValue)).thenReturn("newSetValueJson");
 
     mTypedPreferences.edit()
         .put(COMPLEX_MAP_PREF, newValue)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mGson).toJson(newValue);
-    verify(mEditor).putString(keyName, "newSetValueJson");
-    verify(mEditor).commit();
+    verifyPrefWasSet(COMPLEX_MAP_PREF, newValue);
+  }
+
+  @Test
+  public void testComplexPrefRemoved() {
+    mTypedPreferences.edit()
+        .remove(COMPLEX_MAP_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(COMPLEX_MAP_PREF);
   }
 
   @Test(expected = NullPointerException.class)
@@ -235,28 +227,20 @@ public class TypedPreferencesGenericsTest {
 
   @Test
   public void testNullComplexPrefDoesntExist() {
-    String keyName = COMPLEX_MAP_NULL_PREF.getKeyName().toString();
-
     HashMap<String, SimpleTestClass> result = mTypedPreferences.get(COMPLEX_MAP_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(COMPLEX_MAP_NULL_PREF);
     assertThat(result).isNull();
   }
 
   @Test
   public void testNullComplexPrefDoesExist() {
-    String keyName = COMPLEX_MAP_NULL_PREF.getKeyName().toString();
-    Type objectType = COMPLEX_MAP_NULL_PREF.getObjectType();
     HashMap<String, SimpleTestClass> expected = new HashMap<>();
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getString(keyName, null)).thenReturn("newValueJson");
-    when(mGson.fromJson("newValueJson", objectType)).thenReturn(expected);
+    setupPrefExists(COMPLEX_MAP_NULL_PREF, expected);
 
     HashMap<String, SimpleTestClass> result = mTypedPreferences.get(COMPLEX_MAP_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getString(keyName, null);
-    verify(mGson).fromJson("newValueJson", objectType);
+    verifyPrefExisted(COMPLEX_MAP_NULL_PREF);
     assertThat(result)
         .isNotNull()
         .isEqualTo(expected);
@@ -264,31 +248,75 @@ public class TypedPreferencesGenericsTest {
 
   @Test
   public void testSetComplexNullPref() {
-    String keyName = COMPLEX_MAP_NULL_PREF.getKeyName().toString();
     HashMap<String, SimpleTestClass> newValue = new HashMap<>();
-    when(mGson.toJson(newValue)).thenReturn("newSetValueJson");
 
     mTypedPreferences.edit()
         .put(COMPLEX_MAP_NULL_PREF, newValue)
-        .apply();
+        .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mGson).toJson(newValue);
-    verify(mEditor).putString(keyName, "newSetValueJson");
-    verify(mEditor).apply();
+    verifyPrefWasSet(COMPLEX_MAP_NULL_PREF, newValue);
+  }
+
+  @Test
+  public void testRemoveComplexNullPref() {
+    mTypedPreferences.edit()
+        .remove(COMPLEX_MAP_NULL_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(COMPLEX_MAP_NULL_PREF);
   }
 
   @Test
   public void testSetComplexNullPrefNull() {
-    String keyName = COMPLEX_MAP_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(COMPLEX_MAP_NULL_PREF, null)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).remove(keyName);
-    verify(mEditor).commit();
+    verifyPrefWasRemoved(COMPLEX_MAP_NULL_PREF);
+  }
+
+  private void verifyPrefDidntExist(TypedKey key) {
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor, mGson);
+    inOrder.verify(mCache).get(key);
+    inOrder.verify(mSharedPreferences).contains(key.getKeyName().toString());
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void verifyPrefWasRemoved(TypedKey key) {
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor, mGson);
+    inOrder.verify(mSharedPreferences).edit();
+    inOrder.verify(mCache).remove(key);
+    inOrder.verify(mEditor).remove(key.getKeyName().toString());
+    inOrder.verify(mEditor).commit();
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private <T> void setupPrefExists(TypedKey<T> key, T expectedValue) {
+    String keyName = key.getKeyName().toString();
+    when(mSharedPreferences.contains(keyName)).thenReturn(true);
+    when(mSharedPreferences.getString(keyName, null)).thenReturn("someFakeJson");
+    when(mGson.fromJson("someFakeJson", key.getObjectType())).thenReturn(expectedValue);
+  }
+
+  private <T> void verifyPrefExisted(TypedKey<T> key) {
+    String keyName = key.getKeyName().toString();
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor, mGson);
+    inOrder.verify(mCache).get(key);
+    inOrder.verify(mSharedPreferences).contains(keyName);
+    inOrder.verify(mSharedPreferences).getString(keyName, null);
+    inOrder.verify(mGson).fromJson("someFakeJson", key.getObjectType());
+    inOrder.verify(mCache).put(eq(key), any());
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private <T> void verifyPrefWasSet(TypedKey<T> key, T expectedValue) {
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor, mGson);
+    inOrder.verify(mSharedPreferences).edit();
+    inOrder.verify(mCache).put(key, expectedValue);
+    inOrder.verify(mGson).toJson(expectedValue);
+    inOrder.verify(mEditor).putString(key.getKeyName().toString(), "someFakeJson");
+    inOrder.verify(mEditor).commit();
+    inOrder.verifyNoMoreInteractions();
   }
 
   public static class SimpleTestClass {
