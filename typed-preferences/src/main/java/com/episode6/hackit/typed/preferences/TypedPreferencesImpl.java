@@ -9,6 +9,8 @@ import com.google.gson.Gson;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -84,6 +86,7 @@ public class TypedPreferencesImpl implements TypedPreferences {
   private class EditorImpl implements TypedPreferences.Editor {
 
     private final SharedPreferences.Editor mEditor;
+    private HashMap<TypedKey<?>, Object> mPutMap = new HashMap<>();
 
     private EditorImpl(SharedPreferences.Editor editor) {
       mEditor = editor;
@@ -92,50 +95,59 @@ public class TypedPreferencesImpl implements TypedPreferences {
     @Override
     @TargetApi(9)
     public void apply() {
+      processPutMap();
       mEditor.apply();
     }
 
     @Override
     public void commit() {
+      processPutMap();
       mEditor.commit();
     }
 
     @Override
     public <T> Editor put(PrefKey<T> prefKey, T instance) {
       Preconditions.checkNotNull(instance);
-      putInternal(prefKey, instance);
+      mPutMap.put(prefKey, instance);
       return this;
     }
 
     @Override
     public <T> Editor put(NullablePrefKey<T> prefKey, @Nullable T instance) {
-      if (instance == null) {
-        removeInternal(prefKey);
-      } else {
-        putInternal(prefKey, instance);
-      }
+      mPutMap.put(prefKey, instance);
       return this;
     }
 
     @Override
     public Editor clear() {
       mEditor.clear();
+      mPutMap.clear();
       return this;
     }
 
     @Override
     public Editor remove(PrefKey<?> prefKey) {
-      removeInternal(prefKey);
+      mPutMap.put(prefKey, null);
       return this;
     }
 
     @Override
     public Editor remove(NullablePrefKey<?> prefKey) {
-      removeInternal(prefKey);
+      mPutMap.put(prefKey, null);
       return this;
     }
 
-    private <T> void putInternal(TypedKey<T> prefKey, T instance) {
+    private void processPutMap() {
+      for (Map.Entry<TypedKey<?>, Object> entry : mPutMap.entrySet()) {
+        if (entry.getValue() == null) {
+          mEditor.remove(entry.getKey().getKeyName().toString());
+        } else {
+          putInternal(entry.getKey(), entry.getValue());
+        }
+      }
+    }
+
+    private void putInternal(TypedKey<?> prefKey, Object instance) {
       Type objType = prefKey.getObjectType();
       String keyName = prefKey.getKeyName().toString();
       if (objType == Boolean.class) {
@@ -155,10 +167,6 @@ public class TypedPreferencesImpl implements TypedPreferences {
         String translation = mGsonSupplier.get().toJson(instance);
         mEditor.putString(keyName, translation);
       }
-    }
-
-    private void removeInternal(TypedKey<?> key) {
-      mEditor.remove(key.getKeyName().toString());
     }
   }
 }
