@@ -52,7 +52,7 @@ public class PrefNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Create a key that represents a shared preference of a generic type (ex: ArrayList<String>)
+   * Create a key that represents a shared preference of a generic type (ex: {@code ArrayList<String>})
    * @param keyType The TypeToken for the type of object that this key represents
    * @param <T> The type of object that this key represents
    * @return a typed {@link KeyBuilder} from which you can build your {@link PrefKey} or {@link OptPrefKey}

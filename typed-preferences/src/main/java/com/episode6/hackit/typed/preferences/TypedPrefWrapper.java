@@ -57,6 +57,7 @@ public class TypedPrefWrapper {
   /**
    * Wrap an existing instance of {@link SharedPreferences} and provide a specific ObjectCache to use
    * @param sharedPreferences The {@link SharedPreferences} to wrap
+   * @param cache The {@link ObjectCache} to used (or null for no cache)
    * @return a {@link TypedPrefs} object that wraps the supplied {@link SharedPreferences} object
    */
   public static TypedPrefs wrapSharedPreferences(
