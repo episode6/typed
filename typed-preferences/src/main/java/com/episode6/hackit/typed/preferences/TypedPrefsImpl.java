@@ -1,5 +1,6 @@
 package com.episode6.hackit.typed.preferences;
 
+import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.util.Preconditions;
@@ -147,6 +148,7 @@ class TypedPrefsImpl implements TypedPrefs {
       mEditor = editor;
     }
 
+    @TargetApi(9)
     @Override
     public void apply() {
       processPutMap();

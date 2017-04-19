@@ -1,5 +1,7 @@
 package com.episode6.hackit.typed.preferences;
 
+import android.annotation.TargetApi;
+
 import javax.annotation.Nullable;
 
 /**
@@ -16,7 +18,9 @@ public interface TypedPrefs {
   Editor edit();
 
   interface Editor {
+    @TargetApi(9)
     void apply();
+    
     void commit();
 
     <T> Editor put(PrefKey<T> prefKey, T instance);
