@@ -1,9 +1,9 @@
 package com.episode6.hackit.typed.preferences;
 
 import android.content.SharedPreferences;
-import android.util.LruCache;
 import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.typed.core.TypedKey;
+import com.episode6.hackit.typed.preferences.cache.ObjectCache;
 import com.episode6.hackit.typed.core.util.Supplier;
 import com.episode6.hackit.typed.testing.Answers;
 import com.episode6.hackit.typed.testing.Rules;
@@ -75,7 +75,7 @@ public class TypedPrefsNoCacheTest {
 
     // ensure we use a null cache, not a mock
     mTypedPrefs = mockspresso.buildUpon()
-        .dependency(new com.episode6.hackit.mockspresso.reflect.TypeToken<LruCache<TypedKey, Object>>() {}, null)
+        .dependency(ObjectCache.class, null)
         .build()
         .create(TypedPrefsImpl.class);
   }

@@ -1,11 +1,9 @@
 package com.episode6.hackit.typed.preferences;
 
 import android.content.Context;
-import android.util.LruCache;
-import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.util.InstanceSupplier;
 import com.episode6.hackit.typed.core.util.Supplier;
-import com.episode6.hackit.typed.core.util.Suppliers;
+import com.episode6.hackit.typed.preferences.cache.ObjectCache;
 import com.google.gson.Gson;
 
 import javax.annotation.Nullable;
@@ -29,7 +27,7 @@ public class TypedPrefInitializer {
 
     private @Nullable Context mContext;
     private @Nullable Supplier<Gson> mGsonSupplier;
-    private @Nullable Supplier<LruCache<TypedKey, Object>> mCacheSupplier;
+    private @Nullable Supplier<ObjectCache> mCacheSupplier;
 
     public Configurater context(Context context) {
       mContext = context.getApplicationContext();
@@ -46,15 +44,15 @@ public class TypedPrefInitializer {
       return this;
     }
 
-    public Configurater cacheSupplier(Supplier<LruCache<TypedKey, Object>> cacheSupplier) {
+    public Configurater cacheSupplier(Supplier<ObjectCache> cacheSupplier) {
       mCacheSupplier = cacheSupplier;
       return this;
     }
 
     public Configurater noCache() {
-      mCacheSupplier = new Supplier<LruCache<TypedKey, Object>>() {
+      mCacheSupplier = new Supplier<ObjectCache>() {
         @Override
-        public LruCache<TypedKey, Object> get() {
+        public ObjectCache get() {
           return null;
         }
       };

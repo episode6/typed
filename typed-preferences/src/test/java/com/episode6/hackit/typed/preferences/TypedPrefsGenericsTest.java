@@ -1,10 +1,10 @@
 package com.episode6.hackit.typed.preferences;
 
 import android.content.SharedPreferences;
-import android.util.LruCache;
 import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.mockspresso.annotation.RealObject;
 import com.episode6.hackit.typed.core.TypedKey;
+import com.episode6.hackit.typed.preferences.cache.ObjectCache;
 import com.episode6.hackit.typed.core.util.Supplier;
 import com.episode6.hackit.typed.testing.Answers;
 import com.episode6.hackit.typed.testing.Rules;
@@ -65,7 +65,7 @@ public class TypedPrefsGenericsTest {
   @Mock SharedPreferences mSharedPreferences;
   /*Mock*/ SharedPreferences.Editor mEditor;
   @Mock Gson mGson;
-  @Mock LruCache<TypedKey, Object> mCache;
+  @Mock ObjectCache mCache;
 
   @RealObject(implementation = TypedPrefsImpl.class)
   TypedPrefs mTypedPrefs;

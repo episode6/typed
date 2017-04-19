@@ -1,12 +1,11 @@
 package com.episode6.hackit.typed.preferences;
 
-import android.annotation.TargetApi;
 import android.content.SharedPreferences;
-import android.util.LruCache;
 import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.util.Preconditions;
 import com.episode6.hackit.typed.core.util.Supplier;
 import com.episode6.hackit.typed.core.util.Suppliers;
+import com.episode6.hackit.typed.preferences.cache.ObjectCache;
 import com.google.gson.Gson;
 
 import javax.annotation.Nullable;
@@ -17,17 +16,16 @@ import java.util.Map;
 /**
  *
  */
-@TargetApi(12)
 class TypedPrefsImpl implements TypedPrefs {
 
   private final SharedPreferences mBackingPrefs;
   private final Supplier<Gson> mGsonSupplier;
-  private final @Nullable LruCache<TypedKey, Object> mCache;
+  private final @Nullable ObjectCache mCache;
 
   TypedPrefsImpl(
       SharedPreferences backingPrefs,
       Supplier<Gson> gsonSupplier,
-      @Nullable LruCache<TypedKey, Object> cache) {
+      @Nullable ObjectCache cache) {
     mBackingPrefs = backingPrefs;
     mGsonSupplier = Suppliers.memoize(gsonSupplier);
     mCache = cache;
@@ -81,27 +79,30 @@ class TypedPrefsImpl implements TypedPrefs {
     if (mCache == null) {
       return null;
     }
-    synchronized (mCache) {
-      return (T) mCache.get(prefKey);
-    }
+
+    return (T) mCache.get(prefKey);
   }
 
   private void putInCache(TypedKey<?> prefKey, Object instance) {
     if (mCache == null) {
       return;
     }
-    synchronized (mCache) {
-      mCache.put(prefKey, instance);
-    }
+
+    mCache.put(prefKey, instance);
   }
 
   private void removeFromCache(TypedKey<?> prefKey) {
     if (mCache == null) {
       return;
     }
-    synchronized (mCache) {
-      mCache.remove(prefKey);
+    mCache.remove(prefKey);
+  }
+
+  private void clearCache() {
+    if (mCache == null) {
+      return;
     }
+    mCache.clear();
   }
 
   private <T> T getInternalAndCacheResult(TypedKey<T> prefKey) {
@@ -173,8 +174,10 @@ class TypedPrefsImpl implements TypedPrefs {
 
     @Override
     public Editor clear() {
+      //FIXME
       mEditor.clear();
       mPutMap.clear();
+      clearCache();
       return this;
     }
 

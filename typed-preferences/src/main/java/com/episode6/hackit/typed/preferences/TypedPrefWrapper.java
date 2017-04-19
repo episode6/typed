@@ -2,9 +2,9 @@ package com.episode6.hackit.typed.preferences;
 
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
-import android.util.LruCache;
-import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.util.Supplier;
+import com.episode6.hackit.typed.preferences.cache.LruObjectCache;
+import com.episode6.hackit.typed.preferences.cache.ObjectCache;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -24,17 +24,17 @@ public class TypedPrefWrapper {
     }
   };
 
-  private static Supplier<LruCache<TypedKey, Object>> sCacheSupplier = new Supplier<LruCache<TypedKey, Object>>() {
+  private static Supplier<ObjectCache> sCacheSupplier = new Supplier<ObjectCache>() {
     @TargetApi(12)
     @Override
-    public LruCache<TypedKey, Object> get() {
-      return new LruCache<>(25);
+    public ObjectCache get() {
+      return new LruObjectCache(25);
     }
   };
 
   static void setDefaults(
       @Nullable Supplier<Gson> gsonSupplier,
-      @Nullable Supplier<LruCache<TypedKey, Object>> cacheSupplier) {
+      @Nullable Supplier<ObjectCache> cacheSupplier) {
 
     if (gsonSupplier != null) {
       sGsonSupplier = gsonSupplier;
@@ -50,7 +50,7 @@ public class TypedPrefWrapper {
 
   public static TypedPrefs wrapSharedPreferences(
       SharedPreferences sharedPreferences,
-      @Nullable LruCache<TypedKey, Object> cache) {
+      @Nullable ObjectCache cache) {
     return new TypedPrefsImpl(
         sharedPreferences,
         sGsonSupplier,
