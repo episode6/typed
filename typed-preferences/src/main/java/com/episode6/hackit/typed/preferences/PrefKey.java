@@ -33,4 +33,22 @@ public class PrefKey<V> implements TypedKey<V> {
   V getDefaultValue() {
     return mDefaultValueSupplier.get();
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    PrefKey<?> prefKey = (PrefKey<?>) o;
+
+    if (!mKeyName.equals(prefKey.mKeyName)) return false;
+    return mObjectType.equals(prefKey.mObjectType);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = mKeyName.hashCode();
+    result = 31 * result + mObjectType.hashCode();
+    return result;
+  }
 }
