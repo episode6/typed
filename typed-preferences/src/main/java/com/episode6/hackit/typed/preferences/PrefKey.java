@@ -30,7 +30,7 @@ public class PrefKey<V> implements TypedKey<V> {
     return mObjectType;
   }
 
-  public V getDefaultValue() {
+  V getDefaultValue() {
     return mDefaultValueSupplier.get();
   }
 }
