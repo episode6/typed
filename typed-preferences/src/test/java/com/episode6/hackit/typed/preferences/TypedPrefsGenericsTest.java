@@ -38,7 +38,7 @@ public class TypedPrefsGenericsTest {
           return new SimpleTestClass("defaultValue");
         }
       });
-  private static final NullablePrefKey<SimpleTestClass> SIMPLE_NULL_PREF = PREF_NAMESPACE
+  private static final OptPrefKey<SimpleTestClass> SIMPLE_NULL_PREF = PREF_NAMESPACE
       .key(SimpleTestClass.class)
       .named("simpleNullTestPref")
       .buildNullable();
@@ -55,7 +55,7 @@ public class TypedPrefsGenericsTest {
           return map;
         }
       });
-  private static final NullablePrefKey<HashMap<String, SimpleTestClass>> COMPLEX_MAP_NULL_PREF = PREF_NAMESPACE
+  private static final OptPrefKey<HashMap<String, SimpleTestClass>> COMPLEX_MAP_NULL_PREF = PREF_NAMESPACE
       .key(new TypeToken<HashMap<String, SimpleTestClass>>() {})
       .named("complexMapNullPref")
       .buildNullable();

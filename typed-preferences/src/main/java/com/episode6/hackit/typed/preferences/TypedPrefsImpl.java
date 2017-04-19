@@ -47,7 +47,7 @@ public class TypedPrefsImpl implements TypedPrefs {
 
   @Nullable
   @Override
-  public <T> T get(NullablePrefKey<T> prefKey) {
+  public <T> T get(OptPrefKey<T> prefKey) {
     T obj = getFromCache(prefKey);
     if (obj != null) {
       return obj;
@@ -66,7 +66,7 @@ public class TypedPrefsImpl implements TypedPrefs {
   }
 
   @Override
-  public boolean contains(NullablePrefKey<?> prefKey) {
+  public boolean contains(OptPrefKey<?> prefKey) {
     return containsInternal(prefKey);
   }
 
@@ -165,7 +165,7 @@ public class TypedPrefsImpl implements TypedPrefs {
     }
 
     @Override
-    public <T> Editor put(NullablePrefKey<T> prefKey, @Nullable T instance) {
+    public <T> Editor put(OptPrefKey<T> prefKey, @Nullable T instance) {
       mPutMap.put(prefKey, instance);
       return this;
     }
@@ -184,7 +184,7 @@ public class TypedPrefsImpl implements TypedPrefs {
     }
 
     @Override
-    public Editor remove(NullablePrefKey<?> prefKey) {
+    public Editor remove(OptPrefKey<?> prefKey) {
       mPutMap.put(prefKey, null);
       return this;
     }

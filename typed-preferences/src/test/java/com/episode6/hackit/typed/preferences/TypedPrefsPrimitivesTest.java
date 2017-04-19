@@ -27,37 +27,37 @@ public class TypedPrefsPrimitivesTest {
   private static final PrefKey<Boolean> BOOL_PREF = PREF_NAMESPACE.key(Boolean.class)
       .named("testBool")
       .buildWithDefault(true);
-  private static final NullablePrefKey<Boolean> BOOL_NULL_PREF = PREF_NAMESPACE.key(Boolean.class)
+  private static final OptPrefKey<Boolean> BOOL_NULL_PREF = PREF_NAMESPACE.key(Boolean.class)
       .named("testNullBool")
       .buildNullable();
   private static final PrefKey<Float> FLOAT_PREF = PREF_NAMESPACE.key(Float.class)
       .named("testFloat")
       .buildWithDefault(1.2f);
-  private static final NullablePrefKey<Float> FLOAT_NULL_PREF = PREF_NAMESPACE.key(Float.class)
+  private static final OptPrefKey<Float> FLOAT_NULL_PREF = PREF_NAMESPACE.key(Float.class)
       .named("testNullFloat")
       .buildNullable();
   private static final PrefKey<Integer> INT_PREF = PREF_NAMESPACE.key(Integer.class)
       .named("testInt")
       .buildWithDefault(3);
-  private static final NullablePrefKey<Integer> INT_NULL_PREF = PREF_NAMESPACE.key(Integer.class)
+  private static final OptPrefKey<Integer> INT_NULL_PREF = PREF_NAMESPACE.key(Integer.class)
       .named("testNullInt")
       .buildNullable();
   private static final PrefKey<Long> LONG_PREF = PREF_NAMESPACE.key(Long.class)
       .named("testLong")
       .buildWithDefault(123L);
-  private static final NullablePrefKey<Long> LONG_NULL_PREF = PREF_NAMESPACE.key(Long.class)
+  private static final OptPrefKey<Long> LONG_NULL_PREF = PREF_NAMESPACE.key(Long.class)
       .named("testNullLong")
       .buildNullable();
   private static final PrefKey<String> STRING_PREF = PREF_NAMESPACE.key(String.class)
       .named("testString")
       .buildWithDefault("default");
-  private static final NullablePrefKey<String> STRING_NULL_PREF = PREF_NAMESPACE.key(String.class)
+  private static final OptPrefKey<String> STRING_NULL_PREF = PREF_NAMESPACE.key(String.class)
       .named("testNullString")
       .buildNullable();
   private static final PrefKey<Double> DOUBLE_PREF = PREF_NAMESPACE.key(Double.class)
       .named("testDouble")
       .buildWithDefault(1.2d);
-  private static final NullablePrefKey<Double> DOUBLE_NULL_PREF = PREF_NAMESPACE.key(Double.class)
+  private static final OptPrefKey<Double> DOUBLE_NULL_PREF = PREF_NAMESPACE.key(Double.class)
       .named("testNullDouble")
       .buildNullable();
 

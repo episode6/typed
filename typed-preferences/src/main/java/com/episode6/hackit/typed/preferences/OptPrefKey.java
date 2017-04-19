@@ -8,12 +8,12 @@ import java.lang.reflect.Type;
 /**
  *
  */
-public class NullablePrefKey<V> implements TypedKey<V> {
+public class OptPrefKey<V> implements TypedKey<V> {
 
   private final TypedKeyName mKeyName;
   private final Type mObjectType;
 
-  NullablePrefKey(TypedKeyName keyName, Type objectType) {
+  OptPrefKey(TypedKeyName keyName, Type objectType) {
     mKeyName = keyName;
     mObjectType = objectType;
   }
@@ -33,7 +33,7 @@ public class NullablePrefKey<V> implements TypedKey<V> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    NullablePrefKey<?> that = (NullablePrefKey<?>) o;
+    OptPrefKey<?> that = (OptPrefKey<?>) o;
 
     if (!mKeyName.equals(that.mKeyName)) return false;
     return mObjectType.equals(that.mObjectType);

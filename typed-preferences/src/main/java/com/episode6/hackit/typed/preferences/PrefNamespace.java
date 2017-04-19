@@ -68,8 +68,8 @@ public class PrefNamespace extends TypedKeyNamespace {
           defaultInstanceSupplier);
     }
 
-    public NullablePrefKey<V> buildNullable() {
-      return new NullablePrefKey<V>(
+    public OptPrefKey<V> buildNullable() {
+      return new OptPrefKey<V>(
           new TypedKeyName(mNamespace, mName),
           mObjectType);
     }
