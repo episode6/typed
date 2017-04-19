@@ -3,7 +3,6 @@ package com.episode6.hackit.typed.preferences;
 import android.content.SharedPreferences;
 import android.util.LruCache;
 import com.episode6.hackit.mockspresso.Mockspresso;
-import com.episode6.hackit.mockspresso.annotation.RealObject;
 import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.util.Supplier;
 import com.episode6.hackit.typed.testing.Answers;
@@ -23,9 +22,9 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests {@link TypedPreferencesImpl} usage with Complex types that are translated via Gson
+ * Tests {@link TypedPreferencesImpl} usage with a null LruCache
  */
-public class TypedPreferencesGenericsTest {
+public class TypedPreferencesNoCacheTest {
 
   private static final PrefNamespace PREF_NAMESPACE = PrefNamespace.ROOT.extend("testNamespace").extend("generics");
 
@@ -65,15 +64,20 @@ public class TypedPreferencesGenericsTest {
   @Mock SharedPreferences mSharedPreferences;
   /*Mock*/ SharedPreferences.Editor mEditor;
   @Mock Gson mGson;
-  @Mock LruCache<TypedKey, Object> mCache;
 
-  @RealObject(implementation = TypedPreferencesImpl.class) TypedPreferences mTypedPreferences;
+  TypedPreferences mTypedPreferences;
 
   @Before
   public void setup() {
     mEditor = mock(SharedPreferences.Editor.class, Answers.builderAnswer());
     when(mSharedPreferences.edit()).thenReturn(mEditor);
     when(mGson.toJson(any())).thenReturn("someFakeJson");
+
+    // ensure we use a null cache, not a mock
+    mTypedPreferences = mockspresso.buildUpon()
+        .dependency(new com.episode6.hackit.mockspresso.reflect.TypeToken<LruCache<TypedKey, Object>>() {}, null)
+        .build()
+        .create(TypedPreferencesImpl.class);
   }
 
   @Test
@@ -276,16 +280,14 @@ public class TypedPreferencesGenericsTest {
   }
 
   private void verifyPrefDidntExist(TypedKey key) {
-    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor, mGson);
-    inOrder.verify(mCache).get(key);
+    InOrder inOrder = Mockito.inOrder(mSharedPreferences, mEditor, mGson);
     inOrder.verify(mSharedPreferences).contains(key.getKeyName().toString());
     inOrder.verifyNoMoreInteractions();
   }
 
   private void verifyPrefWasRemoved(TypedKey key) {
-    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor, mGson);
+    InOrder inOrder = Mockito.inOrder(mSharedPreferences, mEditor, mGson);
     inOrder.verify(mSharedPreferences).edit();
-    inOrder.verify(mCache).remove(key);
     inOrder.verify(mEditor).remove(key.getKeyName().toString());
     inOrder.verify(mEditor).commit();
     inOrder.verifyNoMoreInteractions();
@@ -300,19 +302,16 @@ public class TypedPreferencesGenericsTest {
 
   private <T> void verifyPrefExisted(TypedKey<T> key) {
     String keyName = key.getKeyName().toString();
-    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor, mGson);
-    inOrder.verify(mCache).get(key);
+    InOrder inOrder = Mockito.inOrder(mSharedPreferences, mEditor, mGson);
     inOrder.verify(mSharedPreferences).contains(keyName);
     inOrder.verify(mSharedPreferences).getString(keyName, null);
     inOrder.verify(mGson).fromJson("someFakeJson", key.getObjectType());
-    inOrder.verify(mCache).put(eq(key), any());
     inOrder.verifyNoMoreInteractions();
   }
 
   private <T> void verifyPrefWasSet(TypedKey<T> key, T expectedValue) {
-    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor, mGson);
+    InOrder inOrder = Mockito.inOrder(mSharedPreferences, mEditor, mGson);
     inOrder.verify(mSharedPreferences).edit();
-    inOrder.verify(mCache).put(key, expectedValue);
     inOrder.verify(mGson).toJson(expectedValue);
     inOrder.verify(mEditor).putString(key.getKeyName().toString(), "someFakeJson");
     inOrder.verify(mEditor).commit();

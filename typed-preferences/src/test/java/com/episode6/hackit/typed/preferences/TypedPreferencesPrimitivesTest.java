@@ -18,7 +18,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
- * Placeholder
+ * Tests {@link TypedPreferencesImpl} usage with Primitives
  */
 public class TypedPreferencesPrimitivesTest {
 
