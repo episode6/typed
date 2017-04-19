@@ -2,6 +2,7 @@ package com.episode6.hackit.typed.preferences;
 
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
+import android.util.LruCache;
 import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.util.Preconditions;
 import com.episode6.hackit.typed.core.util.Supplier;
@@ -15,32 +16,49 @@ import java.util.Map;
 /**
  *
  */
+@TargetApi(12)
 public class TypedPreferencesImpl implements TypedPreferences {
 
   private final SharedPreferences mBackingPrefs;
   private final Supplier<Gson> mGsonSupplier;
+  private final @Nullable LruCache<TypedKey, Object> mCache;
 
-  TypedPreferencesImpl(SharedPreferences backingPrefs, Supplier<Gson> gsonSupplier) {
+  TypedPreferencesImpl(
+      SharedPreferences backingPrefs,
+      Supplier<Gson> gsonSupplier,
+      @Nullable LruCache<TypedKey, Object> cache) {
     mBackingPrefs = backingPrefs;
     mGsonSupplier = gsonSupplier;
+    mCache = cache;
   }
 
   @Override
   public <T> T get(PrefKey<T> prefKey) {
+    T obj = getFromCache(prefKey);
+    if (obj != null) {
+      return obj;
+    }
+
     if (!containsInternal(prefKey)) {
       return prefKey.getDefaultValue();
     }
-    return getInternal(prefKey);
+    return getInternalAndCacheResult(prefKey);
   }
 
   @Nullable
   @Override
   public <T> T get(NullablePrefKey<T> prefKey) {
+    T obj = getFromCache(prefKey);
+    if (obj != null) {
+      return obj;
+    }
+
     if (!containsInternal(prefKey)) {
       return null;
     }
-    return getInternal(prefKey);
+    return getInternalAndCacheResult(prefKey);
   }
+
 
   @Override
   public boolean contains(PrefKey<?> prefKey) {
@@ -57,7 +75,33 @@ public class TypedPreferencesImpl implements TypedPreferences {
     return new EditorImpl(mBackingPrefs.edit());
   }
 
-  private <T> T getInternal(TypedKey<T> prefKey) {
+  @SuppressWarnings("unchecked")
+  private <T> T getFromCache(TypedKey<T> prefKey) {
+    if (mCache == null) {
+      return null;
+    }
+    synchronized (mCache) {
+      return (T) mCache.get(prefKey);
+    }
+  }
+
+  private void putInCache(TypedKey<?> prefKey, Object instance) {
+    if (mCache == null) {
+      return;
+    }
+    synchronized (mCache) {
+      mCache.put(prefKey, instance);
+    }
+  }
+
+  private <T> T getInternalAndCacheResult(TypedKey<T> prefKey) {
+    T obj = getFromSharedPrefs(prefKey);
+    putInCache(prefKey, obj);
+    return obj;
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> T getFromSharedPrefs(TypedKey<T> prefKey) {
     Type objType = prefKey.getObjectType();
     String keyName = prefKey.getKeyName().toString();
     if (objType == Boolean.class) {
@@ -93,7 +137,6 @@ public class TypedPreferencesImpl implements TypedPreferences {
     }
 
     @Override
-    @TargetApi(9)
     public void apply() {
       processPutMap();
       mEditor.apply();
@@ -148,6 +191,8 @@ public class TypedPreferencesImpl implements TypedPreferences {
     }
 
     private void putInternal(TypedKey<?> prefKey, Object instance) {
+      putInCache(prefKey, instance);
+
       Type objType = prefKey.getObjectType();
       String keyName = prefKey.getKeyName().toString();
       if (objType == Boolean.class) {
