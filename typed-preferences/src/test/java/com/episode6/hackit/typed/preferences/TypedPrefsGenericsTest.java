@@ -104,7 +104,7 @@ public class TypedPrefsGenericsTest {
 
     mTypedPrefs.edit()
         .put(SIMPLE_PREF, newValue)
-        .commit();
+        .apply();
 
     verifyPrefWasSet(SIMPLE_PREF, newValue);
   }
@@ -119,7 +119,7 @@ public class TypedPrefsGenericsTest {
   public void testRemoveSimplePref() {
     mTypedPrefs.edit()
         .remove(SIMPLE_PREF)
-        .commit();
+        .apply();
 
     verifyPrefWasRemoved(SIMPLE_PREF);
   }
@@ -151,7 +151,7 @@ public class TypedPrefsGenericsTest {
 
     mTypedPrefs.edit()
         .put(SIMPLE_NULL_PREF, newValue)
-        .commit();
+        .apply();
 
     verifyPrefWasSet(SIMPLE_NULL_PREF, newValue);
   }
@@ -160,7 +160,7 @@ public class TypedPrefsGenericsTest {
   public void testRemoveSimpleNullPref() {
     mTypedPrefs.edit()
         .remove(SIMPLE_NULL_PREF)
-        .commit();
+        .apply();
 
     verifyPrefWasRemoved(SIMPLE_NULL_PREF);
   }
@@ -169,7 +169,7 @@ public class TypedPrefsGenericsTest {
   public void testSetSimpleNullPrefNull() {
     mTypedPrefs.edit()
         .put(SIMPLE_NULL_PREF, null)
-        .commit();
+        .apply();
 
     verifyPrefWasRemoved(SIMPLE_NULL_PREF);
   }
@@ -206,7 +206,7 @@ public class TypedPrefsGenericsTest {
 
     mTypedPrefs.edit()
         .put(COMPLEX_MAP_PREF, newValue)
-        .commit();
+        .apply();
 
     verifyPrefWasSet(COMPLEX_MAP_PREF, newValue);
   }
@@ -215,7 +215,7 @@ public class TypedPrefsGenericsTest {
   public void testComplexPrefRemoved() {
     mTypedPrefs.edit()
         .remove(COMPLEX_MAP_PREF)
-        .commit();
+        .apply();
 
     verifyPrefWasRemoved(COMPLEX_MAP_PREF);
   }
@@ -253,7 +253,7 @@ public class TypedPrefsGenericsTest {
 
     mTypedPrefs.edit()
         .put(COMPLEX_MAP_NULL_PREF, newValue)
-        .commit();
+        .apply();
 
     verifyPrefWasSet(COMPLEX_MAP_NULL_PREF, newValue);
   }
@@ -262,7 +262,7 @@ public class TypedPrefsGenericsTest {
   public void testRemoveComplexNullPref() {
     mTypedPrefs.edit()
         .remove(COMPLEX_MAP_NULL_PREF)
-        .commit();
+        .apply();
 
     verifyPrefWasRemoved(COMPLEX_MAP_NULL_PREF);
   }
@@ -271,7 +271,7 @@ public class TypedPrefsGenericsTest {
   public void testSetComplexNullPrefNull() {
     mTypedPrefs.edit()
         .put(COMPLEX_MAP_NULL_PREF, null)
-        .commit();
+        .apply();
 
     verifyPrefWasRemoved(COMPLEX_MAP_NULL_PREF);
   }
@@ -288,7 +288,7 @@ public class TypedPrefsGenericsTest {
     inOrder.verify(mSharedPreferences).edit();
     inOrder.verify(mCache).remove(key);
     inOrder.verify(mEditor).remove(key.getKeyName().toString());
-    inOrder.verify(mEditor).commit();
+    inOrder.verify(mEditor).apply();
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -316,7 +316,7 @@ public class TypedPrefsGenericsTest {
     inOrder.verify(mCache).put(key, expectedValue);
     inOrder.verify(mGson).toJson(expectedValue);
     inOrder.verify(mEditor).putString(key.getKeyName().toString(), "someFakeJson");
-    inOrder.verify(mEditor).commit();
+    inOrder.verify(mEditor).apply();
     inOrder.verifyNoMoreInteractions();
   }
 
