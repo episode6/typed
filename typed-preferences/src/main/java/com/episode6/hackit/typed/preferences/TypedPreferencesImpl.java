@@ -18,7 +18,7 @@ public class TypedPreferencesImpl implements TypedPreferences {
   private final SharedPreferences mBackingPrefs;
   private final Supplier<Gson> mGsonSupplier;
 
-  private TypedPreferencesImpl(SharedPreferences backingPrefs, Supplier<Gson> gsonSupplier) {
+  TypedPreferencesImpl(SharedPreferences backingPrefs, Supplier<Gson> gsonSupplier) {
     mBackingPrefs = backingPrefs;
     mGsonSupplier = gsonSupplier;
   }
