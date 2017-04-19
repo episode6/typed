@@ -94,6 +94,15 @@ public class TypedPreferencesImpl implements TypedPreferences {
     }
   }
 
+  private void removeFromCache(TypedKey<?> prefKey) {
+    if (mCache == null) {
+      return;
+    }
+    synchronized (mCache) {
+      mCache.remove(prefKey);
+    }
+  }
+
   private <T> T getInternalAndCacheResult(TypedKey<T> prefKey) {
     T obj = getFromSharedPrefs(prefKey);
     putInCache(prefKey, obj);
@@ -183,7 +192,7 @@ public class TypedPreferencesImpl implements TypedPreferences {
     private void processPutMap() {
       for (Map.Entry<TypedKey<?>, Object> entry : mPutMap.entrySet()) {
         if (entry.getValue() == null) {
-          mEditor.remove(entry.getKey().getKeyName().toString());
+          removeInternal(entry.getKey());
         } else {
           putInternal(entry.getKey(), entry.getValue());
         }
@@ -212,6 +221,11 @@ public class TypedPreferencesImpl implements TypedPreferences {
         String translation = mGsonSupplier.get().toJson(instance);
         mEditor.putString(keyName, translation);
       }
+    }
+
+    private void removeInternal(TypedKey<?> prefKey) {
+      removeFromCache(prefKey);
+      mEditor.remove(prefKey.getKeyName().toString());
     }
   }
 }
