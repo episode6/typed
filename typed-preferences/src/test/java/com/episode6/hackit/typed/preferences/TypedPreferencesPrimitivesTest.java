@@ -1,14 +1,18 @@
 package com.episode6.hackit.typed.preferences;
 
 import android.content.SharedPreferences;
+import android.util.LruCache;
 import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.mockspresso.annotation.RealObject;
+import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.testing.Answers;
 import com.episode6.hackit.typed.testing.Rules;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -61,6 +65,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Mock SharedPreferences mSharedPreferences;
   /*Mock*/ SharedPreferences.Editor mEditor;
+  @Mock LruCache<TypedKey, Object> mCache;
 
   @RealObject(implementation = TypedPreferencesImpl.class) TypedPreferences mTypedPreferences;
 
@@ -72,38 +77,38 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testBooleanDoesntExist() {
-    String keyName = BOOL_PREF.getKeyName().toString();
-
     boolean result = mTypedPreferences.get(BOOL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(BOOL_PREF);
     assertThat(result).isTrue();
   }
 
   @Test
   public void testBooleanDoesExist() {
-    String keyName = BOOL_PREF.getKeyName().toString();
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getBoolean(eq(keyName), anyBoolean())).thenReturn(false);
+    setupBooleanExists(BOOL_PREF, false);
 
     boolean result = mTypedPreferences.get(BOOL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getBoolean(eq(keyName), anyBoolean());
+    verifyBooleanExisted(BOOL_PREF);
     assertThat(result).isFalse();
   }
 
   @Test
   public void testSetBoolean() {
-    String keyName = BOOL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(BOOL_PREF, false)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).putBoolean(keyName, false);
-    verify(mEditor).commit();
+    verifyBooleanWasSet(BOOL_PREF, false);
+  }
+
+  @Test
+  public void testRemoveBoolean() {
+    mTypedPreferences.edit()
+        .remove(BOOL_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(BOOL_PREF);
   }
 
   @Test(expected = NullPointerException.class)
@@ -114,24 +119,19 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testNullBooleanDoesntExist() {
-    String keyName = BOOL_NULL_PREF.getKeyName().toString();
-
     Boolean result = mTypedPreferences.get(BOOL_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(BOOL_NULL_PREF);
     assertThat(result).isNull();
   }
 
   @Test
   public void testNullBooleanDoesExist() {
-    String keyName = BOOL_NULL_PREF.getKeyName().toString();
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getBoolean(eq(keyName), anyBoolean())).thenReturn(true);
+    setupBooleanExists(BOOL_NULL_PREF, true);
 
     Boolean result = mTypedPreferences.get(BOOL_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getBoolean(eq(keyName), anyBoolean());
+    verifyBooleanExisted(BOOL_NULL_PREF);
     assertThat(result)
         .isNotNull()
         .isTrue();
@@ -139,65 +139,66 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullBoolean() {
-    String keyName = BOOL_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(BOOL_NULL_PREF, false)
-        .apply();
+        .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).putBoolean(keyName, false);
-    verify(mEditor).apply();
+    verifyBooleanWasSet(BOOL_NULL_PREF, false);
+  }
+
+  @Test
+  public void testRemoveNullBoolean() {
+    mTypedPreferences.edit()
+        .remove(BOOL_NULL_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(BOOL_NULL_PREF);
   }
 
   @Test
   public void testSetNullBooleanNull() {
-    String keyName = BOOL_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(BOOL_NULL_PREF, null)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).remove(keyName);
-    verify(mEditor).commit();
+    verifyPrefWasRemoved(BOOL_NULL_PREF);
   }
 
 
   @Test
   public void testFloatDoesntExist() {
-    String keyName = FLOAT_PREF.getKeyName().toString();
-
     float result = mTypedPreferences.get(FLOAT_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(FLOAT_PREF);
     assertThat(result).isEqualTo(1.2f);
   }
 
   @Test
   public void testFloatDoesExist() {
-    String keyName = FLOAT_PREF.getKeyName().toString();
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getFloat(eq(keyName), anyFloat())).thenReturn(3.5f);
+    setupFloatExists(FLOAT_PREF, 3.5f);
 
     float result = mTypedPreferences.get(FLOAT_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getFloat(eq(keyName), anyFloat());
+    verifyFloatExisted(FLOAT_PREF);
     assertThat(result).isEqualTo(3.5f);
   }
 
   @Test
   public void testSetFloat() {
-    String keyName = FLOAT_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(FLOAT_PREF, 7.6f)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).putFloat(keyName, 7.6f);
-    verify(mEditor).commit();
+    verifyFloatWasSet(FLOAT_PREF, 7.6f);
+  }
+
+  @Test
+  public void testRemoveFloat() {
+    mTypedPreferences.edit()
+        .remove(FLOAT_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(FLOAT_PREF);
   }
 
   @Test(expected = NullPointerException.class)
@@ -208,24 +209,19 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testNullFloatDoesntExist() {
-    String keyName = FLOAT_NULL_PREF.getKeyName().toString();
-
     Float result = mTypedPreferences.get(FLOAT_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(FLOAT_NULL_PREF);
     assertThat(result).isNull();
   }
 
   @Test
   public void testNullFloatDoesExist() {
-    String keyName = FLOAT_NULL_PREF.getKeyName().toString();
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getFloat(eq(keyName), anyFloat())).thenReturn(17.3f);
+    setupFloatExists(FLOAT_NULL_PREF, 17.3f);
 
     Float result = mTypedPreferences.get(FLOAT_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getFloat(eq(keyName), anyFloat());
+    verifyFloatExisted(FLOAT_NULL_PREF);
     assertThat(result)
         .isNotNull()
         .isEqualTo(17.3f);
@@ -233,64 +229,65 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullFloat() {
-    String keyName = FLOAT_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(FLOAT_NULL_PREF, 13.3f)
-        .apply();
+        .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).putFloat(keyName, 13.3f);
-    verify(mEditor).apply();
+    verifyFloatWasSet(FLOAT_NULL_PREF, 13.3f);
+  }
+
+  @Test
+  public void testRemoveNullFloat() {
+    mTypedPreferences.edit()
+        .remove(FLOAT_NULL_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(FLOAT_NULL_PREF);
   }
 
   @Test
   public void testSetNullFloatNull() {
-    String keyName = FLOAT_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(FLOAT_NULL_PREF, null)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).remove(keyName);
-    verify(mEditor).commit();
+    verifyPrefWasRemoved(FLOAT_NULL_PREF);
   }
 
   @Test
   public void testIntegerDoesntExist() {
-    String keyName = INT_PREF.getKeyName().toString();
-
     int result = mTypedPreferences.get(INT_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(INT_PREF);
     assertThat(result).isEqualTo(3);
   }
 
   @Test
   public void testIntegerDoesExist() {
-    String keyName = INT_PREF.getKeyName().toString();
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getInt(eq(keyName), anyInt())).thenReturn(7);
+    setupIntegerExists(INT_PREF, 7);
 
     int result = mTypedPreferences.get(INT_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getInt(eq(keyName), anyInt());
+    verifyIntegerExisted(INT_PREF);
     assertThat(result).isEqualTo(7);
   }
 
   @Test
   public void testSetInteger() {
-    String keyName = INT_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(INT_PREF, 12)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).putInt(keyName, 12);
-    verify(mEditor).commit();
+    verifyIntegerWasSet(INT_PREF, 12);
+  }
+
+  @Test
+  public void testRemoveInteger() {
+    mTypedPreferences.edit()
+        .remove(INT_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(INT_PREF);
   }
 
   @Test(expected = NullPointerException.class)
@@ -301,24 +298,19 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testNullIntegerDoesntExist() {
-    String keyName = INT_NULL_PREF.getKeyName().toString();
-
     Integer result = mTypedPreferences.get(INT_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(INT_NULL_PREF);
     assertThat(result).isNull();
   }
 
   @Test
   public void testNullIntegerDoesExist() {
-    String keyName = INT_NULL_PREF.getKeyName().toString();
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getInt(eq(keyName), anyInt())).thenReturn(18);
+    setupIntegerExists(INT_NULL_PREF, 18);
 
     Integer result = mTypedPreferences.get(INT_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getInt(eq(keyName), anyInt());
+    verifyIntegerExisted(INT_NULL_PREF);
     assertThat(result)
         .isNotNull()
         .isEqualTo(18);
@@ -326,65 +318,66 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullInteger() {
-    String keyName = INT_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(INT_NULL_PREF, 22)
-        .apply();
+        .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).putInt(keyName, 22);
-    verify(mEditor).apply();
+    verifyIntegerWasSet(INT_NULL_PREF, 22);
+  }
+
+  @Test
+  public void testRemoveNullInteger() {
+    mTypedPreferences.edit()
+        .remove(INT_NULL_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(INT_NULL_PREF);
   }
 
   @Test
   public void testSetNullIntegerNull() {
-    String keyName = INT_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(INT_NULL_PREF, null)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).remove(keyName);
-    verify(mEditor).commit();
+    verifyPrefWasRemoved(INT_NULL_PREF);
   }
 
 
   @Test
   public void testLongDoesntExist() {
-    String keyName = LONG_PREF.getKeyName().toString();
-
     long result = mTypedPreferences.get(LONG_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(LONG_PREF);
     assertThat(result).isEqualTo(123L);
   }
 
   @Test
   public void testLongDoesExist() {
-    String keyName = LONG_PREF.getKeyName().toString();
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getLong(eq(keyName), anyLong())).thenReturn(15L);
+    setupLongExists(LONG_PREF, 15L);
 
     long result = mTypedPreferences.get(LONG_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getLong(eq(keyName), anyLong());
+    verifyLongExisted(LONG_PREF);
     assertThat(result).isEqualTo(15L);
   }
 
   @Test
   public void testSetLong() {
-    String keyName = LONG_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(LONG_PREF, 145L)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).putLong(keyName, 145L);
-    verify(mEditor).commit();
+    verifyLongWasSet(LONG_PREF, 145L);
+  }
+
+  @Test
+  public void testRemoveLong() {
+    mTypedPreferences.edit()
+        .remove(LONG_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(LONG_PREF);
   }
 
   @Test(expected = NullPointerException.class)
@@ -395,24 +388,19 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testNullLongDoesntExist() {
-    String keyName = LONG_NULL_PREF.getKeyName().toString();
-
     Long result = mTypedPreferences.get(LONG_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(LONG_NULL_PREF);
     assertThat(result).isNull();
   }
 
   @Test
   public void testNullLongDoesExist() {
-    String keyName = LONG_NULL_PREF.getKeyName().toString();
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getLong(eq(keyName), anyLong())).thenReturn(173L);
+    setupLongExists(LONG_NULL_PREF, 173L);
 
     Long result = mTypedPreferences.get(LONG_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getLong(eq(keyName), anyLong());
+    verifyLongExisted(LONG_NULL_PREF);
     assertThat(result)
         .isNotNull()
         .isEqualTo(173L);
@@ -420,65 +408,65 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullLong() {
-    String keyName = LONG_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(LONG_NULL_PREF, 133L)
-        .apply();
+        .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).putLong(keyName, 133L);
-    verify(mEditor).apply();
+    verifyLongWasSet(LONG_NULL_PREF, 133L);
+  }
+
+  @Test
+  public void testRemoveNullLong() {
+    mTypedPreferences.edit()
+        .remove(LONG_NULL_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(LONG_NULL_PREF);
   }
 
   @Test
   public void testSetNullLongNull() {
-    String keyName = LONG_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(LONG_NULL_PREF, null)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).remove(keyName);
-    verify(mEditor).commit();
+    verifyPrefWasRemoved(LONG_NULL_PREF);
   }
-
 
   @Test
   public void testStringDoesntExist() {
-    String keyName = STRING_PREF.getKeyName().toString();
-
     String result = mTypedPreferences.get(STRING_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(STRING_PREF);
     assertThat(result).isEqualTo("default");
   }
 
   @Test
   public void testStringDoesExist() {
-    String keyName = STRING_PREF.getKeyName().toString();
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getString(eq(keyName), nullable(String.class))).thenReturn("sup");
+    setupStringExists(STRING_PREF, "sup");
 
     String result = mTypedPreferences.get(STRING_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getString(eq(keyName), nullable(String.class));
+    verifyStringExisted(STRING_PREF);
     assertThat(result).isEqualTo("sup");
   }
 
   @Test
   public void testSetString() {
-    String keyName = STRING_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(STRING_PREF, "howdy")
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).putString(keyName, "howdy");
-    verify(mEditor).commit();
+    verifyStringWasSet(STRING_PREF, "howdy");
+  }
+
+  @Test
+  public void testRemoveString() {
+    mTypedPreferences.edit()
+        .remove(STRING_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(STRING_PREF);
   }
 
   @Test(expected = NullPointerException.class)
@@ -489,24 +477,19 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testNullStringDoesntExist() {
-    String keyName = STRING_NULL_PREF.getKeyName().toString();
-
     String result = mTypedPreferences.get(STRING_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(STRING_NULL_PREF);
     assertThat(result).isNull();
   }
 
   @Test
   public void testNullStringDoesExist() {
-    String keyName = STRING_NULL_PREF.getKeyName().toString();
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getString(eq(keyName), nullable(String.class))).thenReturn("yooo");
+    setupStringExists(STRING_NULL_PREF, "yooo");
 
     String result = mTypedPreferences.get(STRING_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getString(eq(keyName), nullable(String.class));
+    verifyStringExisted(STRING_NULL_PREF);
     assertThat(result)
         .isNotNull()
         .isEqualTo("yooo");
@@ -514,66 +497,65 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullString() {
-    String keyName = STRING_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(STRING_NULL_PREF, "hey now")
-        .apply();
+        .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).putString(keyName, "hey now");
-    verify(mEditor).apply();
+    verifyStringWasSet(STRING_NULL_PREF, "hey now");
+  }
+
+  @Test
+  public void testRemoveNullString() {
+    mTypedPreferences.edit()
+        .remove(STRING_NULL_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(STRING_NULL_PREF);
   }
 
   @Test
   public void testSetNullStringNull() {
-    String keyName = STRING_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(STRING_NULL_PREF, null)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).remove(keyName);
-    verify(mEditor).commit();
+    verifyPrefWasRemoved(STRING_NULL_PREF);
   }
 
   @Test
   public void testDoubleDoesntExist() {
-    String keyName = DOUBLE_PREF.getKeyName().toString();
-
     double result = mTypedPreferences.get(DOUBLE_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(DOUBLE_PREF);
     assertThat(result).isEqualTo(1.2d);
   }
 
   @Test
   public void testDoubleDoesExist() {
-    String keyName = DOUBLE_PREF.getKeyName().toString();
-    long doubleBits = Double.doubleToRawLongBits(3.5d);
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getLong(eq(keyName), anyLong())).thenReturn(doubleBits);
+    setupDoubleExists(DOUBLE_PREF, 3.5d);
 
     double result = mTypedPreferences.get(DOUBLE_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getLong(eq(keyName), anyLong());
+    verifyDoubleExisted(DOUBLE_PREF);
     assertThat(result).isEqualTo(3.5d);
   }
 
   @Test
   public void testSetDouble() {
-    long doubleBits = Double.doubleToRawLongBits(7.6d);
-    String keyName = DOUBLE_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(DOUBLE_PREF, 7.6d)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).putLong(keyName, doubleBits);
-    verify(mEditor).commit();
+    verifyDoubleWasSet(DOUBLE_PREF, 7.6d);
+  }
+
+  @Test
+  public void testDoubleRemoved() {
+    mTypedPreferences.edit()
+        .remove(DOUBLE_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(DOUBLE_PREF);
   }
 
   @Test(expected = NullPointerException.class)
@@ -584,25 +566,19 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testNullDoubleDoesntExist() {
-    String keyName = DOUBLE_NULL_PREF.getKeyName().toString();
-
     Double result = mTypedPreferences.get(DOUBLE_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
+    verifyPrefDidntExist(DOUBLE_NULL_PREF);
     assertThat(result).isNull();
   }
 
   @Test
   public void testNullDoubleDoesExist() {
-    String keyName = DOUBLE_NULL_PREF.getKeyName().toString();
-    long doubleBits = Double.doubleToRawLongBits(17.3d);
-    when(mSharedPreferences.contains(keyName)).thenReturn(true);
-    when(mSharedPreferences.getLong(eq(keyName), anyLong())).thenReturn(doubleBits);
+    setupDoubleExists(DOUBLE_NULL_PREF, 17.3d);
 
     Double result = mTypedPreferences.get(DOUBLE_NULL_PREF);
 
-    verify(mSharedPreferences).contains(keyName);
-    verify(mSharedPreferences).getLong(eq(keyName), anyLong());
+    verifyDoubleExisted(DOUBLE_NULL_PREF);
     assertThat(result)
         .isNotNull()
         .isEqualTo(17.3d);
@@ -610,28 +586,196 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullDouble() {
-    long doubleBits = Double.doubleToRawLongBits(13.3d);
-    String keyName = DOUBLE_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(DOUBLE_NULL_PREF, 13.3d)
-        .apply();
+        .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).putLong(keyName, doubleBits);
-    verify(mEditor).apply();
+    verifyDoubleWasSet(DOUBLE_NULL_PREF, 13.3d);
+  }
+
+  @Test
+  public void testNullDoubleRemoved() {
+    mTypedPreferences.edit()
+        .remove(DOUBLE_NULL_PREF)
+        .commit();
+
+    verifyPrefWasRemoved(DOUBLE_NULL_PREF);
   }
 
   @Test
   public void testSetNullDoubleNull() {
-    String keyName = DOUBLE_NULL_PREF.getKeyName().toString();
-
     mTypedPreferences.edit()
         .put(DOUBLE_NULL_PREF, null)
         .commit();
 
-    verify(mSharedPreferences).edit();
-    verify(mEditor).remove(keyName);
-    verify(mEditor).commit();
+    verifyPrefWasRemoved(DOUBLE_NULL_PREF);
+  }
+
+  private void verifyPrefDidntExist(TypedKey key) {
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mCache).get(key);
+    inOrder.verify(mSharedPreferences).contains(key.getKeyName().toString());
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void verifyPrefWasRemoved(TypedKey key) {
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mSharedPreferences).edit();
+    inOrder.verify(mCache).remove(key);
+    inOrder.verify(mEditor).remove(key.getKeyName().toString());
+    inOrder.verify(mEditor).commit();
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void setupBooleanExists(TypedKey<Boolean> key, boolean expectedValue) {
+    String keyName = key.getKeyName().toString();
+    when(mSharedPreferences.contains(keyName)).thenReturn(true);
+    when(mSharedPreferences.getBoolean(eq(keyName), anyBoolean())).thenReturn(expectedValue);
+  }
+
+  private void verifyBooleanExisted(TypedKey<Boolean> key) {
+    String keyName = key.getKeyName().toString();
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mCache).get(key);
+    inOrder.verify(mSharedPreferences).contains(keyName);
+    inOrder.verify(mSharedPreferences).getBoolean(eq(keyName), anyBoolean());
+    inOrder.verify(mCache).put(eq(key), any(Boolean.class));
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void verifyBooleanWasSet(TypedKey<Boolean> key, boolean expectedValue) {
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mSharedPreferences).edit();
+    inOrder.verify(mCache).put(key, expectedValue);
+    inOrder.verify(mEditor).putBoolean(key.getKeyName().toString(), expectedValue);
+    inOrder.verify(mEditor).commit();
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void setupFloatExists(TypedKey<Float> key, float expectedValue) {
+    String keyName = key.getKeyName().toString();
+    when(mSharedPreferences.contains(keyName)).thenReturn(true);
+    when(mSharedPreferences.getFloat(eq(keyName), anyFloat())).thenReturn(expectedValue);
+  }
+
+  private void verifyFloatExisted(TypedKey<Float> key) {
+    String keyName = key.getKeyName().toString();
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mCache).get(key);
+    inOrder.verify(mSharedPreferences).contains(keyName);
+    inOrder.verify(mSharedPreferences).getFloat(eq(keyName), anyFloat());
+    inOrder.verify(mCache).put(eq(key), any(Float.class));
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void verifyFloatWasSet(TypedKey<Float> key, float expectedValue) {
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mSharedPreferences).edit();
+    inOrder.verify(mCache).put(key, expectedValue);
+    inOrder.verify(mEditor).putFloat(key.getKeyName().toString(), expectedValue);
+    inOrder.verify(mEditor).commit();
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void setupIntegerExists(TypedKey<Integer> key, int expectedValue) {
+    String keyName = key.getKeyName().toString();
+    when(mSharedPreferences.contains(keyName)).thenReturn(true);
+    when(mSharedPreferences.getInt(eq(keyName), anyInt())).thenReturn(expectedValue);
+  }
+
+  private void verifyIntegerExisted(TypedKey<Integer> key) {
+    String keyName = key.getKeyName().toString();
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mCache).get(key);
+    inOrder.verify(mSharedPreferences).contains(keyName);
+    inOrder.verify(mSharedPreferences).getInt(eq(keyName), anyInt());
+    inOrder.verify(mCache).put(eq(key), any(Integer.class));
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void verifyIntegerWasSet(TypedKey<Integer> key, int expectedValue) {
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mSharedPreferences).edit();
+    inOrder.verify(mCache).put(key, expectedValue);
+    inOrder.verify(mEditor).putInt(key.getKeyName().toString(), expectedValue);
+    inOrder.verify(mEditor).commit();
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void setupLongExists(TypedKey<Long> key, long expectedValue) {
+    String keyName = key.getKeyName().toString();
+    when(mSharedPreferences.contains(keyName)).thenReturn(true);
+    when(mSharedPreferences.getLong(eq(keyName), anyLong())).thenReturn(expectedValue);
+  }
+
+  private void verifyLongExisted(TypedKey<Long> key) {
+    String keyName = key.getKeyName().toString();
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mCache).get(key);
+    inOrder.verify(mSharedPreferences).contains(keyName);
+    inOrder.verify(mSharedPreferences).getLong(eq(keyName), anyLong());
+    inOrder.verify(mCache).put(eq(key), any(Long.class));
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void verifyLongWasSet(TypedKey<Long> key, long expectedValue) {
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mSharedPreferences).edit();
+    inOrder.verify(mCache).put(key, expectedValue);
+    inOrder.verify(mEditor).putLong(key.getKeyName().toString(), expectedValue);
+    inOrder.verify(mEditor).commit();
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void setupStringExists(TypedKey<String> key, String expectedValue) {
+    String keyName = key.getKeyName().toString();
+    when(mSharedPreferences.contains(keyName)).thenReturn(true);
+    when(mSharedPreferences.getString(eq(keyName), nullable(String.class))).thenReturn(expectedValue);
+  }
+
+  private void verifyStringExisted(TypedKey<String> key) {
+    String keyName = key.getKeyName().toString();
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mCache).get(key);
+    inOrder.verify(mSharedPreferences).contains(keyName);
+    inOrder.verify(mSharedPreferences).getString(eq(keyName), nullable(String.class));
+    inOrder.verify(mCache).put(eq(key), any(String.class));
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void verifyStringWasSet(TypedKey<String> key, String expectedValue) {
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mSharedPreferences).edit();
+    inOrder.verify(mCache).put(key, expectedValue);
+    inOrder.verify(mEditor).putString(key.getKeyName().toString(), expectedValue);
+    inOrder.verify(mEditor).commit();
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void setupDoubleExists(TypedKey<Double> key, double expectedValue) {
+    long doubleBits = Double.doubleToRawLongBits(expectedValue);
+    String keyName = key.getKeyName().toString();
+    when(mSharedPreferences.contains(keyName)).thenReturn(true);
+    when(mSharedPreferences.getLong(eq(keyName), anyLong())).thenReturn(doubleBits);
+  }
+
+  private void verifyDoubleExisted(TypedKey<Double> key) {
+    String keyName = key.getKeyName().toString();
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    inOrder.verify(mCache).get(key);
+    inOrder.verify(mSharedPreferences).contains(keyName);
+    inOrder.verify(mSharedPreferences).getLong(eq(keyName), anyLong());
+    inOrder.verify(mCache).put(eq(key), any(Double.class));
+    inOrder.verifyNoMoreInteractions();
+  }
+
+  private void verifyDoubleWasSet(TypedKey<Double> key, double expectedValue) {
+    InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
+    long doubleBits = Double.doubleToRawLongBits(expectedValue);
+    inOrder.verify(mSharedPreferences).edit();
+    inOrder.verify(mCache).put(key, expectedValue);
+    inOrder.verify(mEditor).putLong(key.getKeyName().toString(), doubleBits);
+    inOrder.verify(mEditor).commit();
+    inOrder.verifyNoMoreInteractions();
   }
 }
