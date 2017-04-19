@@ -14,9 +14,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests {@link TypedPrefsImpl} usage of Editor.clear()
@@ -69,9 +67,10 @@ public class TypedPrefsClearTest {
     inOrder.verify(mSharedPreferences).edit();
     inOrder.verify(mEditor).clear();
     inOrder.verify(mCache).clear();
+    inOrder.verify(mCache).put(FLOAT_PREF, 10f);
     inOrder.verify(mEditor).putFloat(FLOAT_PREF.getKeyName().toString(), 10f);
     inOrder.verify(mEditor).commit();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mSharedPreferences, mEditor, mCache);
   }
 
   @Test
@@ -86,9 +85,10 @@ public class TypedPrefsClearTest {
     inOrder.verify(mSharedPreferences).edit();
     inOrder.verify(mEditor).clear();
     inOrder.verify(mCache).clear();
+    inOrder.verify(mCache).put(LONG_NULL_PREF, 12L);
     inOrder.verify(mEditor).putLong(LONG_NULL_PREF.getKeyName().toString(), 12L);
     inOrder.verify(mEditor).apply();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mSharedPreferences, mEditor, mCache);
   }
 
   @Test
@@ -104,7 +104,7 @@ public class TypedPrefsClearTest {
     inOrder.verify(mEditor).clear();
     inOrder.verify(mEditor).putFloat(FLOAT_PREF.getKeyName().toString(), 10f);
     inOrder.verify(mEditor).commit();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mSharedPreferences, mEditor, mCache);
   }
 
   @Test
@@ -120,6 +120,6 @@ public class TypedPrefsClearTest {
     inOrder.verify(mEditor).clear();
     inOrder.verify(mEditor).putLong(LONG_NULL_PREF.getKeyName().toString(), 12L);
     inOrder.verify(mEditor).apply();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mSharedPreferences, mEditor, mCache);
   }
 }
