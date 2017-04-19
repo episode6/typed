@@ -7,7 +7,8 @@ import com.episode6.hackit.typed.core.util.Supplier;
 import java.lang.reflect.Type;
 
 /**
- * Placeholder
+ * A Key representing a preference in {@link android.content.SharedPreferences}
+ * A {@link PrefKey} requires a default value that is provided when its underlying preference is unset.
  */
 public class PrefKey<V> implements TypedKey<V> {
   private final TypedKeyName mKeyName;

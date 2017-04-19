@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * Actual implementation of {@link TypedPrefs}
  */
 class TypedPrefsImpl implements TypedPrefs {
 

@@ -5,7 +5,7 @@ import android.util.LruCache;
 import com.episode6.hackit.typed.core.TypedKey;
 
 /**
- *
+ * An implementation of {@link ObjectCache} that uses android's {@link LruCache} as its backing store.
  */
 @TargetApi(12)
 public class LruObjectCache implements ObjectCache {

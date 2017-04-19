@@ -6,7 +6,8 @@ import com.episode6.hackit.typed.core.TypedKeyName;
 import java.lang.reflect.Type;
 
 /**
- *
+ * A key representing an optional or nullable preference in {@link android.content.SharedPreferences}.
+ * An {@link OptPrefKey} has no default value because its default value is null.
  */
 public class OptPrefKey<V> implements TypedKey<V> {
 

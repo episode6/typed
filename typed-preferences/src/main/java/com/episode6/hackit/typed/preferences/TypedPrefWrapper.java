@@ -11,7 +11,7 @@ import com.google.gson.GsonBuilder;
 import javax.annotation.Nullable;
 
 /**
- *
+ * Class to assist in wrapping existing instances of {@link SharedPreferences}
  */
 public class TypedPrefWrapper {
 
@@ -44,10 +44,21 @@ public class TypedPrefWrapper {
     }
   }
 
+  /**
+   * Wrap an existing instance of {@link SharedPreferences} using the default
+   * gson and cache suppliers
+   * @param sharedPreferences The {@link SharedPreferences} to wrap
+   * @return a {@link TypedPrefs} object that wraps the supplied {@link SharedPreferences} object
+   */
   public static TypedPrefs wrapSharedPreferences(SharedPreferences sharedPreferences) {
     return wrapSharedPreferences(sharedPreferences, sCacheSupplier.get());
   }
 
+  /**
+   * Wrap an existing instance of {@link SharedPreferences} and provide a specific ObjectCache to use
+   * @param sharedPreferences The {@link SharedPreferences} to wrap
+   * @return a {@link TypedPrefs} object that wraps the supplied {@link SharedPreferences} object
+   */
   public static TypedPrefs wrapSharedPreferences(
       SharedPreferences sharedPreferences,
       @Nullable ObjectCache cache) {
