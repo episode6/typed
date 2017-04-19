@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 /**
  *
  */
-public interface TypedPreferences {
+public interface TypedPrefs {
   <T> T get(PrefKey<T> prefKey);
   @Nullable <T> T get(NullablePrefKey<T> prefKey);
 

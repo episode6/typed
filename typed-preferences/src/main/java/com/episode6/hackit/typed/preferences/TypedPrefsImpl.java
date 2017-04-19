@@ -17,13 +17,13 @@ import java.util.Map;
  *
  */
 @TargetApi(12)
-public class TypedPreferencesImpl implements TypedPreferences {
+public class TypedPrefsImpl implements TypedPrefs {
 
   private final SharedPreferences mBackingPrefs;
   private final Supplier<Gson> mGsonSupplier;
   private final @Nullable LruCache<TypedKey, Object> mCache;
 
-  TypedPreferencesImpl(
+  TypedPrefsImpl(
       SharedPreferences backingPrefs,
       Supplier<Gson> gsonSupplier,
       @Nullable LruCache<TypedKey, Object> cache) {
@@ -136,7 +136,7 @@ public class TypedPreferencesImpl implements TypedPreferences {
     return mBackingPrefs.contains(key.getKeyName().toString());
   }
 
-  private class EditorImpl implements TypedPreferences.Editor {
+  private class EditorImpl implements TypedPrefs.Editor {
 
     private final SharedPreferences.Editor mEditor;
     private HashMap<TypedKey<?>, Object> mPutMap = new HashMap<>();

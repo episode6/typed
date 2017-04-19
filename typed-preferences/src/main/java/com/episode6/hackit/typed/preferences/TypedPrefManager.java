@@ -54,15 +54,15 @@ public class TypedPrefManager {
     };
   }
 
-  public static TypedPreferences getDefaultTypedPreferences(Context context) {
-    return new TypedPreferencesImpl(
+  public static TypedPrefs getDefaultTypedPreferences(Context context) {
+    return new TypedPrefsImpl(
         PreferenceManager.getDefaultSharedPreferences(context),
         sGsonSupplier,
         sCacheSupplier.get());
   }
 
-  public static TypedPreferences wrapSharedPreferences(SharedPreferences sharedPreferences) {
-    return new TypedPreferencesImpl(
+  public static TypedPrefs wrapSharedPreferences(SharedPreferences sharedPreferences) {
+    return new TypedPrefsImpl(
         sharedPreferences,
         sGsonSupplier,
         sCacheSupplier.get());

@@ -18,9 +18,9 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests {@link TypedPreferencesImpl} usage with Primitives
+ * Tests {@link TypedPrefsImpl} usage with Primitives
  */
-public class TypedPreferencesPrimitivesTest {
+public class TypedPrefsPrimitivesTest {
 
   private static final PrefNamespace PREF_NAMESPACE = PrefNamespace.ROOT.extend("testNamespace").extend("subNamespace");
 
@@ -67,7 +67,8 @@ public class TypedPreferencesPrimitivesTest {
   /*Mock*/ SharedPreferences.Editor mEditor;
   @Mock LruCache<TypedKey, Object> mCache;
 
-  @RealObject(implementation = TypedPreferencesImpl.class) TypedPreferences mTypedPreferences;
+  @RealObject(implementation = TypedPrefsImpl.class)
+  TypedPrefs mTypedPrefs;
 
   @Before
   public void setup() {
@@ -77,7 +78,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testBooleanDoesntExist() {
-    boolean result = mTypedPreferences.get(BOOL_PREF);
+    boolean result = mTypedPrefs.get(BOOL_PREF);
 
     verifyPrefDidntExist(BOOL_PREF);
     assertThat(result).isTrue();
@@ -87,7 +88,7 @@ public class TypedPreferencesPrimitivesTest {
   public void testBooleanDoesExist() {
     setupBooleanExists(BOOL_PREF, false);
 
-    boolean result = mTypedPreferences.get(BOOL_PREF);
+    boolean result = mTypedPrefs.get(BOOL_PREF);
 
     verifyBooleanExisted(BOOL_PREF);
     assertThat(result).isFalse();
@@ -95,7 +96,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetBoolean() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(BOOL_PREF, false)
         .commit();
 
@@ -104,7 +105,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testRemoveBoolean() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(BOOL_PREF)
         .commit();
 
@@ -113,13 +114,13 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test(expected = NullPointerException.class)
   public void testSetBooleanException() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(BOOL_PREF, null);
   }
 
   @Test
   public void testNullBooleanDoesntExist() {
-    Boolean result = mTypedPreferences.get(BOOL_NULL_PREF);
+    Boolean result = mTypedPrefs.get(BOOL_NULL_PREF);
 
     verifyPrefDidntExist(BOOL_NULL_PREF);
     assertThat(result).isNull();
@@ -129,7 +130,7 @@ public class TypedPreferencesPrimitivesTest {
   public void testNullBooleanDoesExist() {
     setupBooleanExists(BOOL_NULL_PREF, true);
 
-    Boolean result = mTypedPreferences.get(BOOL_NULL_PREF);
+    Boolean result = mTypedPrefs.get(BOOL_NULL_PREF);
 
     verifyBooleanExisted(BOOL_NULL_PREF);
     assertThat(result)
@@ -139,7 +140,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullBoolean() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(BOOL_NULL_PREF, false)
         .commit();
 
@@ -148,7 +149,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testRemoveNullBoolean() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(BOOL_NULL_PREF)
         .commit();
 
@@ -157,7 +158,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullBooleanNull() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(BOOL_NULL_PREF, null)
         .commit();
 
@@ -167,7 +168,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testFloatDoesntExist() {
-    float result = mTypedPreferences.get(FLOAT_PREF);
+    float result = mTypedPrefs.get(FLOAT_PREF);
 
     verifyPrefDidntExist(FLOAT_PREF);
     assertThat(result).isEqualTo(1.2f);
@@ -177,7 +178,7 @@ public class TypedPreferencesPrimitivesTest {
   public void testFloatDoesExist() {
     setupFloatExists(FLOAT_PREF, 3.5f);
 
-    float result = mTypedPreferences.get(FLOAT_PREF);
+    float result = mTypedPrefs.get(FLOAT_PREF);
 
     verifyFloatExisted(FLOAT_PREF);
     assertThat(result).isEqualTo(3.5f);
@@ -185,7 +186,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetFloat() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(FLOAT_PREF, 7.6f)
         .commit();
 
@@ -194,7 +195,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testRemoveFloat() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(FLOAT_PREF)
         .commit();
 
@@ -203,13 +204,13 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test(expected = NullPointerException.class)
   public void testSetFloatException() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(FLOAT_PREF, null);
   }
 
   @Test
   public void testNullFloatDoesntExist() {
-    Float result = mTypedPreferences.get(FLOAT_NULL_PREF);
+    Float result = mTypedPrefs.get(FLOAT_NULL_PREF);
 
     verifyPrefDidntExist(FLOAT_NULL_PREF);
     assertThat(result).isNull();
@@ -219,7 +220,7 @@ public class TypedPreferencesPrimitivesTest {
   public void testNullFloatDoesExist() {
     setupFloatExists(FLOAT_NULL_PREF, 17.3f);
 
-    Float result = mTypedPreferences.get(FLOAT_NULL_PREF);
+    Float result = mTypedPrefs.get(FLOAT_NULL_PREF);
 
     verifyFloatExisted(FLOAT_NULL_PREF);
     assertThat(result)
@@ -229,7 +230,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullFloat() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(FLOAT_NULL_PREF, 13.3f)
         .commit();
 
@@ -238,7 +239,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testRemoveNullFloat() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(FLOAT_NULL_PREF)
         .commit();
 
@@ -247,7 +248,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullFloatNull() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(FLOAT_NULL_PREF, null)
         .commit();
 
@@ -256,7 +257,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testIntegerDoesntExist() {
-    int result = mTypedPreferences.get(INT_PREF);
+    int result = mTypedPrefs.get(INT_PREF);
 
     verifyPrefDidntExist(INT_PREF);
     assertThat(result).isEqualTo(3);
@@ -266,7 +267,7 @@ public class TypedPreferencesPrimitivesTest {
   public void testIntegerDoesExist() {
     setupIntegerExists(INT_PREF, 7);
 
-    int result = mTypedPreferences.get(INT_PREF);
+    int result = mTypedPrefs.get(INT_PREF);
 
     verifyIntegerExisted(INT_PREF);
     assertThat(result).isEqualTo(7);
@@ -274,7 +275,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetInteger() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(INT_PREF, 12)
         .commit();
 
@@ -283,7 +284,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testRemoveInteger() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(INT_PREF)
         .commit();
 
@@ -292,13 +293,13 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test(expected = NullPointerException.class)
   public void testSetIntegerException() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(INT_PREF, null);
   }
 
   @Test
   public void testNullIntegerDoesntExist() {
-    Integer result = mTypedPreferences.get(INT_NULL_PREF);
+    Integer result = mTypedPrefs.get(INT_NULL_PREF);
 
     verifyPrefDidntExist(INT_NULL_PREF);
     assertThat(result).isNull();
@@ -308,7 +309,7 @@ public class TypedPreferencesPrimitivesTest {
   public void testNullIntegerDoesExist() {
     setupIntegerExists(INT_NULL_PREF, 18);
 
-    Integer result = mTypedPreferences.get(INT_NULL_PREF);
+    Integer result = mTypedPrefs.get(INT_NULL_PREF);
 
     verifyIntegerExisted(INT_NULL_PREF);
     assertThat(result)
@@ -318,7 +319,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullInteger() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(INT_NULL_PREF, 22)
         .commit();
 
@@ -327,7 +328,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testRemoveNullInteger() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(INT_NULL_PREF)
         .commit();
 
@@ -336,7 +337,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullIntegerNull() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(INT_NULL_PREF, null)
         .commit();
 
@@ -346,7 +347,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testLongDoesntExist() {
-    long result = mTypedPreferences.get(LONG_PREF);
+    long result = mTypedPrefs.get(LONG_PREF);
 
     verifyPrefDidntExist(LONG_PREF);
     assertThat(result).isEqualTo(123L);
@@ -356,7 +357,7 @@ public class TypedPreferencesPrimitivesTest {
   public void testLongDoesExist() {
     setupLongExists(LONG_PREF, 15L);
 
-    long result = mTypedPreferences.get(LONG_PREF);
+    long result = mTypedPrefs.get(LONG_PREF);
 
     verifyLongExisted(LONG_PREF);
     assertThat(result).isEqualTo(15L);
@@ -364,7 +365,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetLong() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(LONG_PREF, 145L)
         .commit();
 
@@ -373,7 +374,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testRemoveLong() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(LONG_PREF)
         .commit();
 
@@ -382,13 +383,13 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test(expected = NullPointerException.class)
   public void testSetLongException() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(LONG_PREF, null);
   }
 
   @Test
   public void testNullLongDoesntExist() {
-    Long result = mTypedPreferences.get(LONG_NULL_PREF);
+    Long result = mTypedPrefs.get(LONG_NULL_PREF);
 
     verifyPrefDidntExist(LONG_NULL_PREF);
     assertThat(result).isNull();
@@ -398,7 +399,7 @@ public class TypedPreferencesPrimitivesTest {
   public void testNullLongDoesExist() {
     setupLongExists(LONG_NULL_PREF, 173L);
 
-    Long result = mTypedPreferences.get(LONG_NULL_PREF);
+    Long result = mTypedPrefs.get(LONG_NULL_PREF);
 
     verifyLongExisted(LONG_NULL_PREF);
     assertThat(result)
@@ -408,7 +409,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullLong() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(LONG_NULL_PREF, 133L)
         .commit();
 
@@ -417,7 +418,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testRemoveNullLong() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(LONG_NULL_PREF)
         .commit();
 
@@ -426,7 +427,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullLongNull() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(LONG_NULL_PREF, null)
         .commit();
 
@@ -435,7 +436,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testStringDoesntExist() {
-    String result = mTypedPreferences.get(STRING_PREF);
+    String result = mTypedPrefs.get(STRING_PREF);
 
     verifyPrefDidntExist(STRING_PREF);
     assertThat(result).isEqualTo("default");
@@ -445,7 +446,7 @@ public class TypedPreferencesPrimitivesTest {
   public void testStringDoesExist() {
     setupStringExists(STRING_PREF, "sup");
 
-    String result = mTypedPreferences.get(STRING_PREF);
+    String result = mTypedPrefs.get(STRING_PREF);
 
     verifyStringExisted(STRING_PREF);
     assertThat(result).isEqualTo("sup");
@@ -453,7 +454,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetString() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(STRING_PREF, "howdy")
         .commit();
 
@@ -462,7 +463,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testRemoveString() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(STRING_PREF)
         .commit();
 
@@ -471,13 +472,13 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test(expected = NullPointerException.class)
   public void testSetStringException() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(STRING_PREF, null);
   }
 
   @Test
   public void testNullStringDoesntExist() {
-    String result = mTypedPreferences.get(STRING_NULL_PREF);
+    String result = mTypedPrefs.get(STRING_NULL_PREF);
 
     verifyPrefDidntExist(STRING_NULL_PREF);
     assertThat(result).isNull();
@@ -487,7 +488,7 @@ public class TypedPreferencesPrimitivesTest {
   public void testNullStringDoesExist() {
     setupStringExists(STRING_NULL_PREF, "yooo");
 
-    String result = mTypedPreferences.get(STRING_NULL_PREF);
+    String result = mTypedPrefs.get(STRING_NULL_PREF);
 
     verifyStringExisted(STRING_NULL_PREF);
     assertThat(result)
@@ -497,7 +498,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullString() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(STRING_NULL_PREF, "hey now")
         .commit();
 
@@ -506,7 +507,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testRemoveNullString() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(STRING_NULL_PREF)
         .commit();
 
@@ -515,7 +516,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullStringNull() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(STRING_NULL_PREF, null)
         .commit();
 
@@ -524,7 +525,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testDoubleDoesntExist() {
-    double result = mTypedPreferences.get(DOUBLE_PREF);
+    double result = mTypedPrefs.get(DOUBLE_PREF);
 
     verifyPrefDidntExist(DOUBLE_PREF);
     assertThat(result).isEqualTo(1.2d);
@@ -534,7 +535,7 @@ public class TypedPreferencesPrimitivesTest {
   public void testDoubleDoesExist() {
     setupDoubleExists(DOUBLE_PREF, 3.5d);
 
-    double result = mTypedPreferences.get(DOUBLE_PREF);
+    double result = mTypedPrefs.get(DOUBLE_PREF);
 
     verifyDoubleExisted(DOUBLE_PREF);
     assertThat(result).isEqualTo(3.5d);
@@ -542,7 +543,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetDouble() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(DOUBLE_PREF, 7.6d)
         .commit();
 
@@ -551,7 +552,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testDoubleRemoved() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(DOUBLE_PREF)
         .commit();
 
@@ -560,13 +561,13 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test(expected = NullPointerException.class)
   public void testSetDoubleException() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(DOUBLE_PREF, null);
   }
 
   @Test
   public void testNullDoubleDoesntExist() {
-    Double result = mTypedPreferences.get(DOUBLE_NULL_PREF);
+    Double result = mTypedPrefs.get(DOUBLE_NULL_PREF);
 
     verifyPrefDidntExist(DOUBLE_NULL_PREF);
     assertThat(result).isNull();
@@ -576,7 +577,7 @@ public class TypedPreferencesPrimitivesTest {
   public void testNullDoubleDoesExist() {
     setupDoubleExists(DOUBLE_NULL_PREF, 17.3d);
 
-    Double result = mTypedPreferences.get(DOUBLE_NULL_PREF);
+    Double result = mTypedPrefs.get(DOUBLE_NULL_PREF);
 
     verifyDoubleExisted(DOUBLE_NULL_PREF);
     assertThat(result)
@@ -586,7 +587,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullDouble() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(DOUBLE_NULL_PREF, 13.3d)
         .commit();
 
@@ -595,7 +596,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testNullDoubleRemoved() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(DOUBLE_NULL_PREF)
         .commit();
 
@@ -604,7 +605,7 @@ public class TypedPreferencesPrimitivesTest {
 
   @Test
   public void testSetNullDoubleNull() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(DOUBLE_NULL_PREF, null)
         .commit();
 

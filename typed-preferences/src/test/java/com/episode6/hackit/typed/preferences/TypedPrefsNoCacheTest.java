@@ -22,9 +22,9 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests {@link TypedPreferencesImpl} usage with a null LruCache
+ * Tests {@link TypedPrefsImpl} usage with a null LruCache
  */
-public class TypedPreferencesNoCacheTest {
+public class TypedPrefsNoCacheTest {
 
   private static final PrefNamespace PREF_NAMESPACE = PrefNamespace.ROOT.extend("testNamespace").extend("generics");
 
@@ -65,7 +65,7 @@ public class TypedPreferencesNoCacheTest {
   /*Mock*/ SharedPreferences.Editor mEditor;
   @Mock Gson mGson;
 
-  TypedPreferences mTypedPreferences;
+  TypedPrefs mTypedPrefs;
 
   @Before
   public void setup() {
@@ -74,15 +74,15 @@ public class TypedPreferencesNoCacheTest {
     when(mGson.toJson(any())).thenReturn("someFakeJson");
 
     // ensure we use a null cache, not a mock
-    mTypedPreferences = mockspresso.buildUpon()
+    mTypedPrefs = mockspresso.buildUpon()
         .dependency(new com.episode6.hackit.mockspresso.reflect.TypeToken<LruCache<TypedKey, Object>>() {}, null)
         .build()
-        .create(TypedPreferencesImpl.class);
+        .create(TypedPrefsImpl.class);
   }
 
   @Test
   public void testSimplePrefDoesntExist() {
-    SimpleTestClass result = mTypedPreferences.get(SIMPLE_PREF);
+    SimpleTestClass result = mTypedPrefs.get(SIMPLE_PREF);
 
     verifyPrefDidntExist(SIMPLE_PREF);
     assertThat(result.value).isEqualTo("defaultValue");
@@ -93,7 +93,7 @@ public class TypedPreferencesNoCacheTest {
     SimpleTestClass expected = new SimpleTestClass("newValue");
     setupPrefExists(SIMPLE_PREF, expected);
 
-    SimpleTestClass result = mTypedPreferences.get(SIMPLE_PREF);
+    SimpleTestClass result = mTypedPrefs.get(SIMPLE_PREF);
 
     verifyPrefExisted(SIMPLE_PREF);
     assertThat(result)
@@ -105,7 +105,7 @@ public class TypedPreferencesNoCacheTest {
   public void testSetSimplePref() {
     SimpleTestClass newValue = new SimpleTestClass("newSetValue");
 
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(SIMPLE_PREF, newValue)
         .commit();
 
@@ -114,13 +114,13 @@ public class TypedPreferencesNoCacheTest {
 
   @Test(expected = NullPointerException.class)
   public void testSetSimplePrefException() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(SIMPLE_PREF, null);
   }
 
   @Test
   public void testRemoveSimplePref() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(SIMPLE_PREF)
         .commit();
 
@@ -129,7 +129,7 @@ public class TypedPreferencesNoCacheTest {
 
   @Test
   public void testNullSimplePrefDoesntExist() {
-    SimpleTestClass result = mTypedPreferences.get(SIMPLE_NULL_PREF);
+    SimpleTestClass result = mTypedPrefs.get(SIMPLE_NULL_PREF);
 
     verifyPrefDidntExist(SIMPLE_NULL_PREF);
     assertThat(result).isNull();
@@ -140,7 +140,7 @@ public class TypedPreferencesNoCacheTest {
     SimpleTestClass expected = new SimpleTestClass("newValue");
     setupPrefExists(SIMPLE_NULL_PREF, expected);
 
-    SimpleTestClass result = mTypedPreferences.get(SIMPLE_NULL_PREF);
+    SimpleTestClass result = mTypedPrefs.get(SIMPLE_NULL_PREF);
 
     verifyPrefExisted(SIMPLE_NULL_PREF);
     assertThat(result)
@@ -152,7 +152,7 @@ public class TypedPreferencesNoCacheTest {
   public void testSetSimpleNullPref() {
     SimpleTestClass newValue = new SimpleTestClass("newSetValue");
 
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(SIMPLE_NULL_PREF, newValue)
         .commit();
 
@@ -161,7 +161,7 @@ public class TypedPreferencesNoCacheTest {
 
   @Test
   public void testRemoveSimpleNullPref() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(SIMPLE_NULL_PREF)
         .commit();
 
@@ -170,7 +170,7 @@ public class TypedPreferencesNoCacheTest {
 
   @Test
   public void testSetSimpleNullPrefNull() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(SIMPLE_NULL_PREF, null)
         .commit();
 
@@ -179,7 +179,7 @@ public class TypedPreferencesNoCacheTest {
 
   @Test
   public void testComplexPrefDoesntExist() {
-    HashMap<String, SimpleTestClass> result = mTypedPreferences.get(COMPLEX_MAP_PREF);
+    HashMap<String, SimpleTestClass> result = mTypedPrefs.get(COMPLEX_MAP_PREF);
 
     verifyPrefDidntExist(COMPLEX_MAP_PREF);
     assertThat(result)
@@ -195,7 +195,7 @@ public class TypedPreferencesNoCacheTest {
     HashMap<String, SimpleTestClass> expected = new HashMap<>();
     setupPrefExists(COMPLEX_MAP_PREF, expected);
 
-    HashMap<String, SimpleTestClass> result = mTypedPreferences.get(COMPLEX_MAP_PREF);
+    HashMap<String, SimpleTestClass> result = mTypedPrefs.get(COMPLEX_MAP_PREF);
 
     verifyPrefExisted(COMPLEX_MAP_PREF);
     assertThat(result)
@@ -207,7 +207,7 @@ public class TypedPreferencesNoCacheTest {
   public void testSetComplexPref() {
     HashMap<String, SimpleTestClass> newValue = new HashMap<>();
 
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(COMPLEX_MAP_PREF, newValue)
         .commit();
 
@@ -216,7 +216,7 @@ public class TypedPreferencesNoCacheTest {
 
   @Test
   public void testComplexPrefRemoved() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(COMPLEX_MAP_PREF)
         .commit();
 
@@ -225,13 +225,13 @@ public class TypedPreferencesNoCacheTest {
 
   @Test(expected = NullPointerException.class)
   public void testSetComplexPrefException() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(COMPLEX_MAP_PREF, null);
   }
 
   @Test
   public void testNullComplexPrefDoesntExist() {
-    HashMap<String, SimpleTestClass> result = mTypedPreferences.get(COMPLEX_MAP_NULL_PREF);
+    HashMap<String, SimpleTestClass> result = mTypedPrefs.get(COMPLEX_MAP_NULL_PREF);
 
     verifyPrefDidntExist(COMPLEX_MAP_NULL_PREF);
     assertThat(result).isNull();
@@ -242,7 +242,7 @@ public class TypedPreferencesNoCacheTest {
     HashMap<String, SimpleTestClass> expected = new HashMap<>();
     setupPrefExists(COMPLEX_MAP_NULL_PREF, expected);
 
-    HashMap<String, SimpleTestClass> result = mTypedPreferences.get(COMPLEX_MAP_NULL_PREF);
+    HashMap<String, SimpleTestClass> result = mTypedPrefs.get(COMPLEX_MAP_NULL_PREF);
 
     verifyPrefExisted(COMPLEX_MAP_NULL_PREF);
     assertThat(result)
@@ -254,7 +254,7 @@ public class TypedPreferencesNoCacheTest {
   public void testSetComplexNullPref() {
     HashMap<String, SimpleTestClass> newValue = new HashMap<>();
 
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(COMPLEX_MAP_NULL_PREF, newValue)
         .commit();
 
@@ -263,7 +263,7 @@ public class TypedPreferencesNoCacheTest {
 
   @Test
   public void testRemoveComplexNullPref() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .remove(COMPLEX_MAP_NULL_PREF)
         .commit();
 
@@ -272,7 +272,7 @@ public class TypedPreferencesNoCacheTest {
 
   @Test
   public void testSetComplexNullPrefNull() {
-    mTypedPreferences.edit()
+    mTypedPrefs.edit()
         .put(COMPLEX_MAP_NULL_PREF, null)
         .commit();
 
