@@ -282,7 +282,7 @@ public class TypedPrefsNoCacheTest {
   private void verifyPrefDidntExist(TypedKey key) {
     InOrder inOrder = Mockito.inOrder(mSharedPreferences, mEditor, mGson);
     inOrder.verify(mSharedPreferences).contains(key.getKeyName().toString());
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mSharedPreferences, mEditor, mGson);
   }
 
   private void verifyPrefWasRemoved(TypedKey key) {
@@ -290,7 +290,7 @@ public class TypedPrefsNoCacheTest {
     inOrder.verify(mSharedPreferences).edit();
     inOrder.verify(mEditor).remove(key.getKeyName().toString());
     inOrder.verify(mEditor).commit();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mSharedPreferences, mEditor, mGson);
   }
 
   private <T> void setupPrefExists(TypedKey<T> key, T expectedValue) {
@@ -306,7 +306,7 @@ public class TypedPrefsNoCacheTest {
     inOrder.verify(mSharedPreferences).contains(keyName);
     inOrder.verify(mSharedPreferences).getString(keyName, null);
     inOrder.verify(mGson).fromJson("someFakeJson", key.getObjectType());
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mSharedPreferences, mEditor, mGson);
   }
 
   private <T> void verifyPrefWasSet(TypedKey<T> key, T expectedValue) {
@@ -315,7 +315,7 @@ public class TypedPrefsNoCacheTest {
     inOrder.verify(mGson).toJson(expectedValue);
     inOrder.verify(mEditor).putString(key.getKeyName().toString(), "someFakeJson");
     inOrder.verify(mEditor).commit();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mSharedPreferences, mEditor, mGson);
   }
 
   public static class SimpleTestClass {

@@ -616,7 +616,7 @@ public class TypedPrefsPrimitivesTest {
     InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor);
     inOrder.verify(mCache).get(key);
     inOrder.verify(mSharedPreferences).contains(key.getKeyName().toString());
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void verifyPrefWasRemoved(TypedKey key) {
@@ -625,7 +625,7 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mCache).remove(key);
     inOrder.verify(mEditor).remove(key.getKeyName().toString());
     inOrder.verify(mEditor).commit();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void setupBooleanExists(TypedKey<Boolean> key, boolean expectedValue) {
@@ -641,7 +641,7 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mSharedPreferences).contains(keyName);
     inOrder.verify(mSharedPreferences).getBoolean(eq(keyName), anyBoolean());
     inOrder.verify(mCache).put(eq(key), any(Boolean.class));
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void verifyBooleanWasSet(TypedKey<Boolean> key, boolean expectedValue) {
@@ -650,7 +650,7 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mCache).put(key, expectedValue);
     inOrder.verify(mEditor).putBoolean(key.getKeyName().toString(), expectedValue);
     inOrder.verify(mEditor).commit();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void setupFloatExists(TypedKey<Float> key, float expectedValue) {
@@ -666,7 +666,7 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mSharedPreferences).contains(keyName);
     inOrder.verify(mSharedPreferences).getFloat(eq(keyName), anyFloat());
     inOrder.verify(mCache).put(eq(key), any(Float.class));
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void verifyFloatWasSet(TypedKey<Float> key, float expectedValue) {
@@ -675,7 +675,7 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mCache).put(key, expectedValue);
     inOrder.verify(mEditor).putFloat(key.getKeyName().toString(), expectedValue);
     inOrder.verify(mEditor).commit();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void setupIntegerExists(TypedKey<Integer> key, int expectedValue) {
@@ -691,7 +691,7 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mSharedPreferences).contains(keyName);
     inOrder.verify(mSharedPreferences).getInt(eq(keyName), anyInt());
     inOrder.verify(mCache).put(eq(key), any(Integer.class));
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void verifyIntegerWasSet(TypedKey<Integer> key, int expectedValue) {
@@ -700,7 +700,7 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mCache).put(key, expectedValue);
     inOrder.verify(mEditor).putInt(key.getKeyName().toString(), expectedValue);
     inOrder.verify(mEditor).commit();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void setupLongExists(TypedKey<Long> key, long expectedValue) {
@@ -716,7 +716,7 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mSharedPreferences).contains(keyName);
     inOrder.verify(mSharedPreferences).getLong(eq(keyName), anyLong());
     inOrder.verify(mCache).put(eq(key), any(Long.class));
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void verifyLongWasSet(TypedKey<Long> key, long expectedValue) {
@@ -725,7 +725,7 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mCache).put(key, expectedValue);
     inOrder.verify(mEditor).putLong(key.getKeyName().toString(), expectedValue);
     inOrder.verify(mEditor).commit();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void setupStringExists(TypedKey<String> key, String expectedValue) {
@@ -741,7 +741,7 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mSharedPreferences).contains(keyName);
     inOrder.verify(mSharedPreferences).getString(eq(keyName), nullable(String.class));
     inOrder.verify(mCache).put(eq(key), any(String.class));
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void verifyStringWasSet(TypedKey<String> key, String expectedValue) {
@@ -750,7 +750,7 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mCache).put(key, expectedValue);
     inOrder.verify(mEditor).putString(key.getKeyName().toString(), expectedValue);
     inOrder.verify(mEditor).commit();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void setupDoubleExists(TypedKey<Double> key, double expectedValue) {
@@ -767,7 +767,7 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mSharedPreferences).contains(keyName);
     inOrder.verify(mSharedPreferences).getLong(eq(keyName), anyLong());
     inOrder.verify(mCache).put(eq(key), any(Double.class));
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 
   private void verifyDoubleWasSet(TypedKey<Double> key, double expectedValue) {
@@ -777,6 +777,6 @@ public class TypedPrefsPrimitivesTest {
     inOrder.verify(mCache).put(key, expectedValue);
     inOrder.verify(mEditor).putLong(key.getKeyName().toString(), doubleBits);
     inOrder.verify(mEditor).commit();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor);
   }
 }

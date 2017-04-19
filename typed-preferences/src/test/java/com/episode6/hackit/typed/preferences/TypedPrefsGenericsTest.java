@@ -4,8 +4,8 @@ import android.content.SharedPreferences;
 import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.mockspresso.annotation.RealObject;
 import com.episode6.hackit.typed.core.TypedKey;
-import com.episode6.hackit.typed.preferences.cache.ObjectCache;
 import com.episode6.hackit.typed.core.util.Supplier;
+import com.episode6.hackit.typed.preferences.cache.ObjectCache;
 import com.episode6.hackit.typed.testing.Answers;
 import com.episode6.hackit.typed.testing.Rules;
 import com.google.gson.Gson;
@@ -280,7 +280,7 @@ public class TypedPrefsGenericsTest {
     InOrder inOrder = Mockito.inOrder(mCache, mSharedPreferences, mEditor, mGson);
     inOrder.verify(mCache).get(key);
     inOrder.verify(mSharedPreferences).contains(key.getKeyName().toString());
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor, mGson);
   }
 
   private void verifyPrefWasRemoved(TypedKey key) {
@@ -289,7 +289,7 @@ public class TypedPrefsGenericsTest {
     inOrder.verify(mCache).remove(key);
     inOrder.verify(mEditor).remove(key.getKeyName().toString());
     inOrder.verify(mEditor).apply();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor, mGson);
   }
 
   private <T> void setupPrefExists(TypedKey<T> key, T expectedValue) {
@@ -307,7 +307,7 @@ public class TypedPrefsGenericsTest {
     inOrder.verify(mSharedPreferences).getString(keyName, null);
     inOrder.verify(mGson).fromJson("someFakeJson", key.getObjectType());
     inOrder.verify(mCache).put(eq(key), any());
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor, mGson);
   }
 
   private <T> void verifyPrefWasSet(TypedKey<T> key, T expectedValue) {
@@ -317,7 +317,7 @@ public class TypedPrefsGenericsTest {
     inOrder.verify(mGson).toJson(expectedValue);
     inOrder.verify(mEditor).putString(key.getKeyName().toString(), "someFakeJson");
     inOrder.verify(mEditor).apply();
-    inOrder.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(mCache, mSharedPreferences, mEditor, mGson);
   }
 
   public static class SimpleTestClass {
