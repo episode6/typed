@@ -3,6 +3,7 @@ package com.episode6.hackit.typed.preferences;
 import android.content.SharedPreferences;
 import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.mockspresso.annotation.RealObject;
+import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.preferences.cache.ObjectCache;
 import com.episode6.hackit.typed.testing.Answers;
 import com.episode6.hackit.typed.testing.Rules;
@@ -63,13 +64,16 @@ public class TypedPrefsClearTest {
         .put(FLOAT_PREF, 10f)
         .commit();
 
+
     InOrder inOrder = Mockito.inOrder(mSharedPreferences, mEditor, mCache);
     inOrder.verify(mSharedPreferences).edit();
     inOrder.verify(mEditor).clear();
     inOrder.verify(mCache).clear();
-    inOrder.verify(mCache).put(FLOAT_PREF, 10f);
-    inOrder.verify(mEditor).putFloat(FLOAT_PREF.getKeyName().toString(), 10f);
+    inOrder.verify(mCache, times(2)).put(any(TypedKey.class), any());
     inOrder.verify(mEditor).commit();
+
+    verify(mEditor).putBoolean(BOOL_PREF.getKeyName().toString(), false);
+    verify(mEditor).putFloat(FLOAT_PREF.getKeyName().toString(), 10f);
     verifyNoMoreInteractions(mSharedPreferences, mEditor, mCache);
   }
 
@@ -85,9 +89,11 @@ public class TypedPrefsClearTest {
     inOrder.verify(mSharedPreferences).edit();
     inOrder.verify(mEditor).clear();
     inOrder.verify(mCache).clear();
-    inOrder.verify(mCache).put(LONG_NULL_PREF, 12L);
-    inOrder.verify(mEditor).putLong(LONG_NULL_PREF.getKeyName().toString(), 12L);
+    inOrder.verify(mCache, times(2)).put(any(TypedKey.class), any());
     inOrder.verify(mEditor).apply();
+
+    verify(mEditor).putInt(INT_NULL_PREF.getKeyName().toString(), 3);
+    verify(mEditor).putLong(LONG_NULL_PREF.getKeyName().toString(), 12L);
     verifyNoMoreInteractions(mSharedPreferences, mEditor, mCache);
   }
 
@@ -102,8 +108,10 @@ public class TypedPrefsClearTest {
     InOrder inOrder = Mockito.inOrder(mSharedPreferences, mEditor, mCache);
     inOrder.verify(mSharedPreferences).edit();
     inOrder.verify(mEditor).clear();
-    inOrder.verify(mEditor).putFloat(FLOAT_PREF.getKeyName().toString(), 10f);
     inOrder.verify(mEditor).commit();
+
+    verify(mEditor).putBoolean(BOOL_PREF.getKeyName().toString(), false);
+    verify(mEditor).putFloat(FLOAT_PREF.getKeyName().toString(), 10f);
     verifyNoMoreInteractions(mSharedPreferences, mEditor, mCache);
   }
 
@@ -118,8 +126,10 @@ public class TypedPrefsClearTest {
     InOrder inOrder = Mockito.inOrder(mSharedPreferences, mEditor, mCache);
     inOrder.verify(mSharedPreferences).edit();
     inOrder.verify(mEditor).clear();
-    inOrder.verify(mEditor).putLong(LONG_NULL_PREF.getKeyName().toString(), 12L);
     inOrder.verify(mEditor).apply();
+
+    verify(mEditor).putInt(INT_NULL_PREF.getKeyName().toString(), 3);
+    verify(mEditor).putLong(LONG_NULL_PREF.getKeyName().toString(), 12L);
     verifyNoMoreInteractions(mSharedPreferences, mEditor, mCache);
   }
 }

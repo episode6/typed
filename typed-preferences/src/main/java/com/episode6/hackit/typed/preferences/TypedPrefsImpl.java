@@ -178,7 +178,6 @@ class TypedPrefsImpl implements TypedPrefs {
     @Override
     public Editor clear() {
       mEditor.clear();
-      mPutMap.clear();
       mClearCacheOnCommit = true;
       return this;
     }
