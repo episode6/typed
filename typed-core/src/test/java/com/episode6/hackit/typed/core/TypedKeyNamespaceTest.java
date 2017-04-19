@@ -1,5 +1,6 @@
 package com.episode6.hackit.typed.core;
 
+import com.episode6.hackit.typed.testing.Rules;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Spy;

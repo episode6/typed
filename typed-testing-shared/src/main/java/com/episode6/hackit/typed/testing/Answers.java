@@ -1,4 +1,4 @@
-package com.episode6.hackit.typed.preferences;
+package com.episode6.hackit.typed.testing;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;

@@ -1,4 +1,4 @@
-package com.episode6.hackit.typed.preferences;
+package com.episode6.hackit.typed.testing;
 
 import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.mockspresso.api.DependencyProvider;
@@ -7,6 +7,8 @@ import com.episode6.hackit.mockspresso.mockito.MockitoPlugin;
 import com.episode6.hackit.mockspresso.reflect.DependencyKey;
 import com.episode6.hackit.mockspresso.reflect.TypeToken;
 import com.episode6.hackit.typed.core.util.Supplier;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -21,6 +23,10 @@ public class Rules {
         .plugin(MockitoPlugin.getInstance())
         .specialObjectMaker(supplierMaker())
         .buildRule();
+  }
+
+  public static MockitoRule mockito() {
+    return MockitoJUnit.rule();
   }
 
   private static SpecialObjectMaker supplierMaker() {

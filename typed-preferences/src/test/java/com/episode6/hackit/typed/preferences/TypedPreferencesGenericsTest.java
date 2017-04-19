@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.mockspresso.annotation.RealObject;
 import com.episode6.hackit.typed.core.util.Supplier;
+import com.episode6.hackit.typed.testing.Answers;
+import com.episode6.hackit.typed.testing.Rules;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.junit.Before;

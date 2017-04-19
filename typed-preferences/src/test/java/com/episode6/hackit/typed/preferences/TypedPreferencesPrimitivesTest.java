@@ -3,6 +3,8 @@ package com.episode6.hackit.typed.preferences;
 import android.content.SharedPreferences;
 import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.mockspresso.annotation.RealObject;
+import com.episode6.hackit.typed.testing.Answers;
+import com.episode6.hackit.typed.testing.Rules;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
