@@ -41,7 +41,7 @@ public class TypedPrefsGenericsTest {
   private static final OptPrefKey<SimpleTestClass> SIMPLE_NULL_PREF = PREF_NAMESPACE
       .key(SimpleTestClass.class)
       .named("simpleNullTestPref")
-      .buildNullable();
+      .buildOptional();
 
   private static final PrefKey<HashMap<String, SimpleTestClass>> COMPLEX_MAP_PREF = PREF_NAMESPACE
       .key(new TypeToken<HashMap<String, SimpleTestClass>>() {})
@@ -58,7 +58,7 @@ public class TypedPrefsGenericsTest {
   private static final OptPrefKey<HashMap<String, SimpleTestClass>> COMPLEX_MAP_NULL_PREF = PREF_NAMESPACE
       .key(new TypeToken<HashMap<String, SimpleTestClass>>() {})
       .named("complexMapNullPref")
-      .buildNullable();
+      .buildOptional();
 
   @Rule public final Mockspresso.Rule mockspresso = Rules.mockspresso();
 

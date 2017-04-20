@@ -29,37 +29,37 @@ public class TypedPrefsPrimitivesTest {
       .buildWithDefault(true);
   private static final OptPrefKey<Boolean> BOOL_NULL_PREF = PREF_NAMESPACE.key(Boolean.class)
       .named("testNullBool")
-      .buildNullable();
+      .buildOptional();
   private static final PrefKey<Float> FLOAT_PREF = PREF_NAMESPACE.key(Float.class)
       .named("testFloat")
       .buildWithDefault(1.2f);
   private static final OptPrefKey<Float> FLOAT_NULL_PREF = PREF_NAMESPACE.key(Float.class)
       .named("testNullFloat")
-      .buildNullable();
+      .buildOptional();
   private static final PrefKey<Integer> INT_PREF = PREF_NAMESPACE.key(Integer.class)
       .named("testInt")
       .buildWithDefault(3);
   private static final OptPrefKey<Integer> INT_NULL_PREF = PREF_NAMESPACE.key(Integer.class)
       .named("testNullInt")
-      .buildNullable();
+      .buildOptional();
   private static final PrefKey<Long> LONG_PREF = PREF_NAMESPACE.key(Long.class)
       .named("testLong")
       .buildWithDefault(123L);
   private static final OptPrefKey<Long> LONG_NULL_PREF = PREF_NAMESPACE.key(Long.class)
       .named("testNullLong")
-      .buildNullable();
+      .buildOptional();
   private static final PrefKey<String> STRING_PREF = PREF_NAMESPACE.key(String.class)
       .named("testString")
       .buildWithDefault("default");
   private static final OptPrefKey<String> STRING_NULL_PREF = PREF_NAMESPACE.key(String.class)
       .named("testNullString")
-      .buildNullable();
+      .buildOptional();
   private static final PrefKey<Double> DOUBLE_PREF = PREF_NAMESPACE.key(Double.class)
       .named("testDouble")
       .buildWithDefault(1.2d);
   private static final OptPrefKey<Double> DOUBLE_NULL_PREF = PREF_NAMESPACE.key(Double.class)
       .named("testNullDouble")
-      .buildNullable();
+      .buildOptional();
 
   @Rule public final Mockspresso.Rule mockspresso = Rules.mockspresso();
 

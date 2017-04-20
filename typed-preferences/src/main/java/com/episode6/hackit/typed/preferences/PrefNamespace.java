@@ -118,7 +118,7 @@ public class PrefNamespace extends TypedKeyNamespace {
      * Builds an {@link OptPrefKey} with no default value (default value is null).
      * @return a new {@link OptPrefKey}
      */
-    public OptPrefKey<V> buildNullable() {
+    public OptPrefKey<V> buildOptional() {
       return new OptPrefKey<V>(
           new TypedKeyName(mNamespace, mName),
           mObjectType);

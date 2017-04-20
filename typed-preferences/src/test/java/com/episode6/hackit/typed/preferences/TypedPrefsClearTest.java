@@ -7,7 +7,6 @@ import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.preferences.cache.ObjectCache;
 import com.episode6.hackit.typed.testing.Answers;
 import com.episode6.hackit.typed.testing.Rules;
-import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,10 +31,10 @@ public class TypedPrefsClearTest {
       .buildWithDefault(1.2f);
   private static final OptPrefKey<Integer> INT_NULL_PREF = PREF_NAMESPACE.key(Integer.class)
       .named("testNullInt")
-      .buildNullable();
+      .buildOptional();
   private static final OptPrefKey<Long> LONG_NULL_PREF = PREF_NAMESPACE.key(Long.class)
       .named("testNullLong")
-      .buildNullable();
+      .buildOptional();
 
   @Rule public final Mockspresso.Rule mockspresso = Rules.mockspresso();
 
