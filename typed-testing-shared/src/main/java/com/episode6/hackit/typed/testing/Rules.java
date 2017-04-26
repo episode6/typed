@@ -18,11 +18,14 @@ import java.lang.reflect.Type;
  */
 public class Rules {
 
-  public static Mockspresso.Rule mockspresso() {
+  public static Mockspresso.Builder mockspressoBuilder() {
     return Mockspresso.Builders.simple()
         .plugin(MockitoPlugin.getInstance())
-        .specialObjectMaker(supplierMaker())
-        .buildRule();
+        .specialObjectMaker(supplierMaker());
+  }
+
+  public static Mockspresso.Rule mockspresso() {
+    return mockspressoBuilder().buildRule();
   }
 
   public static MockitoRule mockito() {

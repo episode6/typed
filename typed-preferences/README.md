@@ -54,7 +54,7 @@ Typed libraries rely on Gson to serialize and deserialize (non-primitive) plain 
 public static final PrefKey<UserProfile> USER_PROFILE = APP_PREFS
   .key(UserProfile.class)
   .named("user_profile")
-  .buildWithDefault(new Supplier<UserProfile>() {  // User a Supplier to provide defaults Objects
+  .buildWithDefault(new Supplier<UserProfile>() {  // User a Supplier to provide default Objects
     @Override
     public UserProfile get() {
       return new UserProfile();
