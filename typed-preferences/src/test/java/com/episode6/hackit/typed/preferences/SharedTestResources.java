@@ -1,6 +1,7 @@
 package com.episode6.hackit.typed.preferences;
 
 import android.content.SharedPreferences;
+import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.mockspresso.annotation.RealObject;
 import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.preferences.cache.ObjectCache;
@@ -35,10 +36,15 @@ public class SharedTestResources {
   TypedPrefs mTypedPrefsNoCache;
 
   @Before
-  public void init() {
+  public void init(Mockspresso mockspresso) {
     mEditor = mock(SharedPreferences.Editor.class, Answers.builderAnswer());
     when(mSharedPreferences.edit()).thenReturn(mEditor);
     when(mGson.toJson(any())).thenReturn("someFakeJson");
+    
+    mTypedPrefsNoCache = mockspresso.buildUpon()
+        .dependency(ObjectCache.class, null)
+        .build()
+        .create(TypedPrefsImpl.class);
   }
 
   void verifyPrefDidntExist(TypedKey key) {
