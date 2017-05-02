@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 /**
- *
+ * Shared test resources for some of our tests
  */
 public class SharedTestResources {
 
@@ -40,7 +40,7 @@ public class SharedTestResources {
     mEditor = mock(SharedPreferences.Editor.class, Answers.builderAnswer());
     when(mSharedPreferences.edit()).thenReturn(mEditor);
     when(mGson.toJson(any())).thenReturn("someFakeJson");
-    
+
     mTypedPrefsNoCache = mockspresso.buildUpon()
         .dependency(ObjectCache.class, null)
         .build()
