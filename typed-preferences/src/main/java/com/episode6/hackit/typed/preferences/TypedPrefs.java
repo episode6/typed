@@ -1,6 +1,12 @@
 package com.episode6.hackit.typed.preferences;
 
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import com.episode6.hackit.typed.core.util.DefaultGsonSupplier;
+import com.episode6.hackit.typed.core.util.Supplier;
+import com.google.gson.Gson;
 
 import javax.annotation.Nullable;
 
@@ -9,6 +15,42 @@ import javax.annotation.Nullable;
  * typed keys.
  */
 public interface TypedPrefs {
+
+  /**
+   * Offers static methods to wrap android's SharedPreferences as TypedPrefs
+   */
+  class wrap {
+
+    /**
+     * Wrap this context's default {@link SharedPreferences} with a TypedPrefs implementation.
+     * @param context android Context
+     * @return An implementation of TypedPrefs wrapping your app's default shared preferences file.
+     */
+    public static TypedPrefs defaultSharedPrefs(Context context) {
+      return sharedPrefs(PreferenceManager.getDefaultSharedPreferences(context));
+    }
+
+    /**
+     * Wrap an existing instance of android's {@link SharedPreferences} with a TypedPrefs implementation
+     * @param sharedPreferences The {@link SharedPreferences} instance to wrap
+     * @return An implementation of TypedPrefs wrapping the supplied instance of SharedPreferences
+     */
+    public static TypedPrefs sharedPrefs(SharedPreferences sharedPreferences) {
+      return sharedPrefs(sharedPreferences, new DefaultGsonSupplier());
+    }
+
+    /**
+     * Wrap an existing instance of android's {@link SharedPreferences} with a TypedPrefs implementation and
+     * uses the provided Gson supplied to translate non-primitive objects.
+     * @param sharedPreferences The {@link SharedPreferences} instance to wrap
+     * @param gsonSupplier A supplier for a {@link Gson} instance, which will be used to translate
+     *                     non-primitive objects
+     * @return An implementation of TypedPrefs wrapping the supplied instance of SharedPreferences
+     */
+    public static TypedPrefs sharedPrefs(SharedPreferences sharedPreferences, Supplier<Gson> gsonSupplier) {
+      return new TypedPrefsImpl(sharedPreferences, gsonSupplier);
+    }
+  }
 
   /**
    * Get the value for a given {@link PrefKey}
