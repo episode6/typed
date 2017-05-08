@@ -6,7 +6,6 @@ import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.util.Preconditions;
 import com.episode6.hackit.typed.core.util.Supplier;
 import com.episode6.hackit.typed.core.util.Suppliers;
-import com.episode6.hackit.typed.preferences.cache.ObjectCache;
 import com.google.gson.Gson;
 
 import javax.annotation.Nullable;
@@ -21,42 +20,29 @@ class TypedPrefsImpl implements TypedPrefs {
 
   private final SharedPreferences mBackingPrefs;
   private final Supplier<Gson> mGsonSupplier;
-  private final @Nullable ObjectCache mCache;
 
   TypedPrefsImpl(
       SharedPreferences backingPrefs,
-      Supplier<Gson> gsonSupplier,
-      @Nullable ObjectCache cache) {
+      Supplier<Gson> gsonSupplier) {
     mBackingPrefs = backingPrefs;
     mGsonSupplier = Suppliers.memoize(gsonSupplier);
-    mCache = cache;
   }
 
   @Override
   public <T> T get(PrefKey<T> prefKey) {
-    T obj = getFromCache(prefKey);
-    if (obj != null) {
-      return obj;
-    }
-
     if (!containsInternal(prefKey)) {
       return prefKey.getDefaultValue();
     }
-    return getInternalAndCacheResult(prefKey);
+    return getFromSharedPrefs(prefKey);
   }
 
   @Nullable
   @Override
   public <T> T get(OptPrefKey<T> prefKey) {
-    T obj = getFromCache(prefKey);
-    if (obj != null) {
-      return obj;
-    }
-
     if (!containsInternal(prefKey)) {
       return null;
     }
-    return getInternalAndCacheResult(prefKey);
+    return getFromSharedPrefs(prefKey);
   }
 
 
@@ -73,43 +59,6 @@ class TypedPrefsImpl implements TypedPrefs {
   @Override
   public Editor edit() {
     return new EditorImpl(mBackingPrefs.edit());
-  }
-
-  @SuppressWarnings("unchecked")
-  private <T> T getFromCache(TypedKey<T> prefKey) {
-    if (mCache == null) {
-      return null;
-    }
-
-    return (T) mCache.get(prefKey);
-  }
-
-  private void putInCache(TypedKey<?> prefKey, Object instance) {
-    if (mCache == null) {
-      return;
-    }
-
-    mCache.put(prefKey, instance);
-  }
-
-  private void removeFromCache(TypedKey<?> prefKey) {
-    if (mCache == null) {
-      return;
-    }
-    mCache.remove(prefKey);
-  }
-
-  private void clearCache() {
-    if (mCache == null) {
-      return;
-    }
-    mCache.clear();
-  }
-
-  private <T> T getInternalAndCacheResult(TypedKey<T> prefKey) {
-    T obj = getFromSharedPrefs(prefKey);
-    putInCache(prefKey, obj);
-    return obj;
   }
 
   @SuppressWarnings("unchecked")
@@ -143,7 +92,6 @@ class TypedPrefsImpl implements TypedPrefs {
 
     private final SharedPreferences.Editor mEditor;
     private HashMap<TypedKey<?>, Object> mPutMap = new HashMap<>();
-    private boolean mClearCacheOnCommit = false;
 
     private EditorImpl(SharedPreferences.Editor editor) {
       mEditor = editor;
@@ -178,7 +126,6 @@ class TypedPrefsImpl implements TypedPrefs {
     @Override
     public Editor clear() {
       mEditor.clear();
-      mClearCacheOnCommit = true;
       return this;
     }
 
@@ -195,10 +142,6 @@ class TypedPrefsImpl implements TypedPrefs {
     }
 
     private void processPutMap() {
-      if (mClearCacheOnCommit) {
-        clearCache();
-      }
-
       for (Map.Entry<TypedKey<?>, Object> entry : mPutMap.entrySet()) {
         if (entry.getValue() == null) {
           removeInternal(entry.getKey());
@@ -209,8 +152,6 @@ class TypedPrefsImpl implements TypedPrefs {
     }
 
     private void putInternal(TypedKey<?> prefKey, Object instance) {
-      putInCache(prefKey, instance);
-
       Type objType = prefKey.getObjectType();
       String keyName = prefKey.getKeyName().toString();
       if (objType == Boolean.class) {
@@ -233,7 +174,6 @@ class TypedPrefsImpl implements TypedPrefs {
     }
 
     private void removeInternal(TypedKey<?> prefKey) {
-      removeFromCache(prefKey);
       mEditor.remove(prefKey.getKeyName().toString());
     }
   }

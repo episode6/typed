@@ -3,7 +3,6 @@ package com.episode6.hackit.typed.preferences;
 import android.content.Context;
 import com.episode6.hackit.typed.core.util.InstanceSupplier;
 import com.episode6.hackit.typed.core.util.Supplier;
-import com.episode6.hackit.typed.preferences.cache.ObjectCache;
 import com.google.gson.Gson;
 
 import javax.annotation.Nullable;
@@ -38,7 +37,6 @@ public class TypedPrefInitializer {
 
     private @Nullable Context mContext;
     private @Nullable Supplier<Gson> mGsonSupplier;
-    private @Nullable Supplier<ObjectCache> mCacheSupplier;
 
     /**
      * Set the application context for the {@link DefaultPrefs} class.
@@ -72,35 +70,10 @@ public class TypedPrefInitializer {
     }
 
     /**
-     * Specify a supplier for a default type of {@link ObjectCache} to use in {@link TypedPrefs}. Each instance of
-     * {@link TypedPrefs} will get its own instance of this object cache (assuming you don't memoize the supplier)
-     * @param cacheSupplier A supplier for an ObjectCache
-     * @return this {@link Configurater}
-     */
-    public Configurater cacheSupplier(Supplier<ObjectCache> cacheSupplier) {
-      mCacheSupplier = cacheSupplier;
-      return this;
-    }
-
-    /**
-     * Specify that {@link TypedPrefs} should not use a cache by default. (Normally a simple Lru cache is used)
-     * @return this {@link Configurater}
-     */
-    public Configurater noCache() {
-      mCacheSupplier = new Supplier<ObjectCache>() {
-        @Override
-        public ObjectCache get() {
-          return null;
-        }
-      };
-      return this;
-    }
-
-    /**
      * Initialize the static elements of the typed-preferences library
      */
     public void init() {
-      TypedPrefWrapper.setDefaults(mGsonSupplier, mCacheSupplier);
+      TypedPrefWrapper.setDefaults(mGsonSupplier);
       if (mContext != null) {
         DefaultPrefs.init(mContext);
       }
