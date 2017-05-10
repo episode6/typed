@@ -6,6 +6,7 @@ import com.episode6.hackit.typed.testing.Rules;
 import com.google.gson.reflect.TypeToken;
 import org.junit.Rule;
 import org.junit.Test;
+import org.powermock.core.classloader.annotations.MockPolicy;
 
 import java.util.HashMap;
 
@@ -14,6 +15,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /**
  * Tests {@link TypedPrefsImpl} usage with Complex types that are translated via Gson
  */
+@MockPolicy(SharedTestResources.MockPolicy.class)
 public class TypedPrefsGenericsTest {
 
   private static final PrefNamespace PREF_NAMESPACE = PrefNamespace.ROOT.extend("testNamespace").extend("generics");

@@ -4,12 +4,14 @@ import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.typed.testing.Rules;
 import org.junit.Rule;
 import org.junit.Test;
+import org.powermock.core.classloader.annotations.MockPolicy;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Tests {@link TypedPrefsImpl} usage with Primitives
  */
+@MockPolicy(SharedTestResources.MockPolicy.class)
 public class TypedPrefsPrimitivesTest {
 
   private static final PrefNamespace PREF_NAMESPACE = PrefNamespace.ROOT.extend("testNamespace").extend("subNamespace");

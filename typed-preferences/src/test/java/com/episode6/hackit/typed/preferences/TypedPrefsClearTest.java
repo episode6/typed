@@ -6,6 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
+import org.powermock.core.classloader.annotations.MockPolicy;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -13,6 +14,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 /**
  * Tests {@link TypedPrefsImpl} usage of Editor.clear()
  */
+@MockPolicy(SharedTestResources.MockPolicy.class)
 public class TypedPrefsClearTest {
 
   private static final PrefNamespace PREF_NAMESPACE = PrefNamespace.ROOT.extend("testNamespace").extend("clearTest");

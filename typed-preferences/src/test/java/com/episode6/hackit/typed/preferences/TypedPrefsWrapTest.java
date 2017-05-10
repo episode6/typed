@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.MockPolicy;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -18,6 +19,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests {@link TypedPrefs.wrap}
  */
+@MockPolicy(SharedTestResources.MockPolicy.class)
 public class TypedPrefsWrapTest {
 
   final SharedTestResources t = new SharedTestResources();

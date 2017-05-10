@@ -9,6 +9,9 @@ import org.junit.Before;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.powermock.core.spi.PowerMockPolicy;
+import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
+import org.powermock.mockpolicies.MockPolicyInterceptionSettings;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -23,6 +26,19 @@ import static org.mockito.Mockito.*;
  * Shared test resources for some of our tests
  */
 public class SharedTestResources {
+
+  static class MockPolicy implements PowerMockPolicy {
+
+    @Override
+    public void applyClassLoadingPolicy(MockPolicyClassLoadingSettings settings) {
+      settings.addFullyQualifiedNamesOfClassesToLoadByMockClassloader(Gson.class.getName());
+    }
+
+    @Override
+    public void applyInterceptionPolicy(MockPolicyInterceptionSettings settings) {
+
+    }
+  }
 
   @Mock SharedPreferences mSharedPreferences;
   /*Mock*/ SharedPreferences.Editor mEditor;

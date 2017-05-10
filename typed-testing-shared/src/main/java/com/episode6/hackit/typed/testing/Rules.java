@@ -21,7 +21,7 @@ public class Rules {
   public static Mockspresso.Builder mockspressoBuilder() {
     return BuildMockspresso.with()
         .injector().simple()
-        .mocker().mockito()
+        .mocker().mockitoWithPowerMockRule()
         .specialObjectMaker(supplierMaker());
   }
 
