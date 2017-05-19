@@ -29,6 +29,7 @@ public final class AppPrefs {
 
 #### Read using TypedPrefs
 ```java
+// Wrap an instance of SharedPreferences
 TypedPrefs typedPrefs = TypedPrefs.Wrap.sharedPrefs(sharedPrefs);
 
 // No need to null-check these, default values are already defined
@@ -74,3 +75,7 @@ typedPrefs.edit()
     .put(USER_PROFILE, profile)
     .commit();
 ```
+
+
+## License
+MIT: https://github.com/episode6/typed/blob/master/LICENSE
