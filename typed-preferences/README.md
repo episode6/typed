@@ -6,7 +6,7 @@ A wrapper around android's SharedPreferences to simplify call-site access to the
 ```groovy
 repositories { jcenter() }
 dependencies {
-    compile 'com.episode6.hackit.typed:typed-preferences:0.0.1-SNAPSHOT'
+    compile 'com.episode6.hackit.typed:typed-preferences:0.0.2-SNAPSHOT'
 }
 ```
 
