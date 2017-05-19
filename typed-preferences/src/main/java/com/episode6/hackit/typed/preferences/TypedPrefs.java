@@ -17,9 +17,9 @@ import javax.annotation.Nullable;
 public interface TypedPrefs {
 
   /**
-   * Offers static methods to wrap android's SharedPreferences as TypedPrefs
+   * Offers static methods to Wrap android's SharedPreferences as TypedPrefs
    */
-  class wrap {
+  class Wrap {
 
     /**
      * Wrap this context's default {@link SharedPreferences} with a TypedPrefs implementation.
@@ -32,7 +32,7 @@ public interface TypedPrefs {
 
     /**
      * Wrap an existing instance of android's {@link SharedPreferences} with a TypedPrefs implementation
-     * @param sharedPreferences The {@link SharedPreferences} instance to wrap
+     * @param sharedPreferences The {@link SharedPreferences} instance to Wrap
      * @return An implementation of TypedPrefs wrapping the supplied instance of SharedPreferences
      */
     public static TypedPrefs sharedPrefs(SharedPreferences sharedPreferences) {
@@ -42,7 +42,7 @@ public interface TypedPrefs {
     /**
      * Wrap an existing instance of android's {@link SharedPreferences} with a TypedPrefs implementation and
      * uses the provided Gson supplied to translate non-primitive objects.
-     * @param sharedPreferences The {@link SharedPreferences} instance to wrap
+     * @param sharedPreferences The {@link SharedPreferences} instance to Wrap
      * @param gsonSupplier A supplier for a {@link Gson} instance, which will be used to translate
      *                     non-primitive objects
      * @return An implementation of TypedPrefs wrapping the supplied instance of SharedPreferences

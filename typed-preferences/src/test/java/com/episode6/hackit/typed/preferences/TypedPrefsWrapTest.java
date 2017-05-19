@@ -19,7 +19,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
- * Tests {@link TypedPrefs.wrap}
+ * Tests {@link TypedPrefs.Wrap}
  */
 @MockPolicy(SharedTestResources.MockPolicy.class)
 @PrepareForTest(PreferenceManager.class)
@@ -50,7 +50,7 @@ public class TypedPrefsWrapTest {
 
   @Test
   public void testDefaultWrap() {
-    TypedPrefs prefs = TypedPrefs.wrap.defaultSharedPrefs(mContext);
+    TypedPrefs prefs = TypedPrefs.Wrap.defaultSharedPrefs(mContext);
     int value = prefs.get(INT_PREF);
 
 
@@ -63,7 +63,7 @@ public class TypedPrefsWrapTest {
 
   @Test
   public void testSimpleWrap() {
-    TypedPrefs prefs = TypedPrefs.wrap.sharedPrefs(t.mSharedPreferences);
+    TypedPrefs prefs = TypedPrefs.Wrap.sharedPrefs(t.mSharedPreferences);
     int value = prefs.get(INT_PREF);
 
     t.verifyPrefDidntExist(INT_PREF);
@@ -75,7 +75,7 @@ public class TypedPrefsWrapTest {
     TestClass expected = new TestClass();
     t.setupPrefExists(CLASS_PREF, expected);
 
-    TypedPrefs prefs = TypedPrefs.wrap.sharedPrefs(t.mSharedPreferences, mGsonSupplier);
+    TypedPrefs prefs = TypedPrefs.Wrap.sharedPrefs(t.mSharedPreferences, mGsonSupplier);
     TestClass result = prefs.get(CLASS_PREF);
 
     t.verifyPrefExisted(CLASS_PREF);

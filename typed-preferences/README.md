@@ -29,7 +29,7 @@ public final class AppPrefs {
 
 #### Read using TypedPrefs
 ```java
-TypedPrefs typedPrefs = TypedPrefWrapper.wrapSharedPreferences(sharedPrefs);
+TypedPrefs typedPrefs = TypedPrefs.Wrap.sharedPrefs(sharedPrefs);
 
 // No need to null-check these, default values are already defined
 // and types are enforced at compile time.
