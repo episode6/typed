@@ -24,7 +24,7 @@ android {
 
 dependencies {
   compile project(':typed-core')
-  compile('net.sourceforge.findbugs:jsr305')
+  compile('com.google.code.findbugs:jsr305')
   compile('com.google.code.gson:gson')
 
   testCompile project(':typed-testing-shared')
