@@ -8,3 +8,7 @@ dependencies {
   compile project(':typed-core')
   compile gdmc('testlibs')
 }
+
+gdmcValidateSelf {
+  required = {false}
+}
