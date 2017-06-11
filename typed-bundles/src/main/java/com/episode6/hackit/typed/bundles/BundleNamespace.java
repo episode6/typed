@@ -73,8 +73,8 @@ public class BundleNamespace extends TypedKeyNamespace {
           defaultInstanceSupplier);
     }
 
-    public NullableBundleKey<V> buildNullable() {
-      return new NullableBundleKey<V>(
+    public OptBundleKey<V> buildOptional() {
+      return new OptBundleKey<V>(
           new TypedKeyName(mNamespace, mName),
           mObjectType);
     }

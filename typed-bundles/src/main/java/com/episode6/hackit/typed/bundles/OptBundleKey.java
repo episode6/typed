@@ -2,23 +2,20 @@ package com.episode6.hackit.typed.bundles;
 
 import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.TypedKeyName;
-import com.episode6.hackit.typed.core.util.Supplier;
 
 import java.lang.reflect.Type;
 
 /**
  *
  */
-public class BundleKey<V> implements TypedKey<V> {
+public class OptBundleKey<V> implements TypedKey<V> {
 
   private final TypedKeyName mKeyName;
   private final Type mObjectType;
-  private final Supplier<V> mDefaultValueSupplier;
 
-  BundleKey(TypedKeyName keyName, Type objectType, Supplier<V> defaultValueSupplier) {
+  OptBundleKey(TypedKeyName keyName, Type objectType) {
     mKeyName = keyName;
     mObjectType = objectType;
-    mDefaultValueSupplier = defaultValueSupplier;
   }
 
   @Override
@@ -31,10 +28,6 @@ public class BundleKey<V> implements TypedKey<V> {
     return mObjectType;
   }
 
-  V getDefaultValue() {
-    return mDefaultValueSupplier.get();
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -44,12 +37,12 @@ public class BundleKey<V> implements TypedKey<V> {
       return false;
     }
 
-    BundleKey<?> bundleKey = (BundleKey<?>) o;
+    OptBundleKey<?> that = (OptBundleKey<?>) o;
 
-    if (!mKeyName.equals(bundleKey.mKeyName)) {
+    if (!mKeyName.equals(that.mKeyName)) {
       return false;
     }
-    return mObjectType.equals(bundleKey.mObjectType);
+    return mObjectType.equals(that.mObjectType);
   }
 
   @Override
