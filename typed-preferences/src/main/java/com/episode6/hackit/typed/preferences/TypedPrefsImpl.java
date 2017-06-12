@@ -33,7 +33,11 @@ class TypedPrefsImpl implements TypedPrefs {
     if (!containsInternal(prefKey)) {
       return prefKey.getDefaultValue();
     }
-    return getFromSharedPrefs(prefKey);
+    T instance = getFromSharedPrefs(prefKey);
+    if (instance == null) {
+      return prefKey.getDefaultValue();
+    }
+    return instance;
   }
 
   @Nullable
@@ -62,7 +66,7 @@ class TypedPrefsImpl implements TypedPrefs {
   }
 
   @SuppressWarnings("unchecked")
-  private <T> T getFromSharedPrefs(TypedKey<T> prefKey) {
+  private @Nullable <T> T getFromSharedPrefs(TypedKey<T> prefKey) {
     Type objType = prefKey.getObjectType();
     String keyName = prefKey.getKeyName().toString();
     if (objType == Boolean.class) {

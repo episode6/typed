@@ -37,7 +37,11 @@ public class TypedBundleImpl implements TypedBundle {
     if (!containsInternal(key)) {
       return key.getDefaultValue();
     }
-    return getInternal(key);
+    T instance = getInternal(key);
+    if (instance == null) {
+      return key.getDefaultValue();
+    }
+    return instance;
   }
 
   @Nullable
@@ -86,7 +90,7 @@ public class TypedBundleImpl implements TypedBundle {
     return mDelegate.containsKey(key.getKeyName().toString());
   }
 
-  private <T> T getInternal(TypedKey<T> key) {
+  private @Nullable <T> T getInternal(TypedKey<T> key) {
     return null;
   }
 
