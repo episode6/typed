@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  */
 @SuppressWarnings("unchecked")
-public class BundleTranslators {
+public class CustomBundleTranslators {
 
   static final BundleTranslator PARCELABLE = new BundleTranslator() {
     @Override

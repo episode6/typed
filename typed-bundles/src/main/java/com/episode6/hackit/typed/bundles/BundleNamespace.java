@@ -48,15 +48,15 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   public <T extends Parcelable> KeyBuilder<T> parcelableKey() {
-    return new KeyBuilder<T>(this, Parcelable.class, BundleTranslators.PARCELABLE);
+    return new KeyBuilder<T>(this, Parcelable.class, CustomBundleTranslators.PARCELABLE);
   }
 
   public <T extends Serializable> KeyBuilder<T> serializableKey() {
-    return new KeyBuilder<T>(this, Serializable.class, BundleTranslators.SERIALIZABLE);
+    return new KeyBuilder<T>(this, Serializable.class, CustomBundleTranslators.SERIALIZABLE);
   }
 
   public <T extends Parcelable> KeyBuilder<ArrayList<T>> parcelableArrayListKey() {
-    return new KeyBuilder<ArrayList<T>>(this, ArrayList.class, BundleTranslators.PARCELABLE_ARRAY_LIST);
+    return new KeyBuilder<ArrayList<T>>(this, ArrayList.class, CustomBundleTranslators.PARCELABLE_ARRAY_LIST);
   }
 
   public static class KeyBuilder<V> {
