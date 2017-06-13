@@ -4,6 +4,7 @@ import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.TypedKeyName;
 import com.episode6.hackit.typed.core.util.Supplier;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 
 /**
@@ -14,11 +15,17 @@ public class BundleKey<V> implements TypedKey<V> {
   private final TypedKeyName mKeyName;
   private final Type mObjectType;
   private final Supplier<V> mDefaultValueSupplier;
+  private final @Nullable BundleTranslator mTranslator;
 
-  BundleKey(TypedKeyName keyName, Type objectType, Supplier<V> defaultValueSupplier) {
+  BundleKey(
+      TypedKeyName keyName,
+      Type objectType,
+      Supplier<V> defaultValueSupplier,
+      @Nullable BundleTranslator translator) {
     mKeyName = keyName;
     mObjectType = objectType;
     mDefaultValueSupplier = defaultValueSupplier;
+    mTranslator = translator;
   }
 
   @Override
@@ -33,6 +40,10 @@ public class BundleKey<V> implements TypedKey<V> {
 
   V getDefaultValue() {
     return mDefaultValueSupplier.get();
+  }
+
+  @Nullable BundleTranslator getTranslator() {
+    return mTranslator;
   }
 
   @Override

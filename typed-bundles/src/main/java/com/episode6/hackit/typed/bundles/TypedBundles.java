@@ -28,11 +28,15 @@ public class TypedBundles {
     return new TypedBundleImpl(sGsonSupplier, bundle);
   }
 
+  public static TypedBundle create() {
+    return fromBundle(new Bundle());
+  }
+
   public static @Nullable TypedBundle fromBundleOrNull(@Nullable Bundle bundle) {
     return bundle == null ? null : fromBundle(bundle);
   }
 
   public static TypedBundle fromNullable(@Nullable Bundle bundle) {
-    return fromBundle(bundle == null ? new Bundle() : bundle);
+    return bundle == null ? create() : fromBundle(bundle);
   }
 }

@@ -1,5 +1,6 @@
 package com.episode6.hackit.typed.bundles;
 
+import android.os.Parcelable;
 import com.episode6.hackit.typed.core.TypedKeyName;
 import com.episode6.hackit.typed.core.TypedKeyNamespace;
 import com.episode6.hackit.typed.core.util.InstanceSupplier;
@@ -8,7 +9,9 @@ import com.episode6.hackit.typed.core.util.Supplier;
 import com.google.gson.reflect.TypeToken;
 
 import javax.annotation.Nullable;
+import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 /**
  *
@@ -37,22 +40,39 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   public <T> KeyBuilder<T> key(Class<T> keyType) {
-    return new KeyBuilder<T>(this, keyType);
+    return new KeyBuilder<T>(this, keyType, DirectBundleTranslators.getDirectTranslator(keyType));
   }
 
   public <T> KeyBuilder<T> key(TypeToken<T> keyType) {
-    return new KeyBuilder<T>(this, keyType.getType());
+    return new KeyBuilder<T>(this, keyType.getType(), null);
+  }
+
+  public <T extends Parcelable> KeyBuilder<T> parcelableKey() {
+    return new KeyBuilder<T>(this, Parcelable.class, BundleTranslators.PARCELABLE);
+  }
+
+  public <T extends Serializable> KeyBuilder<T> serializableKey() {
+    return new KeyBuilder<T>(this, Serializable.class, BundleTranslators.SERIALIZABLE);
+  }
+
+  public <T extends Parcelable> KeyBuilder<ArrayList<T>> parcelableArrayListKey() {
+    return new KeyBuilder<ArrayList<T>>(this, ArrayList.class, BundleTranslators.PARCELABLE_ARRAY_LIST);
   }
 
   public static class KeyBuilder<V> {
     private final BundleNamespace mNamespace;
     private final Type mObjectType;
+    private final @Nullable BundleTranslator mTranslator;
 
     private @Nullable String mName;
 
-    private KeyBuilder(BundleNamespace namespace, Type objectType) {
+    private KeyBuilder(
+        BundleNamespace namespace,
+        Type objectType,
+        @Nullable BundleTranslator translator) {
       mNamespace = namespace;
       mObjectType = objectType;
+      mTranslator = translator;
     }
 
     public KeyBuilder<V> named(String name) {
@@ -70,13 +90,15 @@ public class BundleNamespace extends TypedKeyNamespace {
       return new BundleKey<V>(
           new TypedKeyName(mNamespace, mName),
           mObjectType,
-          defaultInstanceSupplier);
+          defaultInstanceSupplier,
+          mTranslator);
     }
 
     public OptBundleKey<V> buildOptional() {
       return new OptBundleKey<V>(
           new TypedKeyName(mNamespace, mName),
-          mObjectType);
+          mObjectType,
+          mTranslator);
     }
   }
 }

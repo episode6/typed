@@ -8,6 +8,7 @@ import com.episode6.hackit.typed.core.util.Suppliers;
 import com.google.gson.Gson;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Type;
 
 /**
  *
@@ -37,7 +38,7 @@ public class TypedBundleImpl implements TypedBundle {
     if (!containsInternal(key)) {
       return key.getDefaultValue();
     }
-    T instance = getInternal(key);
+    T instance = getInternal(key, key.getTranslator());
     if (instance == null) {
       return key.getDefaultValue();
     }
@@ -50,12 +51,12 @@ public class TypedBundleImpl implements TypedBundle {
     if (!containsInternal(key)) {
       return null;
     }
-    return getInternal(key);
+    return getInternal(key, key.getTranslator());
   }
 
   @Override
   public <T> TypedBundle put(BundleKey<T> key, T value) {
-    putInternal(key, Preconditions.checkNotNull(value));
+    putInternal(key, Preconditions.checkNotNull(value), key.getTranslator());
     return this;
   }
 
@@ -64,7 +65,7 @@ public class TypedBundleImpl implements TypedBundle {
     if (value == null) {
       removeInternal(key);
     } else {
-      putInternal(key, value);
+      putInternal(key, value, key.getTranslator());
     }
     return this;
   }
@@ -90,15 +91,28 @@ public class TypedBundleImpl implements TypedBundle {
     return mDelegate.containsKey(key.getKeyName().toString());
   }
 
-  private @Nullable <T> T getInternal(TypedKey<T> key) {
-    return null;
-  }
-
-  private <T> void putInternal(TypedKey<T> key, T value) {
-
-  }
-
   private void removeInternal(TypedKey<?> key) {
     mDelegate.remove(key.getKeyName().toString());
+  }
+
+  @SuppressWarnings("unchecked")
+  private @Nullable <T> T getInternal(TypedKey<T> key, @Nullable BundleTranslator translator) {
+    final String keyName = key.getKeyName().toString();
+    if (translator != null) {
+      return (T) translator.getFromBundle(mDelegate, keyName);
+    } else {
+      String translation = mDelegate.getString(keyName);
+      return mGsonSupplier.get().fromJson(translation, key.getObjectType());
+    }
+  }
+
+  private <T> void putInternal(TypedKey<T> key, T value, @Nullable BundleTranslator translator) {
+    final String keyName = key.getKeyName().toString();
+    if (translator != null) {
+      translator.writeToBundle(mDelegate, keyName, value);
+    } else {
+      String translation = mGsonSupplier.get().toJson(value, key.getObjectType());
+      mDelegate.putString(keyName, translation);
+    }
   }
 }
