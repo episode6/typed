@@ -94,6 +94,13 @@ public class BundleNamespace extends TypedKeyNamespace {
           defaultInstanceSupplier);
     }
 
+    public ReqBundleKey<V> buildRequired() {
+      return new ReqBundleKey<V>(
+          new TypedKeyName(mNamespace, mName),
+          mObjectType,
+          mTranslator);
+    }
+
     public OptBundleKey<V> buildOptional() {
       return new OptBundleKey<V>(
           new TypedKeyName(mNamespace, mName),

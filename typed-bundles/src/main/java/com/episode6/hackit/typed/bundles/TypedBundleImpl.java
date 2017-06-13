@@ -28,6 +28,11 @@ public class TypedBundleImpl implements TypedBundle {
   }
 
   @Override
+  public boolean contains(ReqBundleKey<?> key) {
+    return containsInternal(key);
+  }
+
+  @Override
   public boolean contains(OptBundleKey<?> key) {
     return containsInternal(key);
   }
@@ -40,6 +45,18 @@ public class TypedBundleImpl implements TypedBundle {
     T instance = getInternal(key);
     if (instance == null) {
       return key.getDefaultValue();
+    }
+    return instance;
+  }
+
+  @Override
+  public <T> T get(ReqBundleKey<T> key) {
+    if (!containsInternal(key)) {
+      throw new MissingPropertyException(key);
+    }
+    T instance = getInternal(key);
+    if (instance == null) {
+      throw new MissingPropertyException(key);
     }
     return instance;
   }
@@ -60,6 +77,12 @@ public class TypedBundleImpl implements TypedBundle {
   }
 
   @Override
+  public <T> TypedBundle put(ReqBundleKey<T> key, T value) {
+    putInternal(key, Preconditions.checkNotNull(value));
+    return this;
+  }
+
+  @Override
   public <T> TypedBundle put(OptBundleKey<T> key, @Nullable T value) {
     if (value == null) {
       removeInternal(key);
@@ -71,6 +94,12 @@ public class TypedBundleImpl implements TypedBundle {
 
   @Override
   public <T> TypedBundle remove(BundleKey<?> key) {
+    removeInternal(key);
+    return this;
+  }
+
+  @Override
+  public <T> TypedBundle remove(ReqBundleKey<?> key) {
     removeInternal(key);
     return this;
   }

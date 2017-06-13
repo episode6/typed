@@ -42,6 +42,11 @@ public class TestResources {
     verifyContainsCalled(key);
   }
 
+  void testDoesntContain(ReqBundleKey key) {
+    assertThat(typedBundle.contains(key)).isFalse();
+    verifyContainsCalled(key);
+  }
+
   void testDoesntContain(OptBundleKey key) {
     assertThat(typedBundle.contains(key)).isFalse();
     verifyContainsCalled(key);

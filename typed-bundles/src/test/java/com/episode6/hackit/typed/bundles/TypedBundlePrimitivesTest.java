@@ -22,11 +22,13 @@ public class TypedBundlePrimitivesTest {
   static final BundleNamespace NAMESPACE = BundleNamespace.fromClass(TypedBundlePrimitivesTest.class);
 
   static final BundleKey<Boolean> BOOL_KEY = NAMESPACE.key(Boolean.class).named("boolKey").buildWithDefault(true);
+  static final ReqBundleKey<Boolean> BOOL_REQ_KEY = NAMESPACE.key(Boolean.class).named("boolReqKey").buildRequired();
   static final OptBundleKey<Boolean> BOOL_OPT_KEY = NAMESPACE.key(Boolean.class).named("boolOptKey").buildOptional();
 
   @Test
   public void testPrefDoesntExist() {
     t.testDoesntContain(BOOL_KEY);
+    t.testDoesntContain(BOOL_REQ_KEY);
     t.testDoesntContain(BOOL_OPT_KEY);
   }
 }
