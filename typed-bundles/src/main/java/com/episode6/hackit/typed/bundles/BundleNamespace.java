@@ -90,8 +90,8 @@ public class BundleNamespace extends TypedKeyNamespace {
       return new BundleKey<V>(
           new TypedKeyName(mNamespace, mName),
           mObjectType,
-          defaultInstanceSupplier,
-          mTranslator);
+          mTranslator,
+          defaultInstanceSupplier);
     }
 
     public OptBundleKey<V> buildOptional() {

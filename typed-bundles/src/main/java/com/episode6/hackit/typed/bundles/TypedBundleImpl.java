@@ -8,7 +8,6 @@ import com.episode6.hackit.typed.core.util.Suppliers;
 import com.google.gson.Gson;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Type;
 
 /**
  *
@@ -38,7 +37,7 @@ public class TypedBundleImpl implements TypedBundle {
     if (!containsInternal(key)) {
       return key.getDefaultValue();
     }
-    T instance = getInternal(key, key.getTranslator());
+    T instance = getInternal(key);
     if (instance == null) {
       return key.getDefaultValue();
     }
@@ -51,12 +50,12 @@ public class TypedBundleImpl implements TypedBundle {
     if (!containsInternal(key)) {
       return null;
     }
-    return getInternal(key, key.getTranslator());
+    return getInternal(key);
   }
 
   @Override
   public <T> TypedBundle put(BundleKey<T> key, T value) {
-    putInternal(key, Preconditions.checkNotNull(value), key.getTranslator());
+    putInternal(key, Preconditions.checkNotNull(value));
     return this;
   }
 
@@ -65,7 +64,7 @@ public class TypedBundleImpl implements TypedBundle {
     if (value == null) {
       removeInternal(key);
     } else {
-      putInternal(key, value, key.getTranslator());
+      putInternal(key, value);
     }
     return this;
   }
@@ -96,8 +95,9 @@ public class TypedBundleImpl implements TypedBundle {
   }
 
   @SuppressWarnings("unchecked")
-  private @Nullable <T> T getInternal(TypedKey<T> key, @Nullable BundleTranslator translator) {
+  private @Nullable <T> T getInternal(AbstractBundleKey<T> key) {
     final String keyName = key.getKeyName().toString();
+    final @Nullable BundleTranslator translator = key.getTranslator();
     if (translator != null) {
       return (T) translator.getFromBundle(mDelegate, keyName);
     } else {
@@ -106,8 +106,9 @@ public class TypedBundleImpl implements TypedBundle {
     }
   }
 
-  private <T> void putInternal(TypedKey<T> key, T value, @Nullable BundleTranslator translator) {
+  private <T> void putInternal(AbstractBundleKey<T> key, T value) {
     final String keyName = key.getKeyName().toString();
+    final @Nullable BundleTranslator translator = key.getTranslator();
     if (translator != null) {
       translator.writeToBundle(mDelegate, keyName, value);
     } else {
