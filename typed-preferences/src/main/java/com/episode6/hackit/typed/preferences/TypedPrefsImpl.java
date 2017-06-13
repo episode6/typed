@@ -172,7 +172,7 @@ class TypedPrefsImpl implements TypedPrefs {
         long doubleBits = Double.doubleToRawLongBits((Double) instance);
         mEditor.putLong(keyName, doubleBits);
       } else {
-        String translation = mGsonSupplier.get().toJson(instance);
+        String translation = mGsonSupplier.get().toJson(instance, objType);
         mEditor.putString(keyName, translation);
       }
     }
