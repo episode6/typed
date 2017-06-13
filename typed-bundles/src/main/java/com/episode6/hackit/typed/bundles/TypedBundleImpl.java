@@ -145,4 +145,23 @@ public class TypedBundleImpl implements TypedBundle {
       mDelegate.putString(keyName, translation);
     }
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    TypedBundleImpl that = (TypedBundleImpl) o;
+
+    return mDelegate.equals(that.mDelegate);
+  }
+
+  @Override
+  public int hashCode() {
+    return mDelegate.hashCode();
+  }
 }

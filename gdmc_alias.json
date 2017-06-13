@@ -3,6 +3,7 @@
     "alias": [
       "junit:junit",
       "net.sourceforge.findbugs:jsr305",
+      "com.google.guava:guava",
       "org.easytesting:fest-assert-core",
       "org.mockito:mockito-core",
       "com.episode6.hackit.mockspresso:mockspresso-core",
