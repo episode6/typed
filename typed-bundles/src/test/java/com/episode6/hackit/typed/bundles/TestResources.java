@@ -136,6 +136,36 @@ public class TestResources {
     verifyNoMoreInteractions(bundle, gson);
   }
 
+  <T> void testGetGsonTranslated(TypedKey<T> key, T retValue) {
+    final String keyName = key.getKeyName().toString();
+    final String fakeJson = "someFakeJson:" + keyName;
+    when(bundle.containsKey(keyName)).thenReturn(true);
+    when(bundle.getString(keyName)).thenReturn(fakeJson);
+    when(gson.fromJson(fakeJson, key.getObjectType())).thenReturn(retValue);
+
+    T instance = get(key);
+
+    assertThat(instance).isEqualTo(retValue);
+    InOrder inOrder = Mockito.inOrder(bundle, gson);
+    inOrder.verify(bundle).containsKey(keyName);
+    inOrder.verify(bundle).getString(keyName);
+    inOrder.verify(gson).fromJson(fakeJson, key.getObjectType());
+    verifyNoMoreInteractions(bundle, gson);
+  }
+
+  <T> void testPutGsonTranslated(TypedKey<T> key, T instanceToPut) {
+    final String keyName = key.getKeyName().toString();
+    final String fakeJson = "someFakeJson:" + keyName;
+    when(gson.toJson(instanceToPut, key.getObjectType())).thenReturn(fakeJson);
+
+    put(key, instanceToPut);
+
+    InOrder inOrder = Mockito.inOrder(bundle, gson);
+    inOrder.verify(gson).toJson(instanceToPut, key.getObjectType());
+    inOrder.verify(bundle).putString(keyName, fakeJson);
+    verifyNoMoreInteractions(bundle, gson);
+  }
+
   @SuppressWarnings("unchecked")
   <T> Tester<T> getGetTester(Type clazz) {
     if (clazz == Boolean.class) {
