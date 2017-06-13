@@ -167,6 +167,18 @@ public class DirectBundleTranslatorsTest {
   }
 
   @Test
+  public void testCharSeqGet() {
+    setSdkVersion(12);
+    testGet(CharSequence.class);
+  }
+
+  @Test
+  public void testCharSeqSet() {
+    setSdkVersion(12);
+    testPut(CharSequence.class);
+  }
+
+  @Test
   public void testSizeGet() {
     setSdkVersion(21);
     testGet(Size.class);

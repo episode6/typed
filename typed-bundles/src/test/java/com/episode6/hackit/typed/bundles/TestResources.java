@@ -305,6 +305,21 @@ public class TestResources {
       };
     }
 
+    if (clazz == CharSequence.class) {
+      return (Tester<T>) new Tester<CharSequence>() {
+        @Override
+        public CharSequence setup(String keyName) {
+          when(bundle.getCharSequence(keyName)).thenReturn("hello there");
+          return "hello there";
+        }
+
+        @Override
+        public void verify(String keyName, InOrder inOrder) {
+          inOrder.verify(bundle).getCharSequence(keyName);
+        }
+      };
+    }
+
     if (clazz == Size.class) {
       return (Tester<T>) new Tester<Size>() {
         @Override
@@ -498,6 +513,20 @@ public class TestResources {
         public void verify(String keyName, InOrder inOrder) {
           Mockito.verify(tb).asBundle();
           inOrder.verify(bundle).putBundle(keyName, b);
+        }
+      };
+    }
+
+    if (clazz == CharSequence.class) {
+      return (Tester<T>) new Tester<CharSequence>() {
+        @Override
+        public CharSequence setup(String keyName) {
+          return "cool beans!";
+        }
+
+        @Override
+        public void verify(String keyName, InOrder inOrder) {
+          inOrder.verify(bundle).putCharSequence(keyName, "cool beans!");
         }
       };
     }

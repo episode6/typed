@@ -114,6 +114,10 @@ public class DirectlyTranslatedKeyTest {
   @Mock Size mSize;
   @Mock SizeF mSizeF;
 
+  BundleKey<CharSequence> chsqKey;
+  ReqBundleKey<CharSequence> chsqReqKey;
+  OptBundleKey<CharSequence> chsqOptKey;
+
   BundleKey<Size> sizeKey;
   ReqBundleKey<Size> sizeReqKey;
   OptBundleKey<Size> sizeOptKey;
@@ -128,6 +132,10 @@ public class DirectlyTranslatedKeyTest {
   public void setup() {
     Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", 21);
 
+    // these keys require android v > 1, so we can't create the statically
+    chsqKey = NAMESPACE.key(CharSequence.class).named("chSqKey").buildWithDefault("nice");
+    chsqReqKey = NAMESPACE.key(CharSequence.class).named("chSqReqKey").buildRequired();
+    chsqOptKey = NAMESPACE.key(CharSequence.class).named("chSqOptKey").buildOptional();
     sizeKey = NAMESPACE.key(Size.class).named("sizeKey").buildWithDefault(mSize);
     sizeReqKey = NAMESPACE.key(Size.class).named("sizeReqKey").buildRequired();
     sizeOptKey = NAMESPACE.key(Size.class).named("sizeOptKey").buildOptional();
@@ -137,7 +145,10 @@ public class DirectlyTranslatedKeyTest {
 
     allKeys = ImmutableSet.<TypedKey>builder()
         .addAll(STATIC_KEYS)
-        .add(sizeKey,
+        .add(chsqKey,
+            chsqReqKey,
+            chsqOptKey,
+            sizeKey,
             sizeReqKey,
             sizeOptKey,
             sizeFKey,

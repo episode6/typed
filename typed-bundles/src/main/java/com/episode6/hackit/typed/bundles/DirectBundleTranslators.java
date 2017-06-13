@@ -37,6 +37,12 @@ public class DirectBundleTranslators {
       return TYPED_BUNDLE;
     }
 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+      if (keyType == CharSequence.class) {
+        return CHAR_SEQUENCE;
+      }
+    }
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       if (keyType == android.util.Size.class) {
         return SIZE;
@@ -176,6 +182,18 @@ public class DirectBundleTranslators {
     @Override
     public void writeToBundle(Bundle b, String keyName, Object instance) {
       b.putBundle(keyName, ((TypedBundle)instance).asBundle());
+    }
+  };
+
+  private static final BundleTranslator CHAR_SEQUENCE = new BundleTranslator() {
+    @Override @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+    public Object getFromBundle(Bundle b, String keyName) {
+      return b.getCharSequence(keyName);
+    }
+
+    @Override @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      b.putCharSequence(keyName, (CharSequence) instance);
     }
   };
 
