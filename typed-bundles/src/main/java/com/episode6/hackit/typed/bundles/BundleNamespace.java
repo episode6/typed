@@ -64,7 +64,7 @@ public class BundleNamespace extends TypedKeyNamespace {
 
   /**
    * Start building a new key for any type of object that isn't generic. If {@link android.os.Bundle} has a special
-   * method to handle keyType, it will be used to get & set instances. Otherwise the object(s) will be translated
+   * method to handle keyType, it will be used to get and set instances. Otherwise the object(s) will be translated
    * via gson, and stored in bundles as strings.
    * @param keyType The type of object this key represents
    * @param <T> The type of object this key represents
@@ -97,7 +97,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<Parcelable>}. The ArrayList will be translated to/from
+   * Start building a new key for an ArrayList&lt;Parcelable&gt;. The ArrayList will be translated to/from
    * a Parcelable[], and the methods {@link android.os.Bundle#putParcelableArray(String, Parcelable[])}
    * and {@link android.os.Bundle#getParcelableArray(String)} will be used to write the list to the bundle.
    *
@@ -113,7 +113,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<Parcelable>}. {@link android.os.Bundle}'s built in
+   * Start building a new key for an ArrayList&lt;Parcelable&gt;. {@link android.os.Bundle}'s built in
    * parcelableArrayList methods will be used to read/write this list to bundles.
    * @param itemType The type of Parcelable that the array list should contain
    * @param <T> The type of Parcelable that the array list should contain
@@ -124,7 +124,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link SparseArray<Parcelable>}. {@link android.os.Bundle}'s built in
+   * Start building a new key for a SparseArray&lt;Parcelable&gt;. {@link android.os.Bundle}'s built in
    * sparseParcelableArray methods will be used to read/write this list to bundles.
    * @param itemType The type of Parcelable that the array should contain
    * @param <T> The type of Parcelable that the array should contain
@@ -159,7 +159,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<Boolean>}. The ArrayList will be translated to/from
+   * Start building a new key for an ArrayList&lt;Boolean&gt;. The ArrayList will be translated to/from
    * a boolean[], and the methods {@link android.os.Bundle#putBooleanArray(String, boolean[])}
    * and {@link android.os.Bundle#getBooleanArray(String)} will be used to write the list to the bundle.
    * @return A new {@link KeyBuilder}, with which to build the new key.
@@ -169,7 +169,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<Integer>}. The ArrayList will be translated to/from
+   * Start building a new key for an ArrayList&lt;Integer&gt;. The ArrayList will be translated to/from
    * a int[], and the methods {@link android.os.Bundle#putIntArray(String, int[])}
    * and {@link android.os.Bundle#getIntArray(String)} will be used to write the list to the bundle.
    *
@@ -183,7 +183,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<Integer>}. {@link android.os.Bundle}'s built in
+   * Start building a new key for an ArrayList&lt;Integer&gt;. {@link android.os.Bundle}'s built in
    * integerArrayList methods will be used to read/write this list to bundles.
    * @return A new {@link KeyBuilder}, with which to build the new key.
    */
@@ -192,7 +192,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<String>}. The ArrayList will be translated to/from
+   * Start building a new key for an ArrayList&lt;String&gt;. The ArrayList will be translated to/from
    * a String[], and the methods {@link android.os.Bundle#putStringArray(String, String[])}
    * and {@link android.os.Bundle#getStringArray(String)} will be used to write the list to the bundle.
    *
@@ -206,7 +206,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<String>}. {@link android.os.Bundle}'s built in
+   * Start building a new key for an ArrayList&lt;String&gt;. {@link android.os.Bundle}'s built in
    * stringArrayList methods will be used to read/write this list to bundles.
    * @return A new {@link KeyBuilder}, with which to build the new key.
    */
@@ -215,7 +215,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<Float>}. The ArrayList will be translated to/from
+   * Start building a new key for a ArrayList&lt;Float&gt;. The ArrayList will be translated to/from
    * a float[], and the methods {@link android.os.Bundle#putFloatArray(String, float[])}
    * and {@link android.os.Bundle#getFloatArray(String)} will be used to read/write the list to the bundle.
    * @return A new {@link KeyBuilder}, with which to build the new key.
@@ -225,7 +225,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<Long>}. The ArrayList will be translated to/from
+   * Start building a new key for an ArrayList&lt;Long&gt;. The ArrayList will be translated to/from
    * a long[], and the methods {@link android.os.Bundle#putLongArray(String, long[])}
    * and {@link android.os.Bundle#getLongArray(String)}  will be used to read/write the list to the bundle.
    * @return A new {@link KeyBuilder}, with which to build the new key.
@@ -235,7 +235,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<Double>}. The ArrayList will be translated to/from
+   * Start building a new key for an ArrayList&lt;Double&gt;. The ArrayList will be translated to/from
    * a double[], and the methods {@link android.os.Bundle#putDoubleArray(String, double[])}
    * and {@link android.os.Bundle#getDoubleArray(String)} will be used to read/write the list to the bundle.
    * @return A new {@link KeyBuilder}, with which to build the new key.
@@ -245,7 +245,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<Short>}. The ArrayList will be translated to/from
+   * Start building a new key for an ArrayList&lt;Short&gt;. The ArrayList will be translated to/from
    * a short[], and the methods {@link android.os.Bundle#putShortArray(String, short[])}
    * and {@link android.os.Bundle#getShortArray(String)} will be used to read/write the list to the bundle.
    * @return A new {@link KeyBuilder}, with which to build the new key.
@@ -255,7 +255,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<Character>}. The ArrayList will be translated to/from
+   * Start building a new key for an ArrayList&lt;Character&gt;. The ArrayList will be translated to/from
    * a char[], and the methods {@link android.os.Bundle#putCharArray(String, char[])}
    * and {@link android.os.Bundle#getCharArray(String)} will be used to read/write the list to the bundle.
    * @return A new {@link KeyBuilder}, with which to build the new key.
@@ -275,7 +275,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<CharSequence>}. The ArrayList will be translated to/from
+   * Start building a new key for an ArrayList&lt;CharSequence&gt;. The ArrayList will be translated to/from
    * a CharSequence[], and the methods {@link android.os.Bundle#putCharSequenceArray(String, CharSequence[])}
    * and {@link android.os.Bundle#getCharSequenceArray(String)} will be used to write the list to the bundle.
    *
@@ -291,7 +291,7 @@ public class BundleNamespace extends TypedKeyNamespace {
   }
 
   /**
-   * Start building a new key for a {@link ArrayList<CharSequence>}. {@link android.os.Bundle}'s built in
+   * Start building a new key for an ArrayList&lt;CharSequence&gt;. {@link android.os.Bundle}'s built in
    * charSequenceArrayList methods will be used to read/write this list to bundles.
    * @return A new {@link KeyBuilder}, with which to build the new key.
    */
