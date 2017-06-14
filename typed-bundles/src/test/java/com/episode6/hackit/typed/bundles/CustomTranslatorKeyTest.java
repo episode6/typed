@@ -1,5 +1,7 @@
 package com.episode6.hackit.typed.bundles;
 
+import android.os.Build;
+import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.SparseArray;
@@ -9,6 +11,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.powermock.core.classloader.annotations.MockPolicy;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.reflect.Whitebox;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,6 +25,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 /**
  *
  */
+@PrepareForTest({Build.VERSION.class})
 @MockPolicy(TestResources.MockPolicy.class)
 public class CustomTranslatorKeyTest {
 
@@ -31,22 +36,29 @@ public class CustomTranslatorKeyTest {
 
   static final BundleNamespace NAMESPACE = BundleNamespace.fromClass(CustomTranslatorKeyTest.class);
 
-  ReqBundleKey<TestParcelable> PARCELABLE_KEY = NAMESPACE.parcelableKey(TestParcelable.class)
+  static ReqBundleKey<TestParcelable> PARCELABLE_KEY = NAMESPACE.parcelableKey(TestParcelable.class)
       .named("parcelableKey")
       .buildRequired();
-  ReqBundleKey<ArrayList<TestParcelable>> PARCELABLE_ARRAY_KEY = NAMESPACE.parcelableArrayKey(TestParcelable.class)
+  static ReqBundleKey<ArrayList<TestParcelable>> PARCELABLE_ARRAY_KEY = NAMESPACE.parcelableArrayKey(TestParcelable.class)
       .named("parcelableArrayKey")
       .buildRequired();
-  ReqBundleKey<ArrayList<TestParcelable>> PARCELABLE_ARRAY_LIST_KEY = NAMESPACE.parcelableArrayListKey(TestParcelable.class)
+  static ReqBundleKey<ArrayList<TestParcelable>> PARCELABLE_ARRAY_LIST_KEY = NAMESPACE.parcelableArrayListKey(TestParcelable.class)
       .named("parcelableArrayListKey")
       .buildRequired();
-  ReqBundleKey<SparseArray<TestParcelable>> SPARSE_PARCELABLE_ARRAY_KEY = NAMESPACE.sparseParcelableArrayKey(TestParcelable.class)
+  static ReqBundleKey<SparseArray<TestParcelable>> SPARSE_PARCELABLE_ARRAY_KEY = NAMESPACE.sparseParcelableArrayKey(TestParcelable.class)
       .named("sparceParcelableArrayKey")
       .buildRequired();
 
-  ReqBundleKey<TestSerializable> SERIALIZABLE_KEY = NAMESPACE.serializableKey(TestSerializable.class)
+  static ReqBundleKey<TestSerializable> SERIALIZABLE_KEY = NAMESPACE.serializableKey(TestSerializable.class)
       .named("serializableKey")
       .buildRequired();
+
+  static ReqBundleKey<TestBinder> binderKey() {
+    return NAMESPACE.binderKey(TestBinder.class)
+        .named("binderKey")
+        .buildRequired();
+  }
+
 
   @Test
   public void testGetParcelable() {
@@ -214,6 +226,48 @@ public class CustomTranslatorKeyTest {
     });
   }
 
+  @Test(expected = NoSuchMethodError.class)
+  public void testBinderKeyOnOldApi() {
+    setSdkVersion(17);
+    binderKey();
+  }
+
+  @Test
+  public void testGetBinder() {
+    setSdkVersion(18);
+    t.testGetTranslated(binderKey(), new TestResources.Tester<TestBinder>() {
+
+      @Override
+      public TestBinder setup(String keyName) {
+        TestBinder tb = mock(TestBinder.class);
+        when(t.bundle.getBinder(keyName)).thenReturn(tb);
+        return tb;
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getBinder(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutBinder() {
+    setSdkVersion(18);
+    t.testPutTranslated(binderKey(), new TestResources.Tester<TestBinder>() {
+      final TestBinder tb = mock(TestBinder.class);
+      @Override
+      public TestBinder setup(String keyName) {
+        return tb;
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putBinder(keyName, tb);
+      }
+    });
+  }
+
   static class TestParcelable implements Parcelable {
     @Override
     public int describeContents() {
@@ -239,4 +293,10 @@ public class CustomTranslatorKeyTest {
   }
 
   static class TestSerializable implements Serializable {}
+
+  public interface TestBinder extends IBinder {}
+
+  private static void setSdkVersion(int version) {
+    Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", version);
+  }
 }

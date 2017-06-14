@@ -1,6 +1,9 @@
 package com.episode6.hackit.typed.bundles;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Parcelable;
 import android.util.SparseArray;
 
@@ -78,5 +81,15 @@ public class CustomBundleTranslators {
     }
   };
 
+  static final BundleTranslator IBINDER = new BundleTranslator() {
+    @Override @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    public Object getFromBundle(Bundle b, String keyName) {
+      return b.getBinder(keyName);
+    }
 
+    @Override @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      b.putBinder(keyName, (IBinder) instance);
+    }
+  };
 }

@@ -1,5 +1,8 @@
 package com.episode6.hackit.typed.bundles;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.os.IBinder;
 import android.os.Parcelable;
 import android.util.SparseArray;
 import com.episode6.hackit.typed.core.TypedKeyName;
@@ -68,7 +71,11 @@ public class BundleNamespace extends TypedKeyNamespace {
     return new KeyBuilder<T>(this, keyType, CustomBundleTranslators.SERIALIZABLE);
   }
 
-
+  @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+  public <T extends IBinder> KeyBuilder<T> binderKey(Class<T> keyType) {
+    assertSdkAtLeast(Build.VERSION_CODES.JELLY_BEAN_MR2);
+    return new KeyBuilder<T>(this, keyType, CustomBundleTranslators.IBINDER);
+  }
 
   public static class KeyBuilder<V> {
     private final BundleNamespace mNamespace;
@@ -117,6 +124,13 @@ public class BundleNamespace extends TypedKeyNamespace {
           new TypedKeyName(mNamespace, mName),
           mObjectType,
           mTranslator);
+    }
+  }
+
+  private static void assertSdkAtLeast(int sdkInt) {
+    if (Build.VERSION.SDK_INT < sdkInt) {
+      throw new NoSuchMethodError(
+          "Illegal use of newer api feature, android api should be >= " + sdkInt + " to use this feature.");
     }
   }
 }
