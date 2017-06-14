@@ -175,7 +175,7 @@ public class DirectBundleTranslators {
   private static final BundleTranslator TYPED_BUNDLE = new BundleTranslator() {
     @Override
     public Object getFromBundle(Bundle b, String keyName) {
-      return TypedBundles.fromBundle(b.getBundle(keyName));
+      return TypedBundles.wrap(b.getBundle(keyName));
     }
 
     @Override

@@ -24,19 +24,19 @@ public class TypedBundles {
     setDefaultGsonSupplier(new InstanceSupplier<>(gson));
   }
 
-  public static TypedBundle fromBundle(Bundle bundle) {
+  public static TypedBundle wrap(Bundle bundle) {
     return new TypedBundleImpl(sGsonSupplier, bundle);
   }
 
   public static TypedBundle create() {
-    return fromBundle(new Bundle());
+    return wrap(new Bundle());
   }
 
-  public static @Nullable TypedBundle fromBundleOrNull(@Nullable Bundle bundle) {
-    return bundle == null ? null : fromBundle(bundle);
+  public static @Nullable TypedBundle wrapOrNull(@Nullable Bundle bundle) {
+    return bundle == null ? null : wrap(bundle);
   }
 
-  public static TypedBundle fromNullable(@Nullable Bundle bundle) {
-    return bundle == null ? create() : fromBundle(bundle);
+  public static TypedBundle wrapNullable(@Nullable Bundle bundle) {
+    return bundle == null ? create() : wrap(bundle);
   }
 }

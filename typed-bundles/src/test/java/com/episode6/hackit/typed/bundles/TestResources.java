@@ -333,7 +333,7 @@ public class TestResources {
         public TypedBundle setup(String keyName) {
           Bundle b = mock(Bundle.class);
           when(bundle.getBundle(keyName)).thenReturn(b);
-          return TypedBundles.fromBundle(b);
+          return TypedBundles.wrap(b);
         }
 
         @Override
