@@ -14,9 +14,34 @@ public interface TypedBundle {
    * Interface for an object that creates TypedBundles.
    */
   interface Factory {
+    /**
+     * @return a new {@link TypedBundle}
+     */
     TypedBundle create();
+
+    /**
+     * Wrap a (non-null) {@link Bundle} with a {@link TypedBundle}
+     * @param bundle The bundle to wrap
+     * @return a new {@link TypedBundle} that wraps the provided bundle
+     */
     TypedBundle wrap(Bundle bundle);
+
+    /**
+     * Wrap a nullable {@link Bundle} with a {@link TypedBundle} OR
+     * create a new {@link TypedBundle} if the provided bundle is null
+     * @param bundle The bundle to wrap
+     * @return a new {@link TypedBundle} that wraps the provided bundle
+     * if it's non-null
+     */
     TypedBundle wrapNullable(@Nullable Bundle bundle);
+
+    /**
+     * Wrap the provided intent's extras with a {@link TypedBundle} if
+     * those extras are non-null
+     * @param intent The intent to getExtras from
+     * @return A new {@link TypedBundle} that wraps the intent's extras
+     * if the intent and its extras bundle is non-null.
+     */
     TypedBundle intentExtras(@Nullable Intent intent);
   }
 
