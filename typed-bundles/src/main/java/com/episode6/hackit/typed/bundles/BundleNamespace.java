@@ -268,7 +268,7 @@ public class BundleNamespace extends TypedKeyNamespace {
    * Start building a new key for a {@link ByteBuffer}. The buffer will be translated to/from
    * a byte[], and the method {@link android.os.Bundle#putByteArray(String, byte[])}
    * and {@link android.os.Bundle#getByteArray(String)} will be used to read/write the array to bundles.
-   * @return
+   * @return A new {@link KeyBuilder}, with which to build the new key.
    */
   public KeyBuilder<ByteBuffer> byteArrayKey() {
     return new KeyBuilder<ByteBuffer>(this, ByteBuffer.class, CustomBundleTranslators.BYTE_ARRAY);
