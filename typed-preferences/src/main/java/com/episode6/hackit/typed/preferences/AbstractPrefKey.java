@@ -1,27 +1,21 @@
-package com.episode6.hackit.typed.bundles;
+package com.episode6.hackit.typed.preferences;
 
 import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.TypedKeyName;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 
 /**
- * Abstract implementation of bundle key, contains the basics that every bundlekey needs
+ * Abstract implementation of pref key, contains the basics that every prefkey needs
  */
-public abstract class AbstractBundleKey<V> implements TypedKey<V> {
+public abstract class AbstractPrefKey<V> implements TypedKey<V> {
 
   private final TypedKeyName mKeyName;
   private final Type mObjectType;
-  private final @Nullable BundleTranslator mTranslator;
 
-  public AbstractBundleKey(
-      TypedKeyName keyName,
-      Type objectType,
-      @Nullable BundleTranslator translator) {
+  public AbstractPrefKey(TypedKeyName keyName, Type objectType) {
     mKeyName = keyName;
     mObjectType = objectType;
-    mTranslator = translator;
   }
 
   @Override
@@ -34,10 +28,6 @@ public abstract class AbstractBundleKey<V> implements TypedKey<V> {
     return mObjectType;
   }
 
-  @Nullable BundleTranslator getTranslator() {
-    return mTranslator;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -47,7 +37,7 @@ public abstract class AbstractBundleKey<V> implements TypedKey<V> {
       return false;
     }
 
-    AbstractBundleKey<?> that = (AbstractBundleKey<?>) o;
+    AbstractPrefKey<?> that = (AbstractPrefKey<?>) o;
 
     if (!mKeyName.equals(that.mKeyName)) {
       return false;
