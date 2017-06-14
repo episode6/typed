@@ -115,4 +115,38 @@ public class CustomBundleTranslators {
       b.putBooleanArray(keyName, array);
     }
   };
+
+  static final BundleTranslator INT_ARRAY = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      int[] array = b.getIntArray(keyName);
+      ArrayList<Integer> list = new ArrayList<>(array.length);
+      for (int i : array) {
+        list.add(i);
+      }
+      return list;
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      ArrayList<Integer> list = (ArrayList<Integer>) instance;
+      int[] array = new int[list.size()];
+      for (int i = 0; i<array.length; i++) {
+        array[i] = list.get(i);
+      }
+      b.putIntArray(keyName, array);
+    }
+  };
+
+  static final BundleTranslator INT_ARRAY_LIST = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      return b.getIntegerArrayList(keyName);
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      b.putIntegerArrayList(keyName, (ArrayList<Integer>) instance);
+    }
+  };
 }

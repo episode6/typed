@@ -63,6 +63,12 @@ public class CustomTranslatorKeyTest {
       .named("boolArrayKey")
       .buildRequired();
 
+  static ReqBundleKey<ArrayList<Integer>> INT_ARRAY_KEY = NAMESPACE.intArrayKey()
+      .named("intArrayKey")
+      .buildRequired();
+  static ReqBundleKey<ArrayList<Integer>> INT_ARRAY_LIST_KEY = NAMESPACE.intArrayListKey()
+      .named("intArrayListKey")
+      .buildRequired();
 
   @Test
   public void testGetParcelable() {
@@ -301,6 +307,72 @@ public class CustomTranslatorKeyTest {
       @Override
       public void verify(String keyName, InOrder inOrder) {
         inOrder.verify(t.bundle).putBooleanArray(keyName, new boolean[] {true, false, true});
+      }
+    });
+  }
+
+  @Test
+  public void testGetIntArray() {
+    t.testGetTranslated(INT_ARRAY_KEY, new TestResources.Tester<ArrayList<Integer>>() {
+
+      @Override
+      public ArrayList<Integer> setup(String keyName) {
+        when(t.bundle.getIntArray(keyName)).thenReturn(new int[] {10, 20, 30});
+        return new ArrayList<>(Arrays.asList(10, 20, 30));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getIntArray(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutIntArray() {
+    t.testPutTranslated(INT_ARRAY_KEY, new TestResources.Tester<ArrayList<Integer>>() {
+
+      @Override
+      public ArrayList<Integer> setup(String keyName) {
+        return new ArrayList<>(Arrays.asList(30, 40, 50));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putIntArray(keyName, new int[] {30, 40, 50});
+      }
+    });
+  }
+
+  @Test
+  public void testGetIntArrayList() {
+    t.testGetTranslated(INT_ARRAY_LIST_KEY, new TestResources.Tester<ArrayList<Integer>>() {
+      @Override
+      public ArrayList<Integer> setup(String keyName) {
+        ArrayList<Integer> list = mock(ArrayList.class);
+        when(t.bundle.getIntegerArrayList(keyName)).thenReturn(list);
+        return list;
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getIntegerArrayList(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutIntArrayList() {
+    t.testPutTranslated(INT_ARRAY_LIST_KEY, new TestResources.Tester<ArrayList<Integer>>() {
+      final ArrayList<Integer> list = mock(ArrayList.class);
+      @Override
+      public ArrayList<Integer> setup(String keyName) {
+        return list;
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putIntegerArrayList(keyName, list);
       }
     });
   }
