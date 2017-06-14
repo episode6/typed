@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 /**
@@ -99,6 +100,26 @@ public class BundleNamespace extends TypedKeyNamespace {
 
   public KeyBuilder<ArrayList<Float>> floatArrayKey() {
     return new KeyBuilder<ArrayList<Float>>(this, ArrayList.class, CustomBundleTranslators.FLOAT_ARRAY);
+  }
+
+  public KeyBuilder<ArrayList<Long>> longArrayKey() {
+    return new KeyBuilder<ArrayList<Long>>(this, ArrayList.class, CustomBundleTranslators.LONG_ARRAY);
+  }
+
+  public KeyBuilder<ArrayList<Double>> doubleArrayKey() {
+    return new KeyBuilder<ArrayList<Double>>(this, ArrayList.class, CustomBundleTranslators.DOUBLE_ARRAY);
+  }
+
+  public KeyBuilder<ArrayList<Short>> shortArrayKey() {
+    return new KeyBuilder<ArrayList<Short>>(this, ArrayList.class, CustomBundleTranslators.SHORT_ARRAY);
+  }
+
+  public KeyBuilder<ArrayList<Character>> charArrayKey() {
+    return new KeyBuilder<ArrayList<Character>>(this, ArrayList.class, CustomBundleTranslators.CHAR_ARRAY);
+  }
+
+  public KeyBuilder<ByteBuffer> byteArrayKey() {
+    return new KeyBuilder<ByteBuffer>(this, ByteBuffer.class, CustomBundleTranslators.BYTE_ARRAY);
   }
 
   public static class KeyBuilder<V> {

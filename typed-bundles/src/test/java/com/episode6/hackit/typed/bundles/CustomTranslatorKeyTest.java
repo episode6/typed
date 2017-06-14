@@ -15,6 +15,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.reflect.Whitebox;
 
 import java.io.Serializable;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -79,6 +80,21 @@ public class CustomTranslatorKeyTest {
 
   static ReqBundleKey<ArrayList<Float>> FLOAT_ARRAY = NAMESPACE.floatArrayKey()
       .named("floatArrayKey")
+      .buildRequired();
+  static ReqBundleKey<ArrayList<Long>> LONG_ARRAY = NAMESPACE.longArrayKey()
+      .named("longArrayKey")
+      .buildRequired();
+  static ReqBundleKey<ArrayList<Double>> DOUBLE_ARRAY = NAMESPACE.doubleArrayKey()
+      .named("doubleArrayKey")
+      .buildRequired();
+  static ReqBundleKey<ArrayList<Short>> SHORT_ARRAY = NAMESPACE.shortArrayKey()
+      .named("shortArrayKey")
+      .buildRequired();
+  static ReqBundleKey<ArrayList<Character>> CHAR_ARRAY = NAMESPACE.charArrayKey()
+      .named("charArrayKey")
+      .buildRequired();
+  static ReqBundleKey<ByteBuffer> BYTE_ARRAY = NAMESPACE.byteArrayKey()
+      .named("byteArrayKey")
       .buildRequired();
 
   @Test
@@ -483,6 +499,171 @@ public class CustomTranslatorKeyTest {
       @Override
       public void verify(String keyName, InOrder inOrder) {
         inOrder.verify(t.bundle).putFloatArray(keyName, new float[] {30f, 40f, 50f});
+      }
+    });
+  }
+
+  @Test
+  public void testGetLongArray() {
+    t.testGetTranslated(LONG_ARRAY, new TestResources.Tester<ArrayList<Long>>() {
+
+      @Override
+      public ArrayList<Long> setup(String keyName) {
+        when(t.bundle.getLongArray(keyName)).thenReturn(new long[] {10L, 20L, 30L});
+        return new ArrayList<>(Arrays.asList(10L, 20L, 30L));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getLongArray(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutLongArray() {
+    t.testPutTranslated(LONG_ARRAY, new TestResources.Tester<ArrayList<Long>>() {
+
+      @Override
+      public ArrayList<Long> setup(String keyName) {
+        return new ArrayList<>(Arrays.asList(30L, 40L, 50L));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putLongArray(keyName, new long[] {30L, 40L, 50L});
+      }
+    });
+  }
+
+  @Test
+  public void testGetDoubleArray() {
+    t.testGetTranslated(DOUBLE_ARRAY, new TestResources.Tester<ArrayList<Double>>() {
+
+      @Override
+      public ArrayList<Double> setup(String keyName) {
+        when(t.bundle.getDoubleArray(keyName)).thenReturn(new double[] {10.2d, 20.3d, 30.4d});
+        return new ArrayList<>(Arrays.asList(10.2d, 20.3d, 30.4d));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getDoubleArray(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutDoubleArray() {
+    t.testPutTranslated(DOUBLE_ARRAY, new TestResources.Tester<ArrayList<Double>>() {
+
+      @Override
+      public ArrayList<Double> setup(String keyName) {
+        return new ArrayList<>(Arrays.asList(30.2d, 40.3d, 50.4d));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putDoubleArray(keyName, new double[] {30.2d, 40.3d, 50.4d});
+      }
+    });
+  }
+
+  @Test
+  public void testGetShortArray() {
+    t.testGetTranslated(SHORT_ARRAY, new TestResources.Tester<ArrayList<Short>>() {
+
+      @Override
+      public ArrayList<Short> setup(String keyName) {
+        when(t.bundle.getShortArray(keyName)).thenReturn(new short[] {10, 20, 30});
+        return new ArrayList<>(Arrays.asList((short)10, (short)20, (short)30));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getShortArray(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutShortArray() {
+    t.testPutTranslated(SHORT_ARRAY, new TestResources.Tester<ArrayList<Short>>() {
+
+      @Override
+      public ArrayList<Short> setup(String keyName) {
+        return new ArrayList<>(Arrays.asList((short)30, (short)40, (short)50));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putShortArray(keyName, new short[] {30, 40, 50});
+      }
+    });
+  }
+
+  @Test
+  public void testGetCharArray() {
+    t.testGetTranslated(CHAR_ARRAY, new TestResources.Tester<ArrayList<Character>>() {
+
+      @Override
+      public ArrayList<Character> setup(String keyName) {
+        when(t.bundle.getCharArray(keyName)).thenReturn(new char[] {'a', 'b', 'c'});
+        return new ArrayList<>(Arrays.asList('a', 'b', 'c'));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getCharArray(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutCharArray() {
+    t.testPutTranslated(CHAR_ARRAY, new TestResources.Tester<ArrayList<Character>>() {
+
+      @Override
+      public ArrayList<Character> setup(String keyName) {
+        return new ArrayList<>(Arrays.asList('d', 'e', 'f'));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putCharArray(keyName, new char[] {'d', 'e', 'f'});
+      }
+    });
+  }
+
+  @Test
+  public void testGetByteArray() {
+    t.testGetTranslated(BYTE_ARRAY, new TestResources.Tester<ByteBuffer>() {
+      @Override
+      public ByteBuffer setup(String keyName) {
+        byte[] array = new byte[] {1, 0, 1, 0, 1};
+        when(t.bundle.getByteArray(keyName)).thenReturn(array);
+        return ByteBuffer.wrap(array);
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getByteArray(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutByteArray() {
+    t.testPutTranslated(BYTE_ARRAY, new TestResources.Tester<ByteBuffer>() {
+      final byte[] bytes = new byte[] {1, 0, 1, 0, 1};
+      @Override
+      public ByteBuffer setup(String keyName) {
+        return ByteBuffer.wrap(bytes);
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putByteArray(keyName, bytes);
       }
     });
   }

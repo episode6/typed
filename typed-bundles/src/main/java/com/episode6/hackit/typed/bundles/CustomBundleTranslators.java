@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.util.SparseArray;
 
 import java.io.Serializable;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -196,6 +197,108 @@ public class CustomBundleTranslators {
         array[i] = list.get(i);
       }
       b.putFloatArray(keyName, array);
+    }
+  };
+
+  static final BundleTranslator LONG_ARRAY = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      long[] array = b.getLongArray(keyName);
+      ArrayList<Long> list = new ArrayList<>(array.length);
+      for (long i : array) {
+        list.add(i);
+      }
+      return list;
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      ArrayList<Long> list = (ArrayList<Long>) instance;
+      long[] array = new long[list.size()];
+      for (int i = 0; i<array.length; i++) {
+        array[i] = list.get(i);
+      }
+      b.putLongArray(keyName, array);
+    }
+  };
+
+  static final BundleTranslator DOUBLE_ARRAY = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      double[] array = b.getDoubleArray(keyName);
+      ArrayList<Double> list = new ArrayList<>(array.length);
+      for (double i : array) {
+        list.add(i);
+      }
+      return list;
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      ArrayList<Double> list = (ArrayList<Double>) instance;
+      double[] array = new double[list.size()];
+      for (int i = 0; i<array.length; i++) {
+        array[i] = list.get(i);
+      }
+      b.putDoubleArray(keyName, array);
+    }
+  };
+
+  static final BundleTranslator SHORT_ARRAY = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      short[] array = b.getShortArray(keyName);
+      ArrayList<Short> list = new ArrayList<>(array.length);
+      for (short i : array) {
+        list.add(i);
+      }
+      return list;
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      ArrayList<Short> list = (ArrayList<Short>) instance;
+      short[] array = new short[list.size()];
+      for (int i = 0; i<array.length; i++) {
+        array[i] = list.get(i);
+      }
+      b.putShortArray(keyName, array);
+    }
+  };
+
+  static final BundleTranslator CHAR_ARRAY = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      char[] array = b.getCharArray(keyName);
+      ArrayList<Character> list = new ArrayList<>(array.length);
+      for (char i : array) {
+        list.add(i);
+      }
+      return list;
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      ArrayList<Character> list = (ArrayList<Character>) instance;
+      char[] array = new char[list.size()];
+      for (int i = 0; i<array.length; i++) {
+        array[i] = list.get(i);
+      }
+      b.putCharArray(keyName, array);
+    }
+  };
+
+  static final BundleTranslator BYTE_ARRAY = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      byte[] array = b.getByteArray(keyName);
+      return ByteBuffer.wrap(array);
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      ByteBuffer buffer = (ByteBuffer) instance;
+      b.putByteArray(keyName, buffer.array());
     }
   };
 }
