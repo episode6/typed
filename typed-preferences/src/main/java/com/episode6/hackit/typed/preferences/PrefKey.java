@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
  * A Key representing a preference in {@link android.content.SharedPreferences}
  * A {@link PrefKey} requires a default value that is provided when its underlying preference is unset.
  */
-public class PrefKey<V> implements TypedKey<V> {
+public final class PrefKey<V> implements TypedKey<V> {
   private final TypedKeyName mKeyName;
   private final Type mObjectType;
   private final Supplier<V> mDefaultValueSupplier;

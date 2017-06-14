@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
  * A key representing an optional or nullable preference in {@link android.content.SharedPreferences}.
  * An {@link OptPrefKey} has no default value because its default value is null.
  */
-public class OptPrefKey<V> implements TypedKey<V> {
+public final class OptPrefKey<V> implements TypedKey<V> {
 
   private final TypedKeyName mKeyName;
   private final Type mObjectType;

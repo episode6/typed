@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
  * A required bundle key. This key doesn't provide a default value, but an exception will be thrown if
  * the key does not exist in the bundle.
  */
-public class ReqBundleKey<V> extends AbstractBundleKey<V> {
+public final class ReqBundleKey<V> extends AbstractBundleKey<V> {
   ReqBundleKey(
       TypedKeyName keyName,
       Type objectType,

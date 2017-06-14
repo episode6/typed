@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 /**
  * Standard bundle key with a default value
  */
-public class BundleKey<V> extends AbstractBundleKey<V> {
+public final class BundleKey<V> extends AbstractBundleKey<V> {
 
   private final Supplier<V> mDefaultValueSupplier;
 
