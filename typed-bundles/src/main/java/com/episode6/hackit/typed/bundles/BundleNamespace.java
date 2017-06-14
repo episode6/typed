@@ -1,6 +1,7 @@
 package com.episode6.hackit.typed.bundles;
 
 import android.os.Parcelable;
+import android.util.SparseArray;
 import com.episode6.hackit.typed.core.TypedKeyName;
 import com.episode6.hackit.typed.core.TypedKeyNamespace;
 import com.episode6.hackit.typed.core.util.InstanceSupplier;
@@ -57,6 +58,10 @@ public class BundleNamespace extends TypedKeyNamespace {
 
   public <T extends Parcelable> KeyBuilder<ArrayList<T>> parcelableArrayListKey(Class<T> itemType) {
     return new KeyBuilder<ArrayList<T>>(this, ArrayList.class, CustomBundleTranslators.PARCELABLE_ARRAY_LIST);
+  }
+
+  public <T extends Parcelable> KeyBuilder<SparseArray<T>> sparseParcelableArrayKey(Class<T> itemType) {
+    return new KeyBuilder<SparseArray<T>>(this, SparseArray.class, CustomBundleTranslators.PARCELABLE_SPARSE_ARRAY_LIST);
   }
 
   public <T extends Serializable> KeyBuilder<T> serializableKey(Class<T> keyType) {

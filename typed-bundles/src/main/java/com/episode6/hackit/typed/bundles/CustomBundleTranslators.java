@@ -2,6 +2,7 @@ package com.episode6.hackit.typed.bundles;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.SparseArray;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,6 +51,18 @@ public class CustomBundleTranslators {
     @Override
     public void writeToBundle(Bundle b, String keyName, Object instance) {
       b.putParcelableArrayList(keyName, (ArrayList<? extends Parcelable>) instance);
+    }
+  };
+
+  static final BundleTranslator PARCELABLE_SPARSE_ARRAY_LIST = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      return b.getSparseParcelableArray(keyName);
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      b.putSparseParcelableArray(keyName, (SparseArray<? extends Parcelable>) instance);
     }
   };
 

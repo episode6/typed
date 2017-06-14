@@ -2,6 +2,7 @@ package com.episode6.hackit.typed.bundles;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.SparseArray;
 import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.typed.testing.Rules;
 import org.junit.Rule;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
@@ -35,6 +37,9 @@ public class CustomTranslatorKeyTest {
       .buildRequired();
   ReqBundleKey<ArrayList<TestParcelable>> PARCELABLE_ARRAY_LIST_KEY = NAMESPACE.parcelableArrayListKey(TestParcelable.class)
       .named("parcelableArrayListKey")
+      .buildRequired();
+  ReqBundleKey<SparseArray<TestParcelable>> SPARSE_PARCELABLE_ARRAY_KEY = NAMESPACE.sparseParcelableArrayKey(TestParcelable.class)
+      .named("sparceParcelableArrayKey")
       .buildRequired();
 
   @Test
@@ -133,6 +138,39 @@ public class CustomTranslatorKeyTest {
       @Override
       public void verify(String keyName, InOrder inOrder) {
         inOrder.verify(t.bundle).putParcelableArrayList(keyName, list);
+      }
+    });
+  }
+
+  @Test
+  public void testGetSparseParcelableArray() {
+    t.testGetTranslated(SPARSE_PARCELABLE_ARRAY_KEY, new TestResources.Tester<SparseArray<TestParcelable>>() {
+      final SparseArray<TestParcelable> sparseArray = mock(SparseArray.class);
+      @Override
+      public SparseArray<TestParcelable> setup(String keyName) {
+        when(t.bundle.<TestParcelable>getSparseParcelableArray(keyName)).thenReturn(sparseArray);
+        return sparseArray;
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getSparseParcelableArray(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutSparseParcelableArray() {
+    t.testPutTranslated(SPARSE_PARCELABLE_ARRAY_KEY, new TestResources.Tester<SparseArray<TestParcelable>>() {
+      final SparseArray<TestParcelable> sparseArray = mock(SparseArray.class);
+      @Override
+      public SparseArray<TestParcelable> setup(String keyName) {
+        return sparseArray;
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putSparseParcelableArray(keyName, sparseArray);
       }
     });
   }
