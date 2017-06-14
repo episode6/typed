@@ -301,4 +301,32 @@ public class CustomBundleTranslators {
       b.putByteArray(keyName, buffer.array());
     }
   };
+
+  static final BundleTranslator CHAR_SEQUENCE_ARRAY = new BundleTranslator() {
+    @Override @TargetApi(Build.VERSION_CODES.FROYO)
+    public Object getFromBundle(Bundle b, String keyName) {
+      CharSequence[] array = b.getCharSequenceArray(keyName);
+      return new ArrayList<CharSequence>(Arrays.asList(array));
+    }
+
+    @Override @TargetApi(Build.VERSION_CODES.FROYO)
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      ArrayList<CharSequence> arrayList = (ArrayList<CharSequence>) instance;
+      CharSequence[] array = new CharSequence[arrayList.size()];
+      array = arrayList.toArray(array);
+      b.putCharSequenceArray(keyName, array);
+    }
+  };
+
+  static final BundleTranslator CHAR_SEQUENCE_ARRAY_LIST = new BundleTranslator() {
+    @Override @TargetApi(Build.VERSION_CODES.FROYO)
+    public Object getFromBundle(Bundle b, String keyName) {
+      return b.getCharSequenceArrayList(keyName);
+    }
+
+    @Override @TargetApi(Build.VERSION_CODES.FROYO)
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      b.putCharSequenceArrayList(keyName, (ArrayList<CharSequence>) instance);
+    }
+  };
 }

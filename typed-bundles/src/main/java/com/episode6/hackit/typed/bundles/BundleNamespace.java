@@ -122,6 +122,18 @@ public class BundleNamespace extends TypedKeyNamespace {
     return new KeyBuilder<ByteBuffer>(this, ByteBuffer.class, CustomBundleTranslators.BYTE_ARRAY);
   }
 
+  @TargetApi(Build.VERSION_CODES.FROYO)
+  public KeyBuilder<ArrayList<CharSequence>> charSequenceArrayKey() {
+    assertSdkAtLeast(Build.VERSION_CODES.FROYO);
+    return new KeyBuilder<ArrayList<CharSequence>>(this, ArrayList.class, CustomBundleTranslators.CHAR_SEQUENCE_ARRAY);
+  }
+
+  @TargetApi(Build.VERSION_CODES.FROYO)
+  public KeyBuilder<ArrayList<CharSequence>> charSequenceArrayListKey() {
+    assertSdkAtLeast(Build.VERSION_CODES.FROYO);
+    return new KeyBuilder<ArrayList<CharSequence>>(this, ArrayList.class, CustomBundleTranslators.CHAR_SEQUENCE_ARRAY_LIST);
+  }
+
   public static class KeyBuilder<V> {
     private final BundleNamespace mNamespace;
     private final Type mObjectType;

@@ -97,6 +97,18 @@ public class CustomTranslatorKeyTest {
       .named("byteArrayKey")
       .buildRequired();
 
+  static ReqBundleKey<ArrayList<CharSequence>> charSequenceArrayKey() {
+    return NAMESPACE.charSequenceArrayKey()
+        .named("charSeqArrayKey")
+        .buildRequired();
+  }
+
+  static ReqBundleKey<ArrayList<CharSequence>> charSequenceArrayListKey() {
+    return NAMESPACE.charSequenceArrayListKey()
+        .named("charSeqArrayListKey")
+        .buildRequired();
+  }
+
   @Test
   public void testGetParcelable() {
     t.testGetTranslated(PARCELABLE_KEY, new TestResources.Tester<TestParcelable>() {
@@ -664,6 +676,88 @@ public class CustomTranslatorKeyTest {
       @Override
       public void verify(String keyName, InOrder inOrder) {
         inOrder.verify(t.bundle).putByteArray(keyName, bytes);
+      }
+    });
+  }
+
+  @Test(expected = NoSuchMethodError.class)
+  public void testCharSequenceArrayOnOldApi() {
+    setSdkVersion(7);
+    charSequenceArrayKey();
+  }
+
+  @Test(expected = NoSuchMethodError.class)
+  public void testCharSequenceArrayListOnOldApi() {
+    setSdkVersion(7);
+    charSequenceArrayListKey();
+  }
+
+  @Test
+  public void testGetCharSequenceArray() {
+    setSdkVersion(8);
+    t.testGetTranslated(charSequenceArrayKey(), new TestResources.Tester<ArrayList<CharSequence>>() {
+      @Override
+      public ArrayList<CharSequence> setup(String keyName) {
+        CharSequence[] array = new CharSequence[] {"test", "ing"};
+        when(t.bundle.getCharSequenceArray(keyName)).thenReturn(array);
+        return new ArrayList<>(Arrays.asList(array));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getCharSequenceArray(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutCharSequenceArray() {
+    setSdkVersion(8);
+    t.testPutTranslated(charSequenceArrayKey(), new TestResources.Tester<ArrayList<CharSequence>>() {
+      final CharSequence[] array = new CharSequence[] {"test", "ing"};
+      @Override
+      public ArrayList<CharSequence> setup(String keyName) {
+        return new ArrayList<>(Arrays.asList(array));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putCharSequenceArray(keyName, array);
+      }
+    });
+  }
+
+  @Test
+  public void testGetCharSequenceArrayList() {
+    setSdkVersion(8);
+    t.testGetTranslated(charSequenceArrayListKey(), new TestResources.Tester<ArrayList<CharSequence>>() {
+      @Override
+      public ArrayList<CharSequence> setup(String keyName) {
+        ArrayList<CharSequence> list = mock(ArrayList.class);
+        when(t.bundle.getCharSequenceArrayList(keyName)).thenReturn(list);
+        return list;
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getCharSequenceArrayList(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutCharSequenceArrayList() {
+    setSdkVersion(8);
+    t.testPutTranslated(charSequenceArrayListKey(), new TestResources.Tester<ArrayList<CharSequence>>() {
+      final ArrayList<CharSequence> list = mock(ArrayList.class);
+      @Override
+      public ArrayList<CharSequence> setup(String keyName) {
+        return list;
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putCharSequenceArrayList(keyName, list);
       }
     });
   }
