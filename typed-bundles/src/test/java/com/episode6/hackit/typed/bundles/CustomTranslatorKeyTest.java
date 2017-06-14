@@ -27,13 +27,13 @@ public class CustomTranslatorKeyTest {
       .buildRule();
 
   static final BundleNamespace NAMESPACE = BundleNamespace.fromClass(CustomTranslatorKeyTest.class);
-  ReqBundleKey<TestParcelable> PARCELABLE_KEY = NAMESPACE.<TestParcelable>parcelableKey()
+  ReqBundleKey<TestParcelable> PARCELABLE_KEY = NAMESPACE.parcelableKey(TestParcelable.class)
       .named("parcelableKey")
       .buildRequired();
-  ReqBundleKey<ArrayList<TestParcelable>> PARCELABLE_ARRAY_KEY = NAMESPACE.<TestParcelable>parcelableArrayKey()
-      .named("parcelableArrayListKey")
+  ReqBundleKey<ArrayList<TestParcelable>> PARCELABLE_ARRAY_KEY = NAMESPACE.parcelableArrayKey(TestParcelable.class)
+      .named("parcelableArrayKey")
       .buildRequired();
-  ReqBundleKey<ArrayList<TestParcelable>> PARCELABLE_ARRAY_LIST_KEY = NAMESPACE.<TestParcelable>parcelableArrayListKey()
+  ReqBundleKey<ArrayList<TestParcelable>> PARCELABLE_ARRAY_LIST_KEY = NAMESPACE.parcelableArrayListKey(TestParcelable.class)
       .named("parcelableArrayListKey")
       .buildRequired();
 

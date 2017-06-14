@@ -47,20 +47,20 @@ public class BundleNamespace extends TypedKeyNamespace {
     return new KeyBuilder<T>(this, keyType.getType(), null);
   }
 
-  public <T extends Parcelable> KeyBuilder<T> parcelableKey() {
-    return new KeyBuilder<T>(this, Parcelable.class, CustomBundleTranslators.PARCELABLE);
+  public <T extends Parcelable> KeyBuilder<T> parcelableKey(Class<T> keyType) {
+    return new KeyBuilder<T>(this, keyType, CustomBundleTranslators.PARCELABLE);
   }
 
-  public <T extends Parcelable> KeyBuilder<ArrayList<T>> parcelableArrayKey() {
+  public <T extends Parcelable> KeyBuilder<ArrayList<T>> parcelableArrayKey(Class<T> itemType) {
     return new KeyBuilder<ArrayList<T>>(this, ArrayList.class, CustomBundleTranslators.PARCELABLE_ARRAY);
   }
 
-  public <T extends Parcelable> KeyBuilder<ArrayList<T>> parcelableArrayListKey() {
+  public <T extends Parcelable> KeyBuilder<ArrayList<T>> parcelableArrayListKey(Class<T> itemType) {
     return new KeyBuilder<ArrayList<T>>(this, ArrayList.class, CustomBundleTranslators.PARCELABLE_ARRAY_LIST);
   }
 
-  public <T extends Serializable> KeyBuilder<T> serializableKey() {
-    return new KeyBuilder<T>(this, Serializable.class, CustomBundleTranslators.SERIALIZABLE);
+  public <T extends Serializable> KeyBuilder<T> serializableKey(Class<T> keyType) {
+    return new KeyBuilder<T>(this, keyType, CustomBundleTranslators.SERIALIZABLE);
   }
 
 
