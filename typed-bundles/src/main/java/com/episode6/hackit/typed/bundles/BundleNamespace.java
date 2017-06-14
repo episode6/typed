@@ -51,13 +51,19 @@ public class BundleNamespace extends TypedKeyNamespace {
     return new KeyBuilder<T>(this, Parcelable.class, CustomBundleTranslators.PARCELABLE);
   }
 
-  public <T extends Serializable> KeyBuilder<T> serializableKey() {
-    return new KeyBuilder<T>(this, Serializable.class, CustomBundleTranslators.SERIALIZABLE);
+  public <T extends Parcelable> KeyBuilder<ArrayList<T>> parcelableArrayKey() {
+    return new KeyBuilder<ArrayList<T>>(this, ArrayList.class, CustomBundleTranslators.PARCELABLE_ARRAY);
   }
 
   public <T extends Parcelable> KeyBuilder<ArrayList<T>> parcelableArrayListKey() {
     return new KeyBuilder<ArrayList<T>>(this, ArrayList.class, CustomBundleTranslators.PARCELABLE_ARRAY_LIST);
   }
+
+  public <T extends Serializable> KeyBuilder<T> serializableKey() {
+    return new KeyBuilder<T>(this, Serializable.class, CustomBundleTranslators.SERIALIZABLE);
+  }
+
+
 
   public static class KeyBuilder<V> {
     private final BundleNamespace mNamespace;

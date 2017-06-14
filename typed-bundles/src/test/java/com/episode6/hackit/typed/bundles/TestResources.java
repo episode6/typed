@@ -111,6 +111,10 @@ public class TestResources {
 
   <T> void testGetDirectTranslated(TypedKey<T> key) {
     Tester<T> tester = getGetTester(key.getObjectType());
+    testGetTranslated(key, tester);
+  }
+
+  <T> void testGetTranslated(TypedKey<T> key, Tester<T> tester) {
     final String keyName = key.getKeyName().toString();
     when(bundle.containsKey(keyName)).thenReturn(true);
     T expected = tester.setup(keyName);
@@ -126,6 +130,10 @@ public class TestResources {
 
   <T> void testPutDirectTranslated(TypedKey<T> key) {
     Tester<T> tester = getPutTester(key.getObjectType());
+    testPutTranslated(key, tester);
+  }
+
+  <T> void testPutTranslated(TypedKey<T> key, Tester<T> tester) {
     final String keyName = key.getKeyName().toString();
     T objToSet = tester.setup(keyName);
 

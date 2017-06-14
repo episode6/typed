@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -24,15 +25,19 @@ public class CustomBundleTranslators {
     }
   };
 
-  static final BundleTranslator SERIALIZABLE = new BundleTranslator() {
+  static final BundleTranslator PARCELABLE_ARRAY = new BundleTranslator() {
     @Override
     public Object getFromBundle(Bundle b, String keyName) {
-      return b.getSerializable(keyName);
+      Parcelable[] array = b.getParcelableArray(keyName);
+      return new ArrayList<Parcelable>(Arrays.asList(array));
     }
 
     @Override
     public void writeToBundle(Bundle b, String keyName, Object instance) {
-      b.putSerializable(keyName, (Serializable) instance);
+      ArrayList<? extends Parcelable> arrayList = (ArrayList<? extends Parcelable>) instance;
+      Parcelable[] array = new Parcelable[arrayList.size()];
+      array = arrayList.toArray(array);
+      b.putParcelableArray(keyName, array);
     }
   };
 
@@ -47,4 +52,18 @@ public class CustomBundleTranslators {
       b.putParcelableArrayList(keyName, (ArrayList<? extends Parcelable>) instance);
     }
   };
+
+  static final BundleTranslator SERIALIZABLE = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      return b.getSerializable(keyName);
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      b.putSerializable(keyName, (Serializable) instance);
+    }
+  };
+
+
 }
