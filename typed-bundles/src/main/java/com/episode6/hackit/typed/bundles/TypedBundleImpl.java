@@ -17,7 +17,7 @@ class TypedBundleImpl implements TypedBundle {
   private final Supplier<Gson> mGsonSupplier;
   private final Bundle mDelegate;
 
-  public TypedBundleImpl(Supplier<Gson> gsonSupplier, Bundle delegate) {
+  TypedBundleImpl(Supplier<Gson> gsonSupplier, Bundle delegate) {
     mGsonSupplier = Suppliers.memoize(gsonSupplier);
     mDelegate = delegate;
   }

@@ -1,5 +1,6 @@
 package com.episode6.hackit.typed.bundles;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import javax.annotation.Nullable;
@@ -8,6 +9,17 @@ import javax.annotation.Nullable;
  * Interface for a bundle with typed keys.
  */
 public interface TypedBundle {
+
+  /**
+   * Interface for an object that creates TypedBundles.
+   */
+  interface Factory {
+    TypedBundle create();
+    TypedBundle wrap(Bundle bundle);
+    TypedBundle wrapNullable(@Nullable Bundle bundle);
+    TypedBundle intentExtras(@Nullable Intent intent);
+  }
+
   boolean contains(BundleKey<?> key);
   boolean contains(ReqBundleKey<?> key);
   boolean contains(OptBundleKey<?> key);

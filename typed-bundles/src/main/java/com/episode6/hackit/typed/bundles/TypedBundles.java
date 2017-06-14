@@ -1,10 +1,8 @@
 package com.episode6.hackit.typed.bundles;
 
+import android.content.Intent;
 import android.os.Bundle;
-import com.episode6.hackit.typed.core.util.DefaultGsonSupplier;
-import com.episode6.hackit.typed.core.util.InstanceSupplier;
-import com.episode6.hackit.typed.core.util.Supplier;
-import com.episode6.hackit.typed.core.util.Suppliers;
+import com.episode6.hackit.typed.core.util.*;
 import com.google.gson.Gson;
 
 import javax.annotation.Nullable;
@@ -14,29 +12,65 @@ import javax.annotation.Nullable;
  */
 public class TypedBundles {
 
-  private static Supplier<Gson> sGsonSupplier = Suppliers.memoize(new DefaultGsonSupplier());
+  private static TypedBundle.Factory sDefaultFactory = new TypedBundleFactoryImpl(new DefaultGsonSupplier());
 
   public static void setDefaultGsonSupplier(Supplier<Gson> gsonSupplier) {
-    sGsonSupplier = Suppliers.memoize(gsonSupplier);
+    sDefaultFactory = createFactory(gsonSupplier);
   }
 
   public static void setDefaultGson(Gson gson) {
-    setDefaultGsonSupplier(new InstanceSupplier<>(gson));
+    sDefaultFactory = createFactory(gson);
+  }
+
+  public static TypedBundle.Factory createFactory(Supplier<Gson> gsonSupplier) {
+    return new TypedBundleFactoryImpl(gsonSupplier);
+  }
+
+  public static TypedBundle.Factory createFactory(Gson gson) {
+    return new TypedBundleFactoryImpl(new InstanceSupplier<>(gson));
   }
 
   public static TypedBundle wrap(Bundle bundle) {
-    return new TypedBundleImpl(sGsonSupplier, bundle);
+    return sDefaultFactory.wrap(bundle);
   }
 
   public static TypedBundle create() {
-    return wrap(new Bundle());
-  }
-
-  public static @Nullable TypedBundle wrapOrNull(@Nullable Bundle bundle) {
-    return bundle == null ? null : wrap(bundle);
+    return sDefaultFactory.create();
   }
 
   public static TypedBundle wrapNullable(@Nullable Bundle bundle) {
-    return bundle == null ? create() : wrap(bundle);
+    return sDefaultFactory.wrapNullable(bundle);
+  }
+
+  private static class TypedBundleFactoryImpl implements TypedBundle.Factory {
+
+    private final Supplier<Gson> mGsonSupplier;
+
+    private TypedBundleFactoryImpl(Supplier<Gson> gsonSupplier) {
+      mGsonSupplier = Suppliers.memoize(gsonSupplier);
+    }
+
+    @Override
+    public TypedBundle create() {
+      return wrap(new Bundle());
+    }
+
+    @Override
+    public TypedBundle wrap(Bundle bundle) {
+      return new TypedBundleImpl(mGsonSupplier, Preconditions.checkNotNull(bundle));
+    }
+
+    @Override
+    public TypedBundle wrapNullable(@Nullable Bundle bundle) {
+      return bundle == null ? create() : wrap(bundle);
+    }
+
+    @Override
+    public TypedBundle intentExtras(@Nullable Intent intent) {
+      if (intent == null) {
+        return create();
+      }
+      return wrapNullable(intent.getExtras());
+    }
   }
 }
