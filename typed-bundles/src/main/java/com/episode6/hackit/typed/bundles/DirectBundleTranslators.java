@@ -35,12 +35,8 @@ public class DirectBundleTranslators {
       return BUNDLE;
     } else if (keyType == TypedBundle.class) {
       return TYPED_BUNDLE;
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-      if (keyType == CharSequence.class) {
-        return CHAR_SEQUENCE;
-      }
+    } else if (keyType == CharSequence.class) {
+      return CHAR_SEQUENCE;
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -186,12 +182,12 @@ public class DirectBundleTranslators {
   };
 
   private static final BundleTranslator CHAR_SEQUENCE = new BundleTranslator() {
-    @Override @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+    @Override
     public Object getFromBundle(Bundle b, String keyName) {
       return b.getCharSequence(keyName);
     }
 
-    @Override @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+    @Override
     public void writeToBundle(Bundle b, String keyName, Object instance) {
       b.putCharSequence(keyName, (CharSequence) instance);
     }

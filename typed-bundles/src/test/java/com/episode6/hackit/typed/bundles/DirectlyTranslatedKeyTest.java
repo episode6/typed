@@ -76,6 +76,10 @@ public class DirectlyTranslatedKeyTest {
   static final ReqBundleKey<TypedBundle> TBUNDLE_REQ_KEY = NAMESPACE.key(TypedBundle.class).named("typedBundleReqKey").buildRequired();
   static final OptBundleKey<TypedBundle> TBUNDLE_OPT_KEY = NAMESPACE.key(TypedBundle.class).named("typedBundleOptKey").buildOptional();
 
+  static final BundleKey<CharSequence> CH_SQ_KEY = NAMESPACE.key(CharSequence.class).named("chSqKey").buildWithDefault("nice");
+  static final ReqBundleKey<CharSequence> CH_SQ_REQ_KEY = NAMESPACE.key(CharSequence.class).named("chSqReqKey").buildRequired();;
+  static final OptBundleKey<CharSequence> CH_SQ_OPT_KEY = NAMESPACE.key(CharSequence.class).named("chSqOptKey").buildOptional();
+
   static final Set<TypedKey> STATIC_KEYS = ImmutableSet.<TypedKey>of(
       BOOL_KEY,
       BOOL_REQ_KEY,
@@ -109,14 +113,13 @@ public class DirectlyTranslatedKeyTest {
       BUNDLE_OPT_KEY,
       TBUNDLE_KEY,
       TBUNDLE_REQ_KEY,
-      TBUNDLE_OPT_KEY);
+      TBUNDLE_OPT_KEY,
+      CH_SQ_KEY,
+      CH_SQ_REQ_KEY,
+      CH_SQ_OPT_KEY);
 
   @Mock Size mSize;
   @Mock SizeF mSizeF;
-
-  BundleKey<CharSequence> chsqKey;
-  ReqBundleKey<CharSequence> chsqReqKey;
-  OptBundleKey<CharSequence> chsqOptKey;
 
   BundleKey<Size> sizeKey;
   ReqBundleKey<Size> sizeReqKey;
@@ -133,9 +136,6 @@ public class DirectlyTranslatedKeyTest {
     Whitebox.setInternalState(Build.VERSION.class, "SDK_INT", 21);
 
     // these keys require android v > 1, so we can't create the statically
-    chsqKey = NAMESPACE.key(CharSequence.class).named("chSqKey").buildWithDefault("nice");
-    chsqReqKey = NAMESPACE.key(CharSequence.class).named("chSqReqKey").buildRequired();
-    chsqOptKey = NAMESPACE.key(CharSequence.class).named("chSqOptKey").buildOptional();
     sizeKey = NAMESPACE.key(Size.class).named("sizeKey").buildWithDefault(mSize);
     sizeReqKey = NAMESPACE.key(Size.class).named("sizeReqKey").buildRequired();
     sizeOptKey = NAMESPACE.key(Size.class).named("sizeOptKey").buildOptional();
@@ -145,10 +145,7 @@ public class DirectlyTranslatedKeyTest {
 
     allKeys = ImmutableSet.<TypedKey>builder()
         .addAll(STATIC_KEYS)
-        .add(chsqKey,
-            chsqReqKey,
-            chsqOptKey,
-            sizeKey,
+        .add(sizeKey,
             sizeReqKey,
             sizeOptKey,
             sizeFKey,
