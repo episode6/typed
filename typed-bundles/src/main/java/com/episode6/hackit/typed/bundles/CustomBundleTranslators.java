@@ -13,7 +13,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
+ * Holds our static {@link BundleTranslator}s for object types that require
+ * a custom builder methods (i.e. we can't do a simple objType == check).
  *
+ * Each of these translators should be referenced in exactly 1 builder method
+ * in {@link BundleNamespace}.
  */
 @SuppressWarnings("unchecked")
 public class CustomBundleTranslators {

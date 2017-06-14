@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import javax.annotation.Nullable;
 
 /**
- *
+ * Utility class for createing {@link TypedBundle}s
  */
 public class TypedBundles {
 

@@ -19,7 +19,7 @@ import org.powermock.reflect.Whitebox;
 import java.util.Set;
 
 /**
- * Tests TypedBundles with primitives
+ * Tests keys created with {@link DirectBundleTranslators}
  */
 @PrepareForTest({Build.VERSION.class})
 @MockPolicy({TestResources.MockPolicy.class})

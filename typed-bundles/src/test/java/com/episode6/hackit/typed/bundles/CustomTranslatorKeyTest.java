@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
- *
+ * Tests keys created with {@link CustomBundleTranslators}
  */
 @PrepareForTest({Build.VERSION.class})
 @MockPolicy(TestResources.MockPolicy.class)

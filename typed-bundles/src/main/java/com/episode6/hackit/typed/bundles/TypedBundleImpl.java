@@ -10,9 +10,9 @@ import com.google.gson.Gson;
 import javax.annotation.Nullable;
 
 /**
- *
+ * Standard implementation of {@link TypedBundle}.
  */
-public class TypedBundleImpl implements TypedBundle {
+class TypedBundleImpl implements TypedBundle {
 
   private final Supplier<Gson> mGsonSupplier;
   private final Bundle mDelegate;

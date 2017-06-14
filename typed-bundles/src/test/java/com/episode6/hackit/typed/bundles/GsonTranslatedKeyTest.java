@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- *
+ * Tests keys created translated via gson.
  */
 @MockPolicy({TestResources.MockPolicy.class})
 public class GsonTranslatedKeyTest {

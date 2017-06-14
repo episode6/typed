@@ -8,7 +8,10 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 
 /**
- *
+ * Holds our static {@link BundleTranslator}s that are each applicable to a
+ * single explicit Type (i.e. subclasses don't apply and we can do a quick
+ * type == check). These translators are not referenced directly in builder
+ * methods, but instead pulled via {@link #getDirectTranslator(Type)}.
  */
 public class DirectBundleTranslators {
 
