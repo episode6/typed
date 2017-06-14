@@ -70,6 +70,13 @@ public class CustomTranslatorKeyTest {
       .named("intArrayListKey")
       .buildRequired();
 
+  static ReqBundleKey<ArrayList<String>> STRING_ARRAY_KEY = NAMESPACE.stringArrayKey()
+      .named("stringArrayKey")
+      .buildRequired();
+  static ReqBundleKey<ArrayList<String>> STRING_ARRAY_LIST_KEY = NAMESPACE.stringArrayListKey()
+      .named("stringArrayListKey")
+      .buildRequired();
+
   @Test
   public void testGetParcelable() {
     t.testGetTranslated(PARCELABLE_KEY, new TestResources.Tester<TestParcelable>() {
@@ -373,6 +380,72 @@ public class CustomTranslatorKeyTest {
       @Override
       public void verify(String keyName, InOrder inOrder) {
         inOrder.verify(t.bundle).putIntegerArrayList(keyName, list);
+      }
+    });
+  }
+
+  @Test
+  public void testGetStringArray() {
+    t.testGetTranslated(STRING_ARRAY_KEY, new TestResources.Tester<ArrayList<String>>() {
+      @Override
+      public ArrayList<String> setup(String keyName) {
+        String[] array = new String[] {"test", "ing"};
+        when(t.bundle.getStringArray(keyName)).thenReturn(array);
+        return new ArrayList<>(Arrays.asList(array));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getStringArray(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutStringArray() {
+    t.testPutTranslated(STRING_ARRAY_KEY, new TestResources.Tester<ArrayList<String>>() {
+      final String[] array = new String[] {"test", "ing"};
+      @Override
+      public ArrayList<String> setup(String keyName) {
+        return new ArrayList<>(Arrays.asList(array));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putStringArray(keyName, array);
+      }
+    });
+  }
+
+  @Test
+  public void testGetStringArrayList() {
+    t.testGetTranslated(STRING_ARRAY_LIST_KEY, new TestResources.Tester<ArrayList<String>>() {
+      @Override
+      public ArrayList<String> setup(String keyName) {
+        ArrayList<String> list = mock(ArrayList.class);
+        when(t.bundle.getStringArrayList(keyName)).thenReturn(list);
+        return list;
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getStringArrayList(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutStringArrayList() {
+    t.testPutTranslated(STRING_ARRAY_LIST_KEY, new TestResources.Tester<ArrayList<String>>() {
+      final ArrayList<String> list = mock(ArrayList.class);
+      @Override
+      public ArrayList<String> setup(String keyName) {
+        return list;
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putStringArrayList(keyName, list);
       }
     });
   }

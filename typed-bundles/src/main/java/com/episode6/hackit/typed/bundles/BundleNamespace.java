@@ -89,6 +89,14 @@ public class BundleNamespace extends TypedKeyNamespace {
     return new KeyBuilder<ArrayList<Integer>>(this, ArrayList.class, CustomBundleTranslators.INT_ARRAY_LIST);
   }
 
+  public KeyBuilder<ArrayList<String>> stringArrayKey() {
+    return new KeyBuilder<ArrayList<String>>(this, ArrayList.class, CustomBundleTranslators.STRING_ARRAY);
+  }
+
+  public KeyBuilder<ArrayList<String>> stringArrayListKey() {
+    return new KeyBuilder<ArrayList<String>>(this, ArrayList.class, CustomBundleTranslators.STRING_ARRAY_LIST);
+  }
+
   public static class KeyBuilder<V> {
     private final BundleNamespace mNamespace;
     private final Type mObjectType;

@@ -10,7 +10,6 @@ import android.util.SparseArray;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  *
@@ -147,6 +146,34 @@ public class CustomBundleTranslators {
     @Override
     public void writeToBundle(Bundle b, String keyName, Object instance) {
       b.putIntegerArrayList(keyName, (ArrayList<Integer>) instance);
+    }
+  };
+
+  static final BundleTranslator STRING_ARRAY = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      String[] array = b.getStringArray(keyName);
+      return new ArrayList<String>(Arrays.asList(array));
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      ArrayList<String> arrayList = (ArrayList<String>) instance;
+      String[] array = new String[arrayList.size()];
+      array = arrayList.toArray(array);
+      b.putStringArray(keyName, array);
+    }
+  };
+
+  static final BundleTranslator STRING_ARRAY_LIST = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      return b.getStringArrayList(keyName);
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      b.putStringArrayList(keyName, (ArrayList<String>) instance);
     }
   };
 }
