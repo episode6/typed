@@ -97,6 +97,10 @@ public class BundleNamespace extends TypedKeyNamespace {
     return new KeyBuilder<ArrayList<String>>(this, ArrayList.class, CustomBundleTranslators.STRING_ARRAY_LIST);
   }
 
+  public KeyBuilder<ArrayList<Float>> floatArrayKey() {
+    return new KeyBuilder<ArrayList<Float>>(this, ArrayList.class, CustomBundleTranslators.FLOAT_ARRAY);
+  }
+
   public static class KeyBuilder<V> {
     private final BundleNamespace mNamespace;
     private final Type mObjectType;

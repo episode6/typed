@@ -77,6 +77,10 @@ public class CustomTranslatorKeyTest {
       .named("stringArrayListKey")
       .buildRequired();
 
+  static ReqBundleKey<ArrayList<Float>> FLOAT_ARRAY = NAMESPACE.floatArrayKey()
+      .named("floatArrayKey")
+      .buildRequired();
+
   @Test
   public void testGetParcelable() {
     t.testGetTranslated(PARCELABLE_KEY, new TestResources.Tester<TestParcelable>() {
@@ -446,6 +450,39 @@ public class CustomTranslatorKeyTest {
       @Override
       public void verify(String keyName, InOrder inOrder) {
         inOrder.verify(t.bundle).putStringArrayList(keyName, list);
+      }
+    });
+  }
+
+  @Test
+  public void testGetFloatArray() {
+    t.testGetTranslated(FLOAT_ARRAY, new TestResources.Tester<ArrayList<Float>>() {
+
+      @Override
+      public ArrayList<Float> setup(String keyName) {
+        when(t.bundle.getFloatArray(keyName)).thenReturn(new float[] {10f, 20f, 30f});
+        return new ArrayList<>(Arrays.asList(10f, 20f, 30f));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getFloatArray(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutFloatArray() {
+    t.testPutTranslated(FLOAT_ARRAY, new TestResources.Tester<ArrayList<Float>>() {
+
+      @Override
+      public ArrayList<Float> setup(String keyName) {
+        return new ArrayList<>(Arrays.asList(30f, 40f, 50f));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putFloatArray(keyName, new float[] {30f, 40f, 50f});
       }
     });
   }

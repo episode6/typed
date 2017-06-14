@@ -176,4 +176,26 @@ public class CustomBundleTranslators {
       b.putStringArrayList(keyName, (ArrayList<String>) instance);
     }
   };
+
+  static final BundleTranslator FLOAT_ARRAY = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      float[] array = b.getFloatArray(keyName);
+      ArrayList<Float> list = new ArrayList<>(array.length);
+      for (float i : array) {
+        list.add(i);
+      }
+      return list;
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      ArrayList<Float> list = (ArrayList<Float>) instance;
+      float[] array = new float[list.size()];
+      for (int i = 0; i<array.length; i++) {
+        array[i] = list.get(i);
+      }
+      b.putFloatArray(keyName, array);
+    }
+  };
 }
