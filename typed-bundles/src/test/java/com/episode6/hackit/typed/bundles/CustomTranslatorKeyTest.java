@@ -59,6 +59,10 @@ public class CustomTranslatorKeyTest {
         .buildRequired();
   }
 
+  static ReqBundleKey<ArrayList<Boolean>> BOOL_ARRAY_KEY = NAMESPACE.boolArrayKey()
+      .named("boolArrayKey")
+      .buildRequired();
+
 
   @Test
   public void testGetParcelable() {
@@ -264,6 +268,39 @@ public class CustomTranslatorKeyTest {
       @Override
       public void verify(String keyName, InOrder inOrder) {
         inOrder.verify(t.bundle).putBinder(keyName, tb);
+      }
+    });
+  }
+
+  @Test
+  public void testGetBoolArray() {
+    t.testGetTranslated(BOOL_ARRAY_KEY, new TestResources.Tester<ArrayList<Boolean>>() {
+
+      @Override
+      public ArrayList<Boolean> setup(String keyName) {
+        when(t.bundle.getBooleanArray(keyName)).thenReturn(new boolean[] {true, false, true});
+        return new ArrayList<>(Arrays.asList(true, false, true));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getBooleanArray(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutBoolArray() {
+    t.testPutTranslated(BOOL_ARRAY_KEY, new TestResources.Tester<ArrayList<Boolean>>() {
+
+      @Override
+      public ArrayList<Boolean> setup(String keyName) {
+        return new ArrayList<>(Arrays.asList(true, false, true));
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putBooleanArray(keyName, new boolean[] {true, false, true});
       }
     });
   }

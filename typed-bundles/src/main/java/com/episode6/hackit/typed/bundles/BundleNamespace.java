@@ -77,6 +77,10 @@ public class BundleNamespace extends TypedKeyNamespace {
     return new KeyBuilder<T>(this, keyType, CustomBundleTranslators.IBINDER);
   }
 
+  public KeyBuilder<ArrayList<Boolean>> boolArrayKey() {
+    return new KeyBuilder<ArrayList<Boolean>>(this, ArrayList.class, CustomBundleTranslators.BOOL_ARRAY);
+  }
+
   public static class KeyBuilder<V> {
     private final BundleNamespace mNamespace;
     private final Type mObjectType;

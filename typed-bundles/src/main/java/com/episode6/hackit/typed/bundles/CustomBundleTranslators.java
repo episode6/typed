@@ -10,6 +10,7 @@ import android.util.SparseArray;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  *
@@ -90,6 +91,28 @@ public class CustomBundleTranslators {
     @Override @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void writeToBundle(Bundle b, String keyName, Object instance) {
       b.putBinder(keyName, (IBinder) instance);
+    }
+  };
+
+  static final BundleTranslator BOOL_ARRAY = new BundleTranslator() {
+    @Override
+    public Object getFromBundle(Bundle b, String keyName) {
+      boolean[] array = b.getBooleanArray(keyName);
+      ArrayList<Boolean> list = new ArrayList<>(array.length);
+      for (boolean bool : array) {
+        list.add(bool);
+      }
+      return list;
+    }
+
+    @Override
+    public void writeToBundle(Bundle b, String keyName, Object instance) {
+      ArrayList<Boolean> list = (ArrayList<Boolean>) instance;
+      boolean[] array = new boolean[list.size()];
+      for (int i = 0; i<array.length; i++) {
+        array[i] = list.get(i);
+      }
+      b.putBooleanArray(keyName, array);
     }
   };
 }
