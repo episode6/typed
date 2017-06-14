@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.powermock.core.classloader.annotations.MockPolicy;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -29,6 +30,7 @@ public class CustomTranslatorKeyTest {
       .buildRule();
 
   static final BundleNamespace NAMESPACE = BundleNamespace.fromClass(CustomTranslatorKeyTest.class);
+
   ReqBundleKey<TestParcelable> PARCELABLE_KEY = NAMESPACE.parcelableKey(TestParcelable.class)
       .named("parcelableKey")
       .buildRequired();
@@ -40,6 +42,10 @@ public class CustomTranslatorKeyTest {
       .buildRequired();
   ReqBundleKey<SparseArray<TestParcelable>> SPARSE_PARCELABLE_ARRAY_KEY = NAMESPACE.sparseParcelableArrayKey(TestParcelable.class)
       .named("sparceParcelableArrayKey")
+      .buildRequired();
+
+  ReqBundleKey<TestSerializable> SERIALIZABLE_KEY = NAMESPACE.serializableKey(TestSerializable.class)
+      .named("serializableKey")
       .buildRequired();
 
   @Test
@@ -175,6 +181,38 @@ public class CustomTranslatorKeyTest {
     });
   }
 
+  @Test
+  public void testGetSerializable() {
+    t.testGetTranslated(SERIALIZABLE_KEY, new TestResources.Tester<TestSerializable>() {
+      @Override
+      public TestSerializable setup(String keyName) {
+        TestSerializable s = new TestSerializable();
+        when(t.bundle.getSerializable(keyName)).thenReturn(s);
+        return s;
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).getSerializable(keyName);
+      }
+    });
+  }
+
+  @Test
+  public void testPutSerializable() {
+    t.testPutTranslated(SERIALIZABLE_KEY, new TestResources.Tester<TestSerializable>() {
+      final TestSerializable s = new TestSerializable();
+      @Override
+      public TestSerializable setup(String keyName) {
+        return s;
+      }
+
+      @Override
+      public void verify(String keyName, InOrder inOrder) {
+        inOrder.verify(t.bundle).putSerializable(keyName, s);
+      }
+    });
+  }
 
   static class TestParcelable implements Parcelable {
     @Override
@@ -199,4 +237,6 @@ public class CustomTranslatorKeyTest {
       }
     };
   }
+
+  static class TestSerializable implements Serializable {}
 }
