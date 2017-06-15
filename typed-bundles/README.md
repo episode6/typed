@@ -1,5 +1,5 @@
-# Typed Bundles (for Android)
-A wrapper for android's Bundle object that simplifies callsite access to extras and arguments.
+# Typed! Bundles (for Android)
+A typed! wrapper for android's Bundle object that simplifies callsite access to extras and arguments.
 
 ### Installation
 ```groovy

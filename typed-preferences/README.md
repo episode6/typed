@@ -1,5 +1,5 @@
-# Typed Preferences (for Android)
-A wrapper around android's SharedPreferences that simplifies call-site access to them.
+# Typed! Preferences (for Android)
+A typed! wrapper for android's SharedPreferences that simplifies call-site access to them.
 
 #### Installation
 ```groovy
