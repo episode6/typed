@@ -1,13 +1,7 @@
 # Typed! Preferences (for Android)
 A typed! wrapper for android's SharedPreferences that simplifies call-site access to them.
 
-#### Installation
-```groovy
-repositories { maven { url "https://oss.sonatype.org/content/repositories/snapshots/" } }
-dependencies {
-    compile 'com.episode6.hackit.typed:typed-preferences:0.0.3-SNAPSHOT'
-}
-```
+[Installation Instructions](README.md)
 
 #### Define your keys
 ```java
