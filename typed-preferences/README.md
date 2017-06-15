@@ -1,10 +1,9 @@
 # Typed Preferences (for Android)
+A wrapper around android's SharedPreferences that simplifies call-site access to them.
 
-A wrapper around android's SharedPreferences to simplify call-site access to them.
-
-#### Add Dependency
+#### Installation
 ```groovy
-repositories { jcenter() }
+repositories { maven { url "https://oss.sonatype.org/content/repositories/snapshots/" } }
 dependencies {
     compile 'com.episode6.hackit.typed:typed-preferences:0.0.3-SNAPSHOT'
 }
