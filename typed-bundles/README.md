@@ -111,7 +111,7 @@ static final BundleKey<ArrayList<String>> STRING_ARRAY_LIST = EXTRAS.stringArray
  ```
 
 #### Handling Arrays
-Because Java won't let use use an array as a Generic sub-type, typed! bundles does not directly support working with arrays. However, when dealing with 3rd-party apps & services, passing arrays in a bundle may be required. To deal with this, we've added custom translated keys that spit-out ArrayLists to the caller, but read and write to arrays under the hood. For example...
+Because Java won't let us use an array as a Generic sub-type, typed! bundles does not directly support working with arrays. However, when dealing with 3rd-party apps & services, passing arrays in a bundle may be required. To deal with this, we've added custom translated keys that spit-out ArrayLists to the caller, but read and write to arrays under the hood. For example...
 ```java
 // While the signature of this key is identical to STRING_ARRAY_LIST mentioned above,
 // notice here we use the method stringArrayKey() instead of stringArrayListKey().
