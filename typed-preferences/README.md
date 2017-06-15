@@ -1,7 +1,7 @@
 # Typed! Preferences (for Android)
 A typed! wrapper for android's SharedPreferences that simplifies call-site access to them.
 
-[Installation Instructions](/README.md)
+See the root readme for [Installation Instructions](/README.md#installation)
 
 #### Define your keys
 ```java

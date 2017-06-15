@@ -1,7 +1,7 @@
 # Typed! Bundles (for Android)
 A typed! wrapper for android's Bundle object that simplifies callsite access to extras and arguments.
 
-[Installation Instructions](/README.md)
+See the root readme for [Installation Instructions](/README.md#installation)
 
 #### Define your keys
 ```java
