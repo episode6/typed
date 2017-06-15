@@ -10,7 +10,7 @@ Wouldn't it be nice if we could define our keys, types and defaults all in a sin
 This project currently offers two typed! libs for Android
 
 - [typed-preferences](typed-preferences/): A typed! wrapper for android's SharedPreferences.
-- [typed-bundles](typed-bundle/): A typed!  wrapper for android's Bundle object.
+- [typed-bundles](typed-bundles/): A typed!  wrapper for android's Bundle object.
 
 
 ## License
