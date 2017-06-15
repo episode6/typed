@@ -123,3 +123,10 @@ static final BundleKey<ArrayList<String>> STRING_ARRAY = EXTRAS.stringArrayKey()
 ```
 
 See [BundleNamespace.java](src/main/java/com/episode6/hackit/typed/bundles/BundleNamespace.java) for more supported key-builder methods.
+
+#### Customizing Gson
+If the your key-types require custom TypeAdapters in order for gson to serialize/deserialize them, you can set the default instance using `TypedBundles.setDefaultGson(Gson)` or `TypedBundles.setDefaultGsonSupplier(Supplier<Gson>)`. However, if using typed! bundles from within a library project, you may prefer to initialize your own TypedBundle.Factory via `TypedBundles.createFactory(Gson)`. The factory may be stored statically, and used to create TypedBundles using your custom gson instance (and it can't be overridden inadvertently by the implementing application).
+
+#### Extra Utilities
+- `TypedBundles.memoize(TypedBundle)` provides a TypedBundle that memoizes its contents as they're read and written. This can be useful for dealing with a Fragment's arguments from inside said fragment, as you'll avoid unnecessary deserialization.
+- `FragmentBuilder<V extends Fragment>` is a utility class for creating a fragment using a TypedBundle for arguments, potentially bypassing the need for a boilerplate static newInstance method.
