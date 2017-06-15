@@ -6,12 +6,11 @@ Some key-value stores in android are annoying (SharedPreferences, Bundles, etc).
 
 Wouldn't it be nice if we could define our keys, types and defaults all in a single object, and enforce the types at compile-time? Typed! (for Android) aims to do just that by leveraging Java's Generics and Gson's ability to serialize pretty much anything.
 
-
 ## The Libs
 This project currently offers two typed! libs for Android
 
-- [typed-preferences](typed-preferences/): A wrapper for android's SharedPreferences.
-- [typed-bundles](typed-bundle/): A wrapper for android's Bundle object.
+- [typed-preferences](typed-preferences/): A typed! wrapper for android's SharedPreferences.
+- [typed-bundles](typed-bundle/): A typed!  wrapper for android's Bundle object.
 
 
 ## License
