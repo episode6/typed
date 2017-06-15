@@ -36,8 +36,6 @@ public class DirectBundleTranslators {
       return BYTE;
     } else if (keyType == Bundle.class) {
       return BUNDLE;
-    } else if (keyType == TypedBundle.class) {
-      return TYPED_BUNDLE;
     } else if (keyType == CharSequence.class) {
       return CHAR_SEQUENCE;
     }
@@ -169,18 +167,6 @@ public class DirectBundleTranslators {
     @Override
     public void writeToBundle(Bundle b, String keyName, Object instance) {
       b.putBundle(keyName, (Bundle) instance);
-    }
-  };
-
-  private static final BundleTranslator TYPED_BUNDLE = new BundleTranslator() {
-    @Override
-    public Object getFromBundle(Bundle b, String keyName) {
-      return TypedBundles.wrap(b.getBundle(keyName));
-    }
-
-    @Override
-    public void writeToBundle(Bundle b, String keyName, Object instance) {
-      b.putBundle(keyName, ((TypedBundle)instance).asBundle());
     }
   };
 

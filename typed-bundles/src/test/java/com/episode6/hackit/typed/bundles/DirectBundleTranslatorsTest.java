@@ -157,16 +157,6 @@ public class DirectBundleTranslatorsTest {
   }
 
   @Test
-  public void testTypedBundleGet() {
-    testGet(TypedBundle.class);
-  }
-
-  @Test
-  public void testTypedBundleSet() {
-    testPut(TypedBundle.class);
-  }
-
-  @Test
   public void testCharSeqGet() {
     testGet(CharSequence.class);
   }

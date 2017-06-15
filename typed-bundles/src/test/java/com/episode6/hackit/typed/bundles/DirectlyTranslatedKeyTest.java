@@ -72,10 +72,6 @@ public class DirectlyTranslatedKeyTest {
   static final ReqBundleKey<Bundle> BUNDLE_REQ_KEY = NAMESPACE.key(Bundle.class).named("bundleReqKey").buildRequired();
   static final OptBundleKey<Bundle> BUNDLE_OPT_KEY = NAMESPACE.key(Bundle.class).named("bundleOptKey").buildOptional();
 
-  static final BundleKey<TypedBundle> TBUNDLE_KEY = NAMESPACE.key(TypedBundle.class).named("typedBundleKey").buildWithDefault(TypedBundles.create());
-  static final ReqBundleKey<TypedBundle> TBUNDLE_REQ_KEY = NAMESPACE.key(TypedBundle.class).named("typedBundleReqKey").buildRequired();
-  static final OptBundleKey<TypedBundle> TBUNDLE_OPT_KEY = NAMESPACE.key(TypedBundle.class).named("typedBundleOptKey").buildOptional();
-
   static final BundleKey<CharSequence> CH_SQ_KEY = NAMESPACE.key(CharSequence.class).named("chSqKey").buildWithDefault("nice");
   static final ReqBundleKey<CharSequence> CH_SQ_REQ_KEY = NAMESPACE.key(CharSequence.class).named("chSqReqKey").buildRequired();;
   static final OptBundleKey<CharSequence> CH_SQ_OPT_KEY = NAMESPACE.key(CharSequence.class).named("chSqOptKey").buildOptional();
@@ -111,9 +107,6 @@ public class DirectlyTranslatedKeyTest {
       BUNDLE_KEY,
       BUNDLE_REQ_KEY,
       BUNDLE_OPT_KEY,
-      TBUNDLE_KEY,
-      TBUNDLE_REQ_KEY,
-      TBUNDLE_OPT_KEY,
       CH_SQ_KEY,
       CH_SQ_REQ_KEY,
       CH_SQ_OPT_KEY);
