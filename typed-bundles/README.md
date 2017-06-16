@@ -43,6 +43,12 @@ static class Extras {
         .key(new TypeToken<HashMap<CustomKey, CustomObj>>() {})
         .named("CustomHashMap")
         .buildWithDefault(/* ... */);
+
+    // Extend from the ANONYMOUS namespace to deal with 3rd party extras / arguments
+    public static final OptBundleKey<String> EXTRA_TITLE = BundleNamespace.ANONYMOUS
+        .key(String.class)
+        .named(Intent.EXTRA_TITLE) // no prefix will be applied to this name
+        .buildOptional();
 }
 ```
 
