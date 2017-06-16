@@ -13,6 +13,8 @@ import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
 import org.powermock.mockpolicies.MockPolicyInterceptionSettings;
 
+import java.lang.reflect.Type;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyFloat;
@@ -50,7 +52,7 @@ public class SharedTestResources {
   public void init() {
     mEditor = mock(SharedPreferences.Editor.class, Answers.builderAnswer());
     when(mSharedPreferences.edit()).thenReturn(mEditor);
-    when(mGson.toJson(any())).thenReturn("someFakeJson");
+    when(mGson.toJson(any(), any(Type.class))).thenReturn("someFakeJson");
   }
 
   void verifyPrefDidntExist(TypedKey key) {
@@ -86,7 +88,7 @@ public class SharedTestResources {
   <T> void verifyPrefWasSet(TypedKey<T> key, T expectedValue) {
     InOrder inOrder = Mockito.inOrder(mSharedPreferences, mEditor, mGson);
     inOrder.verify(mSharedPreferences).edit();
-    inOrder.verify(mGson).toJson(expectedValue);
+    inOrder.verify(mGson).toJson(expectedValue, key.getObjectType());
     inOrder.verify(mEditor).putString(key.getKeyName().toString(), "someFakeJson");
     inOrder.verify(mEditor).apply();
     verifyNoMoreInteractions(mSharedPreferences, mEditor, mGson);

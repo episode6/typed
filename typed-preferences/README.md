@@ -1,14 +1,7 @@
-# Typed Preferences (for Android)
+# Typed! Preferences (for Android)
+A typed! wrapper for android's SharedPreferences that simplifies call-site access to them.
 
-A wrapper around android's SharedPreferences to simplify call-site access to them.
-
-#### Add Dependency
-```groovy
-repositories { jcenter() }
-dependencies {
-    compile 'com.episode6.hackit.typed:typed-preferences:0.0.2'
-}
-```
+See the root readme for [Installation Instructions](/README.md#installation)
 
 #### Define your keys
 ```java

@@ -1,37 +1,28 @@
 package com.episode6.hackit.typed.bundles;
 
-import com.episode6.hackit.typed.core.TypedKey;
 import com.episode6.hackit.typed.core.TypedKeyName;
 import com.episode6.hackit.typed.core.util.Supplier;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 
 /**
- *
+ * Standard bundle key with a default value
  */
-public class BundleKey<V> implements TypedKey<V> {
+public final class BundleKey<V> extends AbstractBundleKey<V> {
 
-  private final TypedKeyName mKeyName;
-  private final Type mObjectType;
   private final Supplier<V> mDefaultValueSupplier;
 
-  BundleKey(TypedKeyName keyName, Type objectType, Supplier<V> defaultValueSupplier) {
-    mKeyName = keyName;
-    mObjectType = objectType;
+  BundleKey(
+      TypedKeyName keyName,
+      Type objectType,
+      @Nullable BundleTranslator translator,
+      Supplier<V> defaultValueSupplier) {
+    super(keyName, objectType, translator);
     mDefaultValueSupplier = defaultValueSupplier;
   }
 
-  @Override
-  public TypedKeyName getKeyName() {
-    return mKeyName;
-  }
-
-  @Override
-  public Type getObjectType() {
-    return mObjectType;
-  }
-
-  public V getDefaultValue() {
+  V getDefaultValue() {
     return mDefaultValueSupplier.get();
   }
 }
