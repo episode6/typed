@@ -44,7 +44,7 @@ static class Extras {
         .named("CustomHashMap")
         .buildWithDefault(/* ... */);
 
-    // Extend from the ANONYMOUS namespace to deal with 3rd party extras / arguments
+    // Build from the ANONYMOUS namespace to deal with 3rd party extras / arguments
     public static final OptBundleKey<String> EXTRA_TITLE = BundleNamespace.ANONYMOUS
         .key(String.class)
         .named(Intent.EXTRA_TITLE) // no prefix will be applied to this name
