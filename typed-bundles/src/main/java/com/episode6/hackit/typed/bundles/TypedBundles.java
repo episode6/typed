@@ -14,7 +14,17 @@ import java.util.Map;
  */
 public class TypedBundles {
 
-  private static TypedBundle.Factory sDefaultFactory = new TypedBundleFactoryImpl(new DefaultGsonSupplier());
+  private static TypedBundle.Factory sDefaultFactory = createFactory(new DefaultGsonSupplier());
+
+  /**
+   * Sets the default factory used by this class's static methods. In production code, you'll
+   * probably prefer {@link #setDefaultGson(Gson)} or {@link #setDefaultGsonSupplier(Supplier)},
+   * however this can be useful in your unit tests.
+   * @param factory The factory to be used by default to create new TypedBundles
+   */
+  public static void setDefaultFactory(TypedBundle.Factory factory) {
+    sDefaultFactory = Preconditions.checkNotNull(factory);
+  }
 
   /**
    * Sets the default gson supplier used when creating new TypedBundles via
@@ -23,7 +33,7 @@ public class TypedBundles {
    * @param gsonSupplier A Supplier for a default Gson instance.
    */
   public static void setDefaultGsonSupplier(Supplier<Gson> gsonSupplier) {
-    sDefaultFactory = createFactory(gsonSupplier);
+    setDefaultFactory(createFactory(gsonSupplier));
   }
 
   /**
@@ -33,7 +43,14 @@ public class TypedBundles {
    * @param gson The gson instance to use.
    */
   public static void setDefaultGson(Gson gson) {
-    sDefaultFactory = createFactory(gson);
+    setDefaultFactory(createFactory(gson));
+  }
+
+  /**
+   * Reset the default factory.
+   */
+  public static void resetDefaultFactory() {
+    setDefaultFactory(createFactory(new DefaultGsonSupplier()));
   }
 
   /**

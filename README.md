@@ -6,10 +6,10 @@ Bring sanity to android's key-value stores by defining your keys with types and 
 repositories { jcenter() }
 dependencies {
     // typed! preferences
-    compile 'com.episode6.hackit.typed:typed-preferences:0.0.3'
+    compile 'com.episode6.hackit.typed:typed-preferences:0.0.4'
 
     // typed! bundles
-    compile 'com.episode6.hackit.typed:typed-bundles:0.0.3'
+    compile 'com.episode6.hackit.typed:typed-bundles:0.0.4'
 }
 ```
 
