@@ -22,5 +22,5 @@ allprojects {
   }
 
   group = "com.episode6.hackit.typed"
-  version = "0.0.4-SNAPSHOT"
+  version = "0.0.4"
 }
