@@ -1,10 +1,10 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'com.episode6.hackit.gdmc'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 dependencies {
-  compile project(':typed-core')
-  compile gdmc('testlibs')
+  implementation project(':typed-core')
+  api gdmc('testlibs')
 }

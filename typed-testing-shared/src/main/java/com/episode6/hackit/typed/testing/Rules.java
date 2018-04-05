@@ -4,6 +4,7 @@ import com.episode6.hackit.mockspresso.BuildMockspresso;
 import com.episode6.hackit.mockspresso.Mockspresso;
 import com.episode6.hackit.mockspresso.api.DependencyProvider;
 import com.episode6.hackit.mockspresso.api.SpecialObjectMaker;
+import com.episode6.hackit.mockspresso.quick.QuickBuildMockspresso;
 import com.episode6.hackit.mockspresso.reflect.DependencyKey;
 import com.episode6.hackit.mockspresso.reflect.TypeToken;
 import com.episode6.hackit.typed.core.util.Supplier;
@@ -19,7 +20,7 @@ import java.lang.reflect.Type;
 public class Rules {
 
   public static Mockspresso.Builder mockspressoBuilder() {
-    return BuildMockspresso.with()
+    return QuickBuildMockspresso.with()
         .injector().simple()
         .mocker().mockitoWithPowerMockRule()
         .specialObjectMaker(supplierMaker());

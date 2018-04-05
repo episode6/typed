@@ -7,7 +7,6 @@ targetCompatibility = 1.7
 
 android {
   compileSdkVersion gdmcVersion('android.compilesdk') as Integer
-  buildToolsVersion gdmcVersion('android.buildtools')
 
   buildTypes {
     release {
@@ -23,10 +22,7 @@ android {
 }
 
 dependencies {
-  compile project(':typed-core')
-  compile('com.google.code.findbugs:jsr305')
-  compile('com.google.code.gson:gson')
+  api project(':typed-core')
 
-  testCompile project(':typed-testing-shared')
-  testCompile gdmc('testlibs')
+  testImplementation project(':typed-testing-shared')
 }

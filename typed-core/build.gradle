@@ -1,4 +1,4 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'com.episode6.hackit.deployable.jar'
 apply plugin: 'com.episode6.hackit.gdmc'
 
@@ -6,9 +6,8 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 dependencies {
-  compile('com.google.code.findbugs:jsr305')
-  compile('com.google.code.gson:gson')
+  api('com.google.code.findbugs:jsr305')
+  api('com.google.code.gson:gson')
   
-  testCompile project(':typed-testing-shared')
-  testCompile gdmc('testlibs')
+  testImplementation project(':typed-testing-shared')
 }

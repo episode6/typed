@@ -6,7 +6,7 @@
       "com.google.guava:guava",
       "org.easytesting:fest-assert-core",
       "org.mockito:mockito-core",
-      "com.episode6.hackit.mockspresso:mockspresso-core",
+      "com.episode6.hackit.mockspresso:mockspresso-quick",
       "org.powermock:powermock-module-junit4",
       "org.powermock:powermock-api-mockito2",
       "org.powermock:powermock-module-junit4-rule",
