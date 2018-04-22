@@ -54,7 +54,7 @@ public class TypedPrefsWrapTest {
     int value = prefs.get(INT_PREF);
 
 
-    verifyStatic();
+    verifyStatic(PreferenceManager.class);
     PreferenceManager.getDefaultSharedPreferences(mContext);
 
     t.verifyPrefDidntExist(INT_PREF);
